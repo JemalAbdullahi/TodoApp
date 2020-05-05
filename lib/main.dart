@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:todolist/UI/home_tab.dart';
 import 'package:todolist/UI/task_list.dart';
-import 'package:todolist/UI/title_card.dart';
-import 'package:todolist/models/global.dart';
+
 
 main() => runApp(MyApp());
 
