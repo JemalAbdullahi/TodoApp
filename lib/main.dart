@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:todolist/UI/todo_tab.dart';
-import 'package:todolist/UI/tasklist_tab.dart';
+import 'package:todolist/UI/tabs/todo_tab.dart';
+import 'package:todolist/UI/tabs/tasklist_tab.dart';
 
 
 main() => runApp(MyApp());

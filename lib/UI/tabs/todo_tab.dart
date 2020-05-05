@@ -67,7 +67,7 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   void _getList() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 3; i++) {
       tasks.add(Task('To Do: ' + i.toString(), false, i));
     }
   }
