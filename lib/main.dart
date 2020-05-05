@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/models/global.dart';
 
 main() => runApp(MyApp());
 
@@ -8,7 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'To Do List',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Color(0xffbf0426),
       ),
       home: HomePage(title: 'To Do App'),
     );
@@ -34,29 +35,25 @@ class _HomePageState extends State<HomePage> {
           appBar: new TabBar(
             tabs: [
               Tab(
-                icon: new Icon(Icons.home),
+                icon: new Icon(Icons.menu, color: lightBlue),
               ),
               Tab(
-                icon: new Icon(Icons.settings),
+                icon: new Icon(Icons.account_circle, color: lightBlue),
               )
             ],
-            labelColor: Colors.blue,
             unselectedLabelColor: Colors.black,
-            indicatorSize: TabBarIndicatorSize.label,
-            indicatorPadding: EdgeInsets.all(5.0),
-            indicatorColor: Colors.blue,
-            labelPadding: EdgeInsets.all(2.0),
+            indicatorColor: Colors.transparent,
           ),
-          backgroundColor: Color(0xffbf0426),
+          backgroundColor: darkRed,
           body: Stack(
             children: <Widget>[
               TabBarView(
                 children: [
                   new Container(
-                    color: Color(0xffceecf2),
+                    color: lightBlue,
                   ),
                   new Container(
-                    color: Color(0xff023059),
+                    color: darkBlue,
                   ),
                 ],
               ),
@@ -65,30 +62,30 @@ class _HomePageState extends State<HomePage> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40),
                   ),
                 ),
               ),
               Positioned(
                 top: 90,
-                left: 175,
-                child: FloatingActionButton(
-                  onPressed: null,
-                  child: Icon(Icons.add),
+                child: Center(
+                  widthFactor: 7.2,
+                  child: FloatingActionButton(
+                    onPressed: null,
+                    child: Icon(Icons.add),
+                  ),
                 ),
+                //left: MediaQuery.of(context).size.width * 0.5,
               ),
               Positioned(
-                width: 110,
                 height: 53,
                 top: 45,
-                left: 20,
-                child: Text('To Do',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xffbf0426),
-                    )),
+                left: 30,
+                child: Text(
+                  'To Do',
+                  style: cardTitleStyle,
+                ),
               ),
             ],
           ),
