@@ -5,13 +5,11 @@ class TitleCard extends StatelessWidget {
   final String title;
 
   TitleCard(this.title);
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         _TitleCardBackground(),
-        _TitleCardButton(),
         Positioned(
           height: 53,
           top: 35,
@@ -20,7 +18,17 @@ class TitleCard extends StatelessWidget {
             title,
             style: cardTitleStyle,
           ),
-        )
+        ),
+        Transform.scale(
+          scale: 1.1,
+          origin: Offset(-1800, -950),
+          child: FloatingActionButton(
+            onPressed: () {
+              Text("New Container");
+            },
+            child: Icon(Icons.add, size: 40),
+          ),
+        ),
       ],
     );
   }
@@ -42,22 +50,36 @@ class _TitleCardBackground extends StatelessWidget {
   }
 }
 
-class _TitleCardButton extends StatelessWidget {
-  final Function addTask;
+class _TitleCardButton extends StatefulWidget {
+  @override
+  __TitleCardButtonState createState() => __TitleCardButtonState();
+}
 
-  _TitleCardButton(this.addTask);
+class __TitleCardButtonState extends State<_TitleCardButton> {
+  __TitleCardButtonState();
+
+  Widget listOverlay() {
+    return Positioned(
+      top: 200,
+      child: Container(
+        height: 200,
+        color: red,
+        /*decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+        ),*/
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      //top: 90,
-      child: Transform.scale(
-        scale: 1.1,
-        origin: Offset(-1800, -950),
-        child: FloatingActionButton(
-          onPressed: addTask(),
-          child: Icon(Icons.add, size: 40),
-        ),
+    return Transform.scale(
+      scale: 1.1,
+      origin: Offset(-1800, -950),
+      child: FloatingActionButton(
+        onPressed: null,
+        child: Icon(Icons.add, size: 40),
       ),
     );
   }

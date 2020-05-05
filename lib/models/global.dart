@@ -12,15 +12,22 @@ Color brownRed = new Color(0xff590209);
 TextStyle cardTitleStyle = new TextStyle(
   fontFamily: 'Avenir', 
   fontWeight: FontWeight.bold, 
-  color: brownRed, 
+  color: darkRed, 
   fontSize: 50
 );
 
-TextStyle toDoListTitleStyle = new TextStyle(
+TextStyle toDoListTileStyle = new TextStyle(
   fontFamily: 'Avenir', 
-  fontWeight: FontWeight.bold, 
-  color: lightBlue, 
-  fontSize: 50
+  fontWeight: FontWeight.w500, 
+  color: Colors.white, 
+  fontSize: 30
+);
+
+TextStyle toDoListSubtitleStyle = new TextStyle(
+  fontFamily: 'Avenir', 
+  fontWeight: FontWeight.w300, 
+  color: Colors.white, 
+  fontSize: 18
 );
 
 TextStyle taskListTitleStyle = new TextStyle(
