@@ -11,9 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'To Do List',
-      theme: ThemeData(
-        primaryColor: Color(0xffbf0426),
-      ),
+      //theme: ThemeData(primaryColor: Color(0xffbf0426)),
       home: HomePage(title: 'To Do App'),
     );
   }
@@ -35,19 +33,23 @@ class _HomePageState extends State<HomePage> {
       child: DefaultTabController(
         length: 2,
         child: new Scaffold(
-          appBar: new TabBar(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(icon: Icon(Icons.menu), onPressed: null),
+            actions: <Widget>[
+              IconButton(icon: Icon(Icons.account_circle), onPressed: null)
+            ],
+          ),
+          /*bottomNavigationBar: new TabBar(
             tabs: [
-              Tab(
-                icon: new Icon(Icons.menu, color: lightBlue),
-              ),
-              Tab(
-                icon: new Icon(Icons.account_circle, color: lightBlue),
-              )
+              Tab(icon: new Icon(Icons.menu, color: lightBlue)),
+              Tab(icon: new Icon(Icons.account_circle, color: lightBlue))
             ],
             unselectedLabelColor: Colors.black,
             indicatorColor: Colors.transparent,
-          ),
-          backgroundColor: red,
+          ),*/
+          //backgroundColor: red,
           body: Container(
             child: TabBarView(children: [HomeTab(), TaskList()]),
           ),
