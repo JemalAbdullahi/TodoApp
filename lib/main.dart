@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:todolist/UI/home_tab.dart';
-import 'package:todolist/UI/task_list.dart';
+import 'package:todolist/UI/todo_tab.dart';
+import 'package:todolist/UI/tasklist_tab.dart';
 
 
 main() => runApp(MyApp());
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           ),*/
           //backgroundColor: red,
           body: Container(
-            child: TabBarView(children: [HomeTab(), TaskList()]),
+            child: TabBarView(children: [ToDoTab(), TaskListTab()]),
           ),
         ),
       ),

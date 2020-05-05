@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/title_card.dart';
-
 import 'package:todolist/models/global.dart';
 
-class HomeTab extends StatefulWidget {
+class TaskListTab extends StatefulWidget {
   @override
-  _HomeTabState createState() => _HomeTabState();
+  _TaskListTabState createState() => _TaskListTabState();
 }
 
-class _HomeTabState extends State<HomeTab> {
+class _TaskListTabState extends State<TaskListTab> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -18,11 +17,11 @@ class _HomeTabState extends State<HomeTab> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [lightBlue, lightBlueGradient],
+              colors: [darkBlueGradient, darkBlue],
             ),
           ),
         ),
-        TitleCard('To Do'),
+        TitleCard('Task List'),
       ],
     );
   }
