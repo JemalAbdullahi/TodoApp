@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/models/global.dart';
 
-class TitleCard extends StatefulWidget {
+class TitleCard extends StatelessWidget {
   final String title;
 
   TitleCard(this.title);
-  @override
-  _TitleCardState createState() => _TitleCardState(title);
-}
-
-class _TitleCardState extends State<TitleCard> {
-  String title;
-
-  _TitleCardState(this.title);
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +43,10 @@ class _TitleCardBackground extends StatelessWidget {
 }
 
 class _TitleCardButton extends StatelessWidget {
+  final Function addTask;
+
+  _TitleCardButton(this.addTask);
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -59,7 +55,7 @@ class _TitleCardButton extends StatelessWidget {
         scale: 1.1,
         origin: Offset(-1800, -950),
         child: FloatingActionButton(
-          onPressed: null,
+          onPressed: addTask(),
           child: Icon(Icons.add, size: 40),
         ),
       ),
