@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todolist/UI/title_card.dart';
 
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/tasks.dart';
+import 'package:todolist/models/widgets/task_list_item_widget.dart';
 
 class ToDoTab extends StatefulWidget {
   @override
@@ -9,16 +11,13 @@ class ToDoTab extends StatefulWidget {
 }
 
 class _ToDoTabState extends State<ToDoTab> {
-  List<String> tasks = [
-    'Shopping List',
-    'Shopping List',
-    'Shopping List',
-    'Shopping List',
-    'Shopping List',
-    'Shopping List',
-    'Shopping List',
-    'Shopping List'
-  ];
+  List<Task> tasks = [];
+  @override
+  void initState() {
+    _getList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -32,34 +31,44 @@ class _ToDoTabState extends State<ToDoTab> {
             ),
           ),
         ),
-        _getList(),
+        _buildReorderableList(context, tasks),
         TitleCard('To Do'),
       ],
     );
   }
 
-  Widget _getList() {
-    return ListView.separated(
-      padding: const EdgeInsets.only(top: 160, left: 25, right: 25),
-      itemCount: tasks.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          height: 80,
-          child: ListTile(
-            title: Text(tasks[index], style: toDoListTileStyle),
-            subtitle: Text(
-              'Family',
-              style: toDoListSubtitleStyle,
-              textAlign: TextAlign.right,
-            ),
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: darkBlue,
-          ),
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) => Divider(),
+  Widget _buildReorderableList(BuildContext context, List<Task> tasks) {
+    return Theme(
+      data: ThemeData(canvasColor: Colors.transparent),
+      child: ReorderableListView(
+        padding: EdgeInsets.only(top: 300),
+        children:
+            tasks.map((Task item) => _buildListTile(context, item)).toList(),
+        onReorder: (oldIndex, newIndex) {
+          setState(
+            () {
+              Task item = tasks[oldIndex];
+              tasks.remove(item);
+              tasks.insert(newIndex, item);
+            },
+          );
+        },
+      ),
     );
+  }
+
+  Widget _buildListTile(BuildContext context, Task item) {
+    return ListTile(
+      key: Key(item.taskId.toString()),
+      title: TaskListItemWidget(
+        title: item.title,
+      ),
+    );
+  }
+
+  void _getList() {
+    for (int i = 0; i < 10; i++) {
+      tasks.add(Task('To Do: ' + i.toString(), false, i));
+    }
   }
 }

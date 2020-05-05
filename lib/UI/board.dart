@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/UI/tasks.dart';
+import 'package:todolist/models/tasks.dart';
 
 class Board extends StatefulWidget {
-  final String startingTask;
+  final Task startingTask;
 
   Board(this.startingTask);
 
@@ -11,7 +11,7 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  List<String> _tasks = [];
+  List<Task> _tasks = [];
 
   @override
   void initState() {
@@ -27,6 +27,7 @@ class _BoardState extends State<Board> {
 
   @override
   Widget build(BuildContext context) {
-    return Tasks(_tasks);
+    return null;
+    //return Tasks(_tasks);
   }
 }
