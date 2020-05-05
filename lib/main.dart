@@ -44,16 +44,28 @@ class _HomePageState extends State<HomePage> {
             unselectedLabelColor: Colors.black,
             indicatorColor: Colors.transparent,
           ),
-          backgroundColor: darkRed,
+          backgroundColor: red,
           body: Stack(
             children: <Widget>[
               TabBarView(
                 children: [
                   new Container(
-                    color: lightBlue,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [lightBlue, lightBlueGradient],
+                      ),
+                    ),
                   ),
                   new Container(
-                    color: darkBlue,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [darkBlueGradient, darkBlue],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -68,15 +80,15 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Positioned(
-                top: 90,
-                child: Center(
-                  widthFactor: 7.2,
-                  child: FloatingActionButton(
-                    onPressed: null,
-                    child: Icon(Icons.add),
+                //top: 90,
+                child: Transform.scale(
+                    scale: 1.3,
+                    origin: Offset(-580, -320),
+                    child: FloatingActionButton(
+                      onPressed: null,
+                      child: Icon(Icons.add, size: 40),
+                    ),
                   ),
-                ),
-                //left: MediaQuery.of(context).size.width * 0.5,
               ),
               Positioned(
                 height: 53,
