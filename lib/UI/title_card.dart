@@ -20,7 +20,7 @@ class TitleCard extends StatelessWidget {
             title,
             style: cardTitleStyle,
           ),
-        )
+        ),
       ],
     );
   }
@@ -43,9 +43,6 @@ class _TitleCardBackground extends StatelessWidget {
 }
 
 class _TitleCardButton extends StatelessWidget {
-  final Function addTask;
-
-  _TitleCardButton(this.addTask);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +52,7 @@ class _TitleCardButton extends StatelessWidget {
         scale: 1.1,
         origin: Offset(-1800, -950),
         child: FloatingActionButton(
-          onPressed: addTask(),
+          onPressed: null,
           child: Icon(Icons.add, size: 40),
         ),
       ),

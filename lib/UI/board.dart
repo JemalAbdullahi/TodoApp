@@ -18,12 +18,12 @@ class _BoardState extends State<Board> {
     _tasks.add(widget.startingTask);
     super.initState();
   }
-
+/*
   void _addTasks(String task) {
     setState(() {
       _tasks.add(task);
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
