@@ -15,7 +15,7 @@ class TaskListItemWidget extends StatelessWidget {
         leading: Checkbox(value: false, onChanged: null),
         title: Text(title, style: toDoListTileStyle),
         subtitle: Text(
-          'keyValue',
+          'Group',
           style: toDoListSubtitleStyle,
           textAlign: TextAlign.right,
         ),
