@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todolist/UI/pages/home_page.dart';
 
-import 'package:todolist/UI/tabs/todo_tab.dart';
-import 'package:todolist/UI/tabs/tasklist_tab.dart';
+import 'package:todolist/UI/pages/login_page.dart';
 
+import 'models/authentication/auth_service.dart';
 
-main() => runApp(MyApp());
+main() => runApp(
+      ChangeNotifierProvider<AuthService>(
+        child: MyApp(),
+        create: (BuildContext context) {
+          return AuthService();
+        },
+      ),
+    );
 
 class MyApp extends StatelessWidget {
   @override
@@ -12,48 +21,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'To Do List',
       //theme: ThemeData(primaryColor: Color(0xffbf0426)),
-      home: HomePage(title: 'To Do App'),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  final String title;
-
-  HomePage({this.title});
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: DefaultTabController(
-        length: 2,
-        child: new Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(icon: Icon(Icons.menu), onPressed: null),
-            actions: <Widget>[
-              IconButton(icon: Icon(Icons.account_circle), onPressed: null)
-            ],
-          ),
-          /*bottomNavigationBar: new TabBar(
-            tabs: [
-              Tab(icon: new Icon(Icons.menu, color: lightBlue)),
-              Tab(icon: new Icon(Icons.account_circle, color: lightBlue))
-            ],
-            unselectedLabelColor: Colors.black,
-            indicatorColor: Colors.transparent,
-          ),*/
-          //backgroundColor: red,
-          body: Container(
-            child: TabBarView(children: [ToDoTab(), TaskListTab()]),
-          ),
-        ),
+      home: FutureBuilder(
+        // get the Provider, and call the getUser method
+        future: Provider.of<AuthService>(context).getUser(),
+        // wait for the future to resolve and render the appropriate
+        // widget for HomePage or LoginPage
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return snapshot.hasData ? HomePage(title: 'To Do List') : LoginPage();
+          } else {
+            return Container(color: Colors.white);
+          }
+        },
       ),
     );
   }
