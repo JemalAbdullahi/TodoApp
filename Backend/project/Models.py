@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 ma = Marshmallow()
 db = SQLAlchemy()
 
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -31,14 +32,15 @@ class User(db.Model):
 
     def serialize(self):
         return {
-            'api_key' : self.api_key,
-            'id' : self.id,
-            'username' : self.username,
-            'firstname' : self.firstname,
-            'lastname' : self.lastname,
-            'password' : self.password,
-            'emailadress' : self.emailadress,
+            'api_key': self.api_key,
+            'id': self.id,
+            'username': self.username,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'password': self.password,
+            'emailadress': self.emailadress,
         }
+
 
 class Task(db.Model):
     __tablename__ = 'tasks'
@@ -66,12 +68,12 @@ class Task(db.Model):
 
     def serialize(self):
         return {
-            'title' : self.title,
-            'user_id' : self.user_id,
-            'id' : self.id,
-            'repeats' : self.repeats,
-            'deadline' : self.deadline,
-            'reminders' : self.reminders,
-            'completed' : self.completed,
-            'note' : self.note,
+            'title': self.title,
+            'user_id': self.user_id,
+            'id': self.id,
+            'repeats': self.repeats,
+            'deadline': self.deadline,
+            'reminders': self.reminders,
+            'completed': self.completed,
+            'note': self.note,
         }
