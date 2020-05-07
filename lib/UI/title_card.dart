@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:todolist/models/global.dart';
+import 'package:todolist/widgets/create_task_overlay.dart';
 
 class TitleCard extends StatelessWidget {
   final String title;
@@ -10,26 +12,26 @@ class TitleCard extends StatelessWidget {
     return Stack(
       children: <Widget>[
         _TitleCardBackground(),
-        Positioned(
-          height: 53,
-          top: 35,
-          left: 30,
-          child: Text(
-            title,
-            style: cardTitleStyle,
-          ),
-        ),
-        Transform.scale(
-          scale: 1.1,
-          origin: Offset(-1800, -950),
-          child: FloatingActionButton(
-            onPressed: () {
-              Text("New Container");
-            },
-            child: Icon(Icons.add, size: 40),
-          ),
-        ),
+        _TitleCardTitle(title),
+        _TitleCardButton(),
       ],
+    );
+  }
+}
+
+class _TitleCardTitle extends StatelessWidget {
+  final String title;
+  _TitleCardTitle(this.title);
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      height: 53,
+      top: 35,
+      left: 30,
+      child: Text(
+        title,
+        style: cardTitleStyle,
+      ),
     );
   }
 }
@@ -51,14 +53,16 @@ class _TitleCardBackground extends StatelessWidget {
 }
 
 class _TitleCardButton extends StatefulWidget {
+  //OverlayState _overlayState;
+  //OverlayEntry _overlayEntry;
+
   @override
   __TitleCardButtonState createState() => __TitleCardButtonState();
 }
 
 class __TitleCardButtonState extends State<_TitleCardButton> {
-  __TitleCardButtonState();
-
   Widget listOverlay() {
+    print("In listOverlay");
     return Positioned(
       top: 200,
       child: Container(
@@ -78,7 +82,14 @@ class __TitleCardButtonState extends State<_TitleCardButton> {
       scale: 1.1,
       origin: Offset(-1800, -950),
       child: FloatingActionButton(
-        onPressed: null,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateTaskOverlay(),
+            ),
+          );
+        },
         child: Icon(Icons.add, size: 40),
       ),
     );

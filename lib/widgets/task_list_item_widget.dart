@@ -10,31 +10,45 @@ class TaskListItemWidget extends StatelessWidget {
   TaskListItemWidget({this.title, this.keyValue});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      //color: Theme.of(context).primaryColorDark,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Theme.of(context).primaryColorDark,
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 25.0,
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => TaskListTab(),
+        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-        child: Row(
-          children: <Widget>[
-            Text(title, style: toDoListTileStyle),
-            SizedBox(width: 180.0),
-            Text(
-              'Group',
-              style: toDoListSubtitleStyle,
-              textAlign: TextAlign.right,
+      child: Container(
+        height: 90,
+        //color: Theme.of(context).primaryColorDark,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: darkBlue, //Theme.of(context).primaryColorDark,
+          boxShadow: [
+            new BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 25.0,
             ),
           ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Row(
+            children: <Widget>[
+              Text(title, style: toDoListTileStyle),
+              SizedBox(width: 180.0),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    'Group',
+                    style: toDoListSubtitleStyle,
+                    textAlign: TextAlign.right,
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

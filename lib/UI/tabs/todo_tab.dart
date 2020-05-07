@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/UI/tabs/tasklist_tab.dart';
-import 'package:todolist/UI/title_card.dart';
 
+
+import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/task_list_item_widget.dart';
@@ -41,13 +41,6 @@ class _ToDoTabState extends State<ToDoTab> {
   Widget _buildReorderableList(BuildContext context, List<Task> tasks) {
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
-      child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => TaskListTab(),
-          ),
-        ),
         child: ReorderableListView(
           padding: EdgeInsets.only(top: 300),
           children:
@@ -61,7 +54,6 @@ class _ToDoTabState extends State<ToDoTab> {
               },
             );
           },
-        ),
       ),
     );
   }
