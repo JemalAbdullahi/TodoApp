@@ -1,5 +1,6 @@
 
 class Task {
+  String group;
   List<Task> tasks;
   String note;
   DateTime timeToComplete;

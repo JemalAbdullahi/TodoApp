@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todolist/UI/pages/home_page.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
+import 'package:todolist/models/global.dart';
 
 import 'models/authentication/auth_service.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'To Do List',
-      //theme: ThemeData(primaryColor: Color(0xffbf0426)),
+      theme: ThemeData(primaryColorLight: lightBlue, primaryColorDark: darkBlue),
       home: FutureBuilder(
         // get the Provider, and call the getUser method
         future: Provider.of<AuthService>(context).getUser(),
