@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-
+Color loginBlue = new Color(0xff56C7F1);
 Color lightBlue = new Color(0xffceecf2);
 Color lightBlueGradient = new Color(0xff00D4FF);
 Color darkBlue = new Color(0xff023059);
@@ -35,4 +35,24 @@ TextStyle taskListTitleStyle = new TextStyle(
   fontWeight: FontWeight.bold, 
   color: darkBlue, 
   fontSize: 50
+);
+
+TextStyle loginTitleStyle = new TextStyle(
+  fontFamily: 'Avenir', 
+  fontWeight: FontWeight.bold, 
+  color: lightBlue, 
+  fontSize: 36
+);
+TextStyle loginButtonStyle = new TextStyle(
+  fontFamily: 'Avenir', 
+  fontWeight: FontWeight.w700, 
+  color: lightBlue, 
+  fontSize: 24
+);
+
+TextStyle registerButtonStyle = new TextStyle(
+  fontFamily: 'Avenir', 
+  fontWeight: FontWeight.bold, 
+  color: lightBlue, 
+  fontSize: 24
 );
