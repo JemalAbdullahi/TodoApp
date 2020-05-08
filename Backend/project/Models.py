@@ -13,16 +13,16 @@ class User(db.Model):
 
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(), unique=True)
-    firstname = db.Column(db.String())
-    lastname = db.Column(db.String())
+    # firstname = db.Column(db.String())
+    # lastname = db.Column(db.String())
     password = db.Column(db.String())
     emailaddress = db.Column(db.String())
     api_key = db.Column(db.String())
 
     def __init__(self, api_key, firstname, lastname, emailaddress, password, username):
         self.api_key = api_key
-        self.firstname = firstname
-        self.lastname = lastname
+        # self.firstname = firstname
+        # self.lastname = lastname
         self.emailaddress = emailaddress
         self.password = password
         self.username = username
@@ -35,8 +35,8 @@ class User(db.Model):
             'api_key': self.api_key,
             'id': self.id,
             'username': self.username,
-            'firstname': self.firstname,
-            'lastname': self.lastname,
+            # 'firstname': self.firstname,
+            # lastname': self.lastname,
             'password': self.password,
             'emailaddress': self.emailaddress,
         }

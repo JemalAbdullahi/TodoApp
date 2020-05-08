@@ -36,8 +36,8 @@ class Register(Resource):
 
         user = User(
             api_key=api_key,
-            firstname=json_data['firstname'],
-            lastname=json_data['lastname'],
+            #firstname=json_data['firstname'],
+            #lastname=json_data['lastname'],
             emailaddress=json_data['emailaddress'],
             password=json_data['password'],
             username=json_data['username'],

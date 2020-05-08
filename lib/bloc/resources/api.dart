@@ -9,7 +9,7 @@ class ApiProvider {
   Client client = Client();
   //final _apiKey = 'your_api_key';
 
-  Future<User> registerUser(String username, String firstname, String lastname, String password, String email) async {
+  Future<User> registerUser(String username, String password, String email) async {
     final response = await client
         .post("http://127.0.0.1:5000/api/register",
         // headers: "",
@@ -18,8 +18,6 @@ class ApiProvider {
           	"emailaddress" : email,
 	          "username" : username,
 	          "password" : password,
-	          "firstname" : firstname,
-	          "lastname" : lastname
         }
         ) 
         );
