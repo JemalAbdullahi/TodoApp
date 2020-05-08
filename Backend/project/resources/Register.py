@@ -50,4 +50,6 @@ class Register(Resource):
         return {"status": 'success', 'data': result}, 201
 
     def generate_key(self):
-        return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(50))
+        return ''.join(
+            random.choice(string.ascii_letters + string.digits)
+            for _ in range(50))

@@ -26,24 +26,21 @@ class _LoginPageState extends State<LoginPage> {
           resizeToAvoidBottomInset: false,
           backgroundColor: loginBlue,
           body: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 60),
-            physics: NeverScrollableScrollPhysics(),
+            //physics: NeverScrollableScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minWidth: MediaQuery.of(context).size.width,
                 minHeight: MediaQuery.of(context).size.height,
               ),
-              child: IntrinsicHeight(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Center(
-                      child: !widget.newUser
-                          ? getSignup(widget, widget.login, context)
-                          : getSignin(widget, widget.login, context),
-                    ),
-                  ],
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Center(
+                    child: !widget.newUser
+                        ? getSignup(widget, widget.login, context)
+                        : getSignin(widget, widget.login, context),
+                  ),
+                ],
               ),
             ),
           )),
@@ -85,7 +82,6 @@ Widget getSignin(LoginPage widget, Function login, BuildContext context) {
                   ),
                 ),
               ),
-
               SizedBox(height: 20.0), // <= NEW
               TextFormField(
                 onSaved: (value) => _password = value,
@@ -162,113 +158,135 @@ Widget getSignup(LoginPage widget, Function login, BuildContext context) {
   //String _email;
   return Form(
     key: _formKey,
-    child: Column(
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisAlignment: MainAxisAlignment.center,
+    child: Stack(
       children: <Widget>[
-        SizedBox(height: 20),
-        Text(
-          'Register',
-          style: loginTitleStyle,
-        ),
-        Container(
-          height: 300,
-          padding: EdgeInsets.only(top: 30, right: 40, left: 40),
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                onSaved: (value) => _username = value,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: '* Username',
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+        SizedBox(height: 40),
+        _RegisterCardBackground(),
+        Column(
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 20),
+            Text(
+              'Register',
+              style: loginTitleStyle,
+            ),
+            Container(
+              height: 300,
+              padding: EdgeInsets.only(top: 30, right: 40, left: 40),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    onSaved: (value) => _username = value,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '* Username',
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 8.0, top: 8.0),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                onSaved: (value) => _password = value,
-                obscureText: true,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: '* Password',
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    onSaved: (value) => _password = value,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '* Password',
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 8.0, top: 8.0),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                onSaved: (value) => _password = value,
-                obscureText: true,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: '* Re-enter Password',
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    onSaved: (value) => _password = value,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '* Re-enter Password',
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 8.0, top: 8.0),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                onSaved: (value) => _email = value,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: '* E-mail Address',
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    onSaved: (value) => _email = value,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '* E-mail Address',
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 8.0, top: 8.0),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-        RaisedButton(
-          color: darkBlueGradient,
-          child: Text(
-            "Register",
-            style: loginButtonStyle,
-          ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-              side: BorderSide(color: Colors.blue)),
-          onPressed: () {
-            final form = _formKey.currentState;
-            form.save();
-            if (form.validate()) {
-              userBloc
-                    .registerUser(
-                        _username,
-                        _password,
-                        _email)
-                    .then((_) {
-                  widget.login();
-                });
-            }
-          },
+            ),
+            RaisedButton(
+              color: darkBlueGradient,
+              child: Text(
+                "Register",
+                style: loginButtonStyle,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.blue)),
+              onPressed: () {
+                final form = _formKey.currentState;
+                form.save();
+                if (form.validate()) {
+                  userBloc.registerUser(_username, _password, _email).then((_) {
+                    widget.login();
+                  });
+                }
+              },
+            ),
+          ],
         ),
       ],
     ),
   );
+}
+
+class _RegisterCardBackground extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      //height: 200,
+      //bottom: 10.0,
+          child: Container(
+        height: 200,
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+          ),
+        ),
+      ),
+      top: 50,
+    );
+  }
 }
 /*
 appBar: AppBar(
