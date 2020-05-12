@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:todolist/models/tasks.dart';
+import 'package:todolist/models/tasks.dart';
 import 'dart:convert';
 import 'package:todolist/models/user.dart';
 
@@ -11,7 +11,7 @@ class ApiProvider {
 
   Future<User> registerUser(String username, String password, String email) async {
     final response = await client
-        .post("http://127.0.0.1:5000/api/register",
+        .post("http://10.0.2.2:5000/api/register",
         // headers: "",
         body: jsonEncode(
           {
@@ -34,7 +34,7 @@ class ApiProvider {
 
   Future signinUser(String username, String password, String apiKey) async {
     final response = await client
-        .post("http://127.0.0.1:5000/api/signin",
+        .post("http://10.0.2.2:5000/api/signin",
         headers: {
           "Authorization" : apiKey
         },
@@ -54,10 +54,10 @@ class ApiProvider {
       throw Exception('Failed to load post');
     }
   }
-/*
+
   Future<List<Task>> getUserTasks(String apiKey) async {
     final response = await client
-        .get("http://127.0.0.1:5000/api/tasks",
+        .get("http://10.0.2.2:5000/api/tasks",
         headers: {
           "Authorization" : apiKey
         },
@@ -86,7 +86,7 @@ class ApiProvider {
 
   Future addUserTask(String apiKey, String taskName, String deadline) async {
     final response = await client
-        .post("http://127.0.0.1:5000/api/tasks",
+        .post("http://10.0.2.2:5000/api/tasks",
         headers: {
           "Authorization" : apiKey
         },
@@ -107,7 +107,7 @@ class ApiProvider {
       throw Exception('Failed to load tasks');
     }
   }
-*/
+
  saveApiKey(String apiKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('API_Token', apiKey);

@@ -40,7 +40,7 @@ TextStyle taskListTitleStyle = new TextStyle(
 TextStyle loginTitleStyle = new TextStyle(
   fontFamily: 'Avenir', 
   fontWeight: FontWeight.bold, 
-  color: lightBlue, 
+  color: darkBlueGradient, 
   fontSize: 36
 );
 TextStyle loginButtonStyle = new TextStyle(
@@ -53,6 +53,6 @@ TextStyle loginButtonStyle = new TextStyle(
 TextStyle registerButtonStyle = new TextStyle(
   fontFamily: 'Avenir', 
   fontWeight: FontWeight.bold, 
-  color: lightBlue, 
+  color: red, 
   fontSize: 24
 );

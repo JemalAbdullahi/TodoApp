@@ -1,15 +1,15 @@
 
 class Task {
-  String group;
-  List<Task> tasks;
-  String note;
+  String group; // which group added that project
+  List<Task> tasks; // tasks associated with the project
+  String note;    
   DateTime timeToComplete;
-  bool completed;
+  bool completed;   // has all tasks within the project been completed
   String repeats;
   DateTime deadline;
   List<DateTime> reminders;
-  int taskId;
-  String title;
+  int taskId;   //project Id
+  String title; //project title
   
   Task(this.title, this.completed, this.taskId);
 

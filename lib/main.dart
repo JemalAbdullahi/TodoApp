@@ -53,9 +53,9 @@ class _SignInState extends State<SignIn> {
         } else {
           print("No data");
         }
-        // String apiKey = snapshot.data;
+        //String apiKey = snapshot.data;
         //apiKey.length > 0 ? getHomePage() :
-        return apiKey.length > 0 ? HomePage() : LoginPage(login: login, newUser: false,);
+        return apiKey.length > 0 ? HomePage(logout: logout) : LoginPage(login: login, newUser: false,);
       },
     );
   }
