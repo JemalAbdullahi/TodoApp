@@ -13,6 +13,7 @@ class _CreateTaskOverlayState extends State<CreateTaskOverlay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: lightBlue,
       appBar: AppBar(),
       body: Column(
@@ -98,7 +99,7 @@ class _CreateTaskOverlayState extends State<CreateTaskOverlay> {
                     borderRadius: BorderRadius.circular(18.0),
                     side: BorderSide(color: Colors.transparent),
                   ),
-                  onPressed: null),
+                  onPressed: (){Navigator.pop(context);}),
               SizedBox(width: 28.0),
             ],
           ),
@@ -106,4 +107,7 @@ class _CreateTaskOverlayState extends State<CreateTaskOverlay> {
       ),
     );
   }
+
+
+  
 }

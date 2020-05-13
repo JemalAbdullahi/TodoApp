@@ -3,6 +3,7 @@
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:todolist/models/user.dart';
+import 'package:todolist/models/tasks.dart';
 
 class UserBloc {
   final _repository = Repository();
@@ -25,7 +26,7 @@ class UserBloc {
   }
 }
 
-/*
+
 class TaskBloc {
   final _repository = Repository();
   final _taskSubject = BehaviorSubject<List<Task>>();
@@ -46,5 +47,5 @@ class TaskBloc {
     _tasks = await _repository.getUserTasks(apiKey);
   }
 }
-*/
+
 final userBloc = UserBloc();

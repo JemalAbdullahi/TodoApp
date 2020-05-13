@@ -84,7 +84,7 @@ class ApiProvider {
     }
   }
 
-  Future addUserTask(String apiKey, String taskName, String deadline) async {
+  Future addUserTask(String apiKey, String taskName, String groupName) async {
     final response = await client
         .post("http://10.0.2.2:5000/api/tasks",
         headers: {
@@ -94,7 +94,7 @@ class ApiProvider {
           "note" : "",
 	        "repeats" : "",
 	        "completed" : false,
-	        "deadline" : deadline,
+	        "group" : groupName,
 	        "reminders" : "",
 	        "title" : taskName 
         })

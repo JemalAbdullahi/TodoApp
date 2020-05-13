@@ -5,6 +5,7 @@ import 'package:todolist/UI/pages/home_page.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
+import 'package:todolist/bloc/resources/repository.dart';
 //import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
@@ -37,9 +38,9 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  //TaskBloc tasksBloc;
+  TaskBloc tasksBloc;
   String apiKey = "";
-  //Repository _repository = Repository();
+  Repository _repository = Repository();
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +49,14 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           apiKey = snapshot.data;
-          //tasksBloc = TaskBloc(apiKey);
+          tasksBloc = TaskBloc(apiKey);
           print(apiKey);
         } else {
           print("No data");
         }
         //String apiKey = snapshot.data;
         //apiKey.length > 0 ? getHomePage() :
-        return apiKey.length > 0 ? HomePage(logout: logout) : LoginPage(login: login, newUser: false,);
+        return apiKey.length > 0 ? HomePage(logout: logout, addtask: addTask) : LoginPage(login: login, newUser: false,);
       },
     );
   }
@@ -85,6 +86,10 @@ class _SignInState extends State<SignIn> {
   Future getApiKey() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("API_Token");
+  }
+
+    void addTask(String taskName, String groupName) async {
+     await _repository.addUserTask(this.apiKey, taskName, groupName);
   }
 
   logout() async {

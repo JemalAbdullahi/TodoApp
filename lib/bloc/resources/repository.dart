@@ -10,12 +10,12 @@ class Repository {
 
   Future signinUser(String username, String password, String apiKey) 
     => apiProvider.signinUser(username, password, apiKey);
-  /*
+  
   Future getUserTasks(String apiKey) 
     => apiProvider.getUserTasks(apiKey);
 
-  Future<Null> addUserTask(String apiKey, String taskName, String deadline) async {
-    apiProvider.addUserTask(apiKey, taskName, deadline);
+  Future<Null> addUserTask(String apiKey, String taskName, String groupName) async {
+    apiProvider.addUserTask(apiKey, taskName, groupName);
   }
-*/
+
 }

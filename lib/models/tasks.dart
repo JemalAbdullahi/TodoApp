@@ -6,19 +6,19 @@ class Task {
   DateTime timeToComplete;
   bool completed;   // has all tasks within the project been completed
   String repeats;
-  DateTime deadline;
+  //DateTime deadline;
   List<DateTime> reminders;
   int taskId;   //project Id
   String title; //project title
   
-  Task(this.title, this.completed, this.taskId);
+  Task(this.title, this.completed, this.taskId, this.note);
 
     factory Task.fromJson(Map<String, dynamic> parsedJson) {
     return Task(
       parsedJson['title'],
       parsedJson['completed'],
       parsedJson['id'],
-      //parsedJson['note'],
+      parsedJson['note'],
       );
   }
 
