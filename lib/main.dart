@@ -43,20 +43,35 @@ class _SignInState extends State<SignIn> {
   Repository _repository = Repository();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: signInUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           apiKey = snapshot.data;
-          tasksBloc = TaskBloc(apiKey);
           print(apiKey);
+          if (apiKey.length > 0 && apiKey != null) {
+            tasksBloc = TaskBloc(apiKey);
+          }
         } else {
           print("No data");
         }
         //String apiKey = snapshot.data;
         //apiKey.length > 0 ? getHomePage() :
-        return apiKey.length > 0 ? HomePage(logout: logout, addTaskDialog: addTaskDialog) : LoginPage(login: login, newUser: false,);
+        return apiKey.length > 0
+            ? HomePage(
+                logout: logout,
+                addTaskDialog: addTaskDialog,
+                tasksBloc: tasksBloc)
+            : LoginPage(
+                login: login,
+                newUser: false,
+              );
       },
     );
   }
@@ -88,8 +103,11 @@ class _SignInState extends State<SignIn> {
     return prefs.getString("API_Token");
   }
 
-    void addTask(String taskName, String groupName) async {
-     await _repository.addUserTask(this.apiKey, taskName, groupName);
+  void addTask(String taskName, String groupName) async {
+    await _repository.addUserTask(this.apiKey, taskName, groupName);
+    setState(() {
+      build(context);
+    });
   }
 
   logout() async {
@@ -99,8 +117,6 @@ class _SignInState extends State<SignIn> {
       build(context);
     });
   }
-
-
 
   void addTaskDialog() {
     TextEditingController _taskNameController = new TextEditingController();
@@ -167,9 +183,10 @@ class _SignInState extends State<SignIn> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.transparent),
                       ),
-                      onPressed: (){
-                        if(_taskNameController.text != null){
-                          addTask(_taskNameController.text, _groupNameController.text);
+                      onPressed: () {
+                        if (_taskNameController.text != null) {
+                          addTask(_taskNameController.text,
+                              _groupNameController.text);
                           Navigator.pop(context);
                         }
                       },

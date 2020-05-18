@@ -133,6 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text("Create One", style: registerButtonStyle),
                   onPressed: () {
                     _newUser = true;
+                    
                   },
                 )
               ],

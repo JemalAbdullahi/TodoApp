@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:todolist/UI/tabs/todo_tab.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback logout;
   final VoidCallback addTaskDialog;
+  final TaskBloc tasksBloc;
   final String title;
 
-  HomePage({this.title, this.logout, this.addTaskDialog});
+  HomePage({this.title, this.logout, this.addTaskDialog, this.tasksBloc});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -36,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             ),*/
         //backgroundColor: red,
         body: Container(
-          child: ToDoTab(widget.addTaskDialog),
+          child: ToDoTab(widget.addTaskDialog, widget.tasksBloc),
         ),
       ),
     );

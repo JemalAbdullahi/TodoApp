@@ -21,6 +21,7 @@ class TaskListItemWidget extends StatelessWidget {
       ),
       child: Container(
         height: 90,
+        //width: 20,
         //color: Theme.of(context).primaryColorDark,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -35,9 +36,9 @@ class TaskListItemWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(title, style: toDoListTileStyle),
-              SizedBox(width: 180.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
