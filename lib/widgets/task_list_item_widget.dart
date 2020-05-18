@@ -6,15 +6,17 @@ import 'package:todolist/models/global.dart';
 class TaskListItemWidget extends StatelessWidget {
   final String title;
   final String keyValue;
+    final VoidCallback addTaskDialog;
 
-  TaskListItemWidget({this.title, this.keyValue});
+
+  TaskListItemWidget({this.title, this.keyValue, this.addTaskDialog});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => TaskListTab(),
+          builder: (_) => TaskListTab(addTaskDialog),
         ),
       ),
       child: Container(

@@ -54,10 +54,10 @@ class _TitleCardBackground extends StatelessWidget {
 }
 
 class _TitleCardButton extends StatefulWidget {
-  final VoidCallback addTask;
+  final VoidCallback addTaskDialog;
   
 
-  _TitleCardButton(this.addTask);
+  _TitleCardButton(this.addTaskDialog);
 
   @override
   __TitleCardButtonState createState() => __TitleCardButtonState();
@@ -86,7 +86,7 @@ class __TitleCardButtonState extends State<_TitleCardButton> {
       origin: Offset(-1800, -950),
       child: FloatingActionButton(
         onPressed: () {
-          _addTaskDialog();
+          widget.addTaskDialog();
           /*Navigator.push(
             context,
             MaterialPageRoute(
@@ -99,7 +99,7 @@ class __TitleCardButtonState extends State<_TitleCardButton> {
     );
   }
 
-  void _addTaskDialog() {
+  /* void _addTaskDialog() {
     TextEditingController _taskNameController = new TextEditingController();
     TextEditingController _groupNameController = new TextEditingController();
     showDialog(
@@ -180,7 +180,7 @@ class __TitleCardButtonState extends State<_TitleCardButton> {
         );
       },
     );
-  }
+  } */
 
 
 }

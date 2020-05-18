@@ -7,9 +7,9 @@ import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/task_list_item_widget.dart';
 
 class ToDoTab extends StatefulWidget {
-  final VoidCallback addtask;
+  final VoidCallback addTaskDialog;
 
-  ToDoTab(this.addtask);
+  ToDoTab(this.addTaskDialog);
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
@@ -36,7 +36,7 @@ class _ToDoTabState extends State<ToDoTab> {
           ),
         ),
         _buildReorderableList(context, tasks),
-        TitleCard('To Do', widget.addtask),
+        TitleCard('To Do', widget.addTaskDialog),
       ],
     );
   }
@@ -66,6 +66,7 @@ class _ToDoTabState extends State<ToDoTab> {
       key: Key(item.taskId.toString()),
       title: TaskListItemWidget(
         title: item.title,
+        addTaskDialog: widget.addTaskDialog,
       ),
     );
   }

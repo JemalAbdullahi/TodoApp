@@ -4,10 +4,10 @@ import 'package:todolist/UI/tabs/todo_tab.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback logout;
-  final VoidCallback addtask;
+  final VoidCallback addTaskDialog;
   final String title;
 
-  HomePage({this.title, this.logout, this.addtask});
+  HomePage({this.title, this.logout, this.addTaskDialog});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
             ),*/
         //backgroundColor: red,
         body: Container(
-          child: ToDoTab(widget.addtask),
+          child: ToDoTab(widget.addTaskDialog),
         ),
       ),
     );

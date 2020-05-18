@@ -56,7 +56,7 @@ class _SignInState extends State<SignIn> {
         }
         //String apiKey = snapshot.data;
         //apiKey.length > 0 ? getHomePage() :
-        return apiKey.length > 0 ? HomePage(logout: logout, addtask: addTask) : LoginPage(login: login, newUser: false,);
+        return apiKey.length > 0 ? HomePage(logout: logout, addTaskDialog: addTaskDialog) : LoginPage(login: login, newUser: false,);
       },
     );
   }
@@ -98,5 +98,90 @@ class _SignInState extends State<SignIn> {
     setState(() {
       build(context);
     });
+  }
+
+
+
+  void addTaskDialog() {
+    TextEditingController _taskNameController = new TextEditingController();
+    TextEditingController _groupNameController = new TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: lightBlue,
+          content: Container(
+            height: 250,
+            width: 90,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text("Add New Task", style: loginTitleStyle),
+                TextField(
+                  controller: _taskNameController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.only(
+                        left: 14.0, bottom: 8.0, top: 8.0),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'Project/Task Name',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: _groupNameController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.only(
+                        left: 14.0, bottom: 8.0, top: 8.0),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'Group Name',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    RaisedButton(
+                      child: Text(
+                        "Save",
+                        style: loginButtonStyle,
+                      ),
+                      disabledColor: darkBlueGradient,
+                      color: lightBlueGradient,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.transparent),
+                      ),
+                      onPressed: (){
+                        if(_taskNameController.text != null){
+                          addTask(_taskNameController.text, _groupNameController.text);
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                    SizedBox(width: 8.0),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

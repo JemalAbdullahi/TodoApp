@@ -3,6 +3,10 @@ import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/models/global.dart';
 
 class TaskListTab extends StatefulWidget {
+    final VoidCallback addTaskDialog;
+
+  TaskListTab(this.addTaskDialog);
+
   @override
   _TaskListTabState createState() => _TaskListTabState();
 }
@@ -37,7 +41,7 @@ class _TaskListTabState extends State<TaskListTab> {
                 ),
               ),
             ),
-            TitleCard('Task List'),
+            TitleCard('Task List', widget.addTaskDialog),
           ],
         ),
       ),
