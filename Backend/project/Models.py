@@ -47,11 +47,53 @@ class Task(db.Model):
     # deadline = db.Column(db.String())
     reminders = db.Column(db.String())
     group = db.Column(db.String())
+    task_key = db.Column(db.String())
 
     def __init__(self, title, user_id, note, completed, repeats, group,
-                 reminders):
+                 reminders, task_key):
         self.title = title
         self.user_id = user_id
+        #self.deadline = deadline
+        self.reminders = reminders
+        self.completed = completed
+        self.note = note
+        self.group = group
+        self.repeats = repeats
+        self.task_key = task_key
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'title': self.title,
+            'user_id': self.user_id,
+            'id': self.id,
+            'repeats': self.repeats,
+            # 'deadline': self.deadline,
+            'reminders': self.reminders,
+            'completed': self.completed,
+            'note': self.note,
+            'task_key': self.task
+        }
+
+class SubTask(db.Model):
+    __tablename__ = 'subtasks'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    task_id = db.Column(db.Integer(), db.ForeignKey('tasks.id'))
+    title = db.Column(db.String())
+    note = db.Column(db.String())
+    completed = db.Column(db.Boolean(), default=False, nullable=False)
+    repeats = db.Column(db.String())
+    # deadline = db.Column(db.String())
+    reminders = db.Column(db.String())
+    group = db.Column(db.String())
+
+    def __init__(self, title, task_id, note, completed, repeats, group,
+                 reminders):
+        self.title = title
+        self.task_id = task_id
         #self.deadline = deadline
         self.reminders = reminders
         self.completed = completed
@@ -65,7 +107,7 @@ class Task(db.Model):
     def serialize(self):
         return {
             'title': self.title,
-            'user_id': self.user_id,
+            'task_id': self.task_id,
             'id': self.id,
             'repeats': self.repeats,
             # 'deadline': self.deadline,

@@ -18,4 +18,11 @@ class Repository {
     apiProvider.addUserTask(apiKey, taskName, groupName);
   }
 
+  Future getSubTasks(String taskKey) 
+    => apiProvider.getSubTasks(taskKey);
+
+  Future<Null> addSubTask(String taskKey, String subtaskName, String notes) async {
+    apiProvider.addSubTask(taskKey, subtaskName, notes);
+  }
+
 }

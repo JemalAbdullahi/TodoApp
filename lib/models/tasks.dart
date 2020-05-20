@@ -11,11 +11,12 @@ class Task {
   int taskId;   //project Id
   String title; //project title
   
-  Task(this.title, this.completed, this.taskId, this.note);
+  Task(this.title, this.group, this.completed, this.taskId, this.note);
 
     factory Task.fromJson(Map<String, dynamic> parsedJson) {
     return Task(
       parsedJson['title'],
+      parsedJson['group'],
       parsedJson['completed'],
       parsedJson['id'],
       parsedJson['note'],

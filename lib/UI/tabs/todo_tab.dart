@@ -82,10 +82,11 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildListTile(BuildContext context, Task item) {
+    print(item.group);
     return ListTile(
       key: Key(item.taskId.toString()),
       title: TaskListItemWidget(
-        title: item.title,
+        task: item,
         addTaskDialog: widget.addTaskDialog,
       ),
     );

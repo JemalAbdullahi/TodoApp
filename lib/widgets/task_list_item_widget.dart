@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+
 import 'package:todolist/UI/tabs/tasklist_tab.dart';
-
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/tasks.dart';
 
-class TaskListItemWidget extends StatelessWidget {
-  final String title;
+class TaskListItemWidget extends StatefulWidget {
+  final Task task;
   final String keyValue;
-    final VoidCallback addTaskDialog;
+  final VoidCallback addTaskDialog;
 
+  TaskListItemWidget({this.task, this.keyValue, this.addTaskDialog});
 
-  TaskListItemWidget({this.title, this.keyValue, this.addTaskDialog});
+  @override
+  _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
+}
+
+class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   @override
   Widget build(BuildContext context) {
+    print(widget.task.group);
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => TaskListTab(addTaskDialog),
+          builder: (_) => TaskListTab(widget.addTaskDialog),
         ),
       ),
       child: Container(
@@ -38,15 +45,28 @@ class TaskListItemWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(title, style: toDoListTileStyle),
+              Checkbox(
+                  value: widget.task.completed,
+                  onChanged: (bool newValue) {
+                    setState(() {
+                      widget.task.completed = newValue;
+                    });
+                  }),
+              Text(widget.task.title, style: toDoListTileStyle),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text(
-                    'Group',
-                    style: toDoListSubtitleStyle,
-                    textAlign: TextAlign.right,
-                  ),
+                  widget.task.group != null
+                      ? Text(
+                          widget.task.group,
+                          style: toDoListSubtitleStyle,
+                          textAlign: TextAlign.right,
+                        )
+                      : Text(
+                          'group',
+                          style: toDoListSubtitleStyle,
+                          textAlign: TextAlign.right,
+                        ),
                   SizedBox(height: 20),
                 ],
               ),

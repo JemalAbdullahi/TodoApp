@@ -110,6 +110,13 @@ class _SignInState extends State<SignIn> {
     });
   }
 
+  void addSubTask(String taskKey, String subtaskName, String notes) async {
+    await _repository.addSubTask(taskKey, subtaskName, notes);
+    setState(() {
+      build(context);
+    });
+  }
+
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("API_Token", "");
@@ -201,4 +208,94 @@ class _SignInState extends State<SignIn> {
       },
     );
   }
+
+
+  /* void addSubTaskDialog() {
+    TextEditingController _subtaskNameController = new TextEditingController();
+    TextEditingController _noteController = new TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: lightBlue,
+          content: Container(
+            height: 250,
+            width: 90,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text("Add New SubTask", style: loginTitleStyle),
+                TextField(
+                  controller: _subtaskNameController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.only(
+                        left: 14.0, bottom: 8.0, top: 8.0),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'SubTask Name',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: _noteController,
+                  minLines: 3,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.only(
+                        left: 14.0, bottom: 8.0, top: 8.0),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'Notes',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    RaisedButton(
+                      child: Text(
+                        "Save",
+                        style: loginButtonStyle,
+                      ),
+                      disabledColor: darkBlueGradient,
+                      color: lightBlueGradient,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.transparent),
+                      ),
+                      onPressed: () {
+                        if (_subtaskNameController.text != null) {
+                          addSubTask("", _subtaskNameController.text,
+                              _noteController.text);
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                    SizedBox(width: 8.0),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  } */
+
+
+
 }
