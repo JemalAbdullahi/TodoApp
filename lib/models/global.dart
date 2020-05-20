@@ -9,6 +9,29 @@ Color red = new Color(0xfff20f38);
 Color darkRed = new Color(0xffbf0426);
 Color brownRed = new Color(0xff590209);
 
+final hintTextStyle = TextStyle(
+  color: Colors.white54,
+  fontFamily: 'OpenSans',
+);
+
+final labelStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'OpenSans',
+);
+
+final boxDecorationStyle = BoxDecoration(
+  color: Color(0xff57CBF2),
+  borderRadius: BorderRadius.circular(10.0),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 6.0,
+      offset: Offset(0, 2),
+    ),
+  ],
+);
+
 TextStyle cardTitleStyle = new TextStyle(
   fontFamily: 'Avenir', 
   fontWeight: FontWeight.bold, 
