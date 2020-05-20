@@ -11,19 +11,27 @@ class Tasks(Resource):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
 
+
         if not header:
             return {"Messege" : "No api key!"}, 400
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
+                task_key = self.generate_key()
+                task = Task.query.filter_by(task_key=task_key).first()
+                while task:
+                    task_key = self.generate_key()
+                    task = Task.query.filter_by(task_key=task_key).first()
+                    
                 task = Task(
                     title = json_data['title'],
                     user_id = user.id,
                     note = json_data['note'],
                     completed = json_data['completed'],
                     repeats = json_data['repeats'],
-                    deadline = json_data['deadline'],
+                    group = json_data['group'],
                     reminders = json_data['reminders'],
+                    task_key = task_key,
                 )
                 db.session.add(task)
                 db.session.commit()
@@ -49,3 +57,8 @@ class Tasks(Resource):
 
 
             return {"status": 'success', 'data': result}, 201
+
+    def generate_key(self):
+        return ''.join(
+            random.choice(string.ascii_letters + string.digits)
+            for _ in range(50))
