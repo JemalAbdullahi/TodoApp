@@ -26,8 +26,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'To Do List',
         debugShowCheckedModeBanner: false,
-        theme:
-            ThemeData(primaryColorLight: lightBlue, primaryColorDark: darkBlue),
+        theme: ThemeData(
+            primaryColorLight: lightBlue,
+            primaryColorDark: darkBlue,
+            fontFamily: 'OpenSans'),
         home: SignIn());
   }
 }
@@ -209,7 +211,6 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-
   /* void addSubTaskDialog() {
     TextEditingController _subtaskNameController = new TextEditingController();
     TextEditingController _noteController = new TextEditingController();
@@ -295,7 +296,5 @@ class _SignInState extends State<SignIn> {
       },
     );
   } */
-
-
 
 }

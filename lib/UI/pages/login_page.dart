@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
@@ -144,7 +145,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildSignupBtn() {
     return GestureDetector(
       onTap: () {
-        _newUser = true;
+        setState(() {
+          _newUser = true;
+        });
+        //_newUser = true;
+        //build(context);
+        print("Sign UP");
       },
       child: RichText(
         text: TextSpan(
@@ -172,13 +178,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   loginFunc() {
-    if (usernameText.text != "" && passwordText.text != "") {
-      userBloc.signinUser(usernameText.text, passwordText.text, "").then((_) {
-        print(usernameText.text + " " + passwordText.text);
-        widget.login();
-      });
-    } else
-      print("enter name and password");
+    setState(() {
+      if (usernameText.text != "" && passwordText.text != "") {
+        userBloc.signinUser(usernameText.text, passwordText.text, "").then((_) {
+          print(usernameText.text + " " + passwordText.text);
+          widget.login();
+        });
+      } else
+        print("enter name and password");
+    });
   }
 
   signupFunc() {
@@ -199,7 +207,12 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _newUser ? _getSignUpScreen() : _getSigninScreen());
+    return Scaffold(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: _newUser ? _getSignUpScreen() : _getSigninScreen(),
+      ),
+    );
   }
 
   Widget _getSigninScreen() {
@@ -299,6 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 30),
                 _buildEmailTF(emailText),
                 _buildSigningUpBtn('SIGN UP'),
+                _buildBackToSignIn()
               ],
             ),
           ),
@@ -319,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
           height: 60,
           child: TextField(
             controller: emailText,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -331,6 +345,21 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildBackToSignIn() {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: FlatButton(
+        onPressed: () {
+          setState(() {
+            _newUser = false;
+          });
+        },
+        padding: EdgeInsets.only(right: 0.0),
+        child: Text('Back to Sign In', style: labelStyle),
+      ),
     );
   }
 }

@@ -69,13 +69,15 @@ class Task(db.Model):
             'title': self.title,
             'user_id': self.user_id,
             'id': self.id,
+            'group': self.group,
             'repeats': self.repeats,
             # 'deadline': self.deadline,
             'reminders': self.reminders,
             'completed': self.completed,
             'note': self.note,
-            'task_key': self.task
+            'task_key': self.task_key
         }
+
 
 class SubTask(db.Model):
     __tablename__ = 'subtasks'

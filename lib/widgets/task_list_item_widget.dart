@@ -18,7 +18,7 @@ class TaskListItemWidget extends StatefulWidget {
 class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   @override
   Widget build(BuildContext context) {
-    print(widget.task.group);
+    //print(widget.task.group);
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
