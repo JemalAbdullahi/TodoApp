@@ -44,7 +44,6 @@ class Task(db.Model):
     note = db.Column(db.String())
     completed = db.Column(db.Boolean(), default=False, nullable=False)
     repeats = db.Column(db.String())
-    # deadline = db.Column(db.String())
     reminders = db.Column(db.String())
     group = db.Column(db.String())
     task_key = db.Column(db.String())
@@ -53,7 +52,6 @@ class Task(db.Model):
                  reminders, task_key):
         self.title = title
         self.user_id = user_id
-        #self.deadline = deadline
         self.reminders = reminders
         self.completed = completed
         self.note = note
@@ -71,7 +69,6 @@ class Task(db.Model):
             'id': self.id,
             'group': self.group,
             'repeats': self.repeats,
-            # 'deadline': self.deadline,
             'reminders': self.reminders,
             'completed': self.completed,
             'note': self.note,

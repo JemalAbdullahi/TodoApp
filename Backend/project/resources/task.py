@@ -69,13 +69,13 @@ class Tasks(Resource):
                 if (task.note != json_data['note']):
                     task.note = json_data['note']
                 if (task.completed != json_data['completed']):
-                    task.completed = json_data['completed'],
+                    task.completed = json_data['completed']
                 if (task.repeats != json_data['repeats']):
                     task.repeats = json_data['repeats'],
                 if (task.group != json_data['group']):
-                    task.group = json_data['group'],
+                    task.group = json_data['group']
                 if (task.reminders != json_data['reminders']):
-                    task.reminders = json_data['reminders'],
+                    task.reminders = json_data['reminders']
 
                 db.session.commit()
 
