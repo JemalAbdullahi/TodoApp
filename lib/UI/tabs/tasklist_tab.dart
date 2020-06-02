@@ -4,6 +4,7 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/subtasks.dart';
+import 'package:todolist/widgets/subtask_list_item_widget.dart';
 
 class TaskListTab extends StatefulWidget {
   final Repository repository;
@@ -98,8 +99,7 @@ class _TaskListTabState extends State<TaskListTab> {
     print(item.group);
     return ListTile(
       key: Key(item.subtaskId.toString()),
-      title: Text(item.title),
-      subtitle: Text(item.note),
+      title: SubTaskListItemWidget(subTask: item, repository: widget.repository),
     );
   }
 

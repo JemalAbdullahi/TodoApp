@@ -1,45 +1,26 @@
 import 'package:flutter/material.dart';
-
-import 'package:todolist/UI/tabs/tasklist_tab.dart';
-import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
-import 'package:todolist/models/tasks.dart';
+import 'package:todolist/models/subtasks.dart';
 
-class TaskListItemWidget extends StatefulWidget {
-  final Task task;
-  final String keyValue;
-  final Repository repository;
+class SubTaskListItemWidget extends StatefulWidget {
+    final SubTask subTask;
+    final Repository repository;
 
-  TaskListItemWidget({this.task, this.keyValue, this.repository});
 
+  SubTaskListItemWidget({this.subTask, this.repository});
   @override
-  _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
+  _SubTaskListItemWidgetState createState() => _SubTaskListItemWidgetState();
 }
 
-class _TaskListItemWidgetState extends State<TaskListItemWidget> {
-  SubTaskBloc subTaskBloc;
-
-  @override
-  void initState() {
-    subTaskBloc = SubTaskBloc(widget.task.taskKey);
-    super.initState();
-  }
+class _SubTaskListItemWidgetState extends State<SubTaskListItemWidget> {
   @override
   Widget build(BuildContext context) {
-    //print(widget.task.group);
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => TaskListTab(widget.repository, widget.task.taskKey, subTaskBloc),
-        ),
-      ),
-      child: Container(
+    return Container(
         height: 90,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: darkBlue, 
+          color: Colors.blue, 
           boxShadow: [
             new BoxShadow(
               color: Colors.black.withOpacity(0.5),
@@ -53,25 +34,24 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Checkbox(
-                  value: widget.task.completed,
+                  value: widget.subTask.completed,
                   onChanged: (bool newValue) {
                     setState(() {
-                      widget.task.completed = true;
-                      widget.repository.updateUserTask(widget.task);
+                      widget.subTask.completed = newValue;
                     });
                   }),
-              Text(widget.task.title, style: toDoListTileStyle),
+              Text(widget.subTask.title, style: toDoListTileStyle),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  widget.task.group != null
+                  widget.subTask.note != null
                       ? Text(
-                          widget.task.group,
+                          widget.subTask.note,
                           style: toDoListSubtitleStyle,
                           textAlign: TextAlign.right,
                         )
                       : Text(
-                          'group',
+                          '',
                           style: toDoListSubtitleStyle,
                           textAlign: TextAlign.right,
                         ),
@@ -81,7 +61,6 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }

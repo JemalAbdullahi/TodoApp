@@ -86,7 +86,27 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
-      throw Exception('Failed to load tasks');
+      throw Exception('Failed to post tasks');
+    }
+  }
+
+  Future updateUserTask(Task task) async {
+    final response = await client.put("http://10.0.2.2:5000/api/tasks",
+        headers: {"Authorization": task.taskKey},
+        body: jsonEncode({
+          "note": task.note,
+          "repeats": task.repeats,
+          "completed": task.completed,
+          "group": task.group,
+          "reminders": task.reminders,
+          "title": task.title
+        }));
+    if (response.statusCode == 201) {
+      print("Task Updated");
+    } else {
+      // If that call was not successful, throw an error.
+      print(json.decode(response.body));
+      throw Exception('Failed to update tasks');
     }
   }
 

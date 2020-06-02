@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:todolist/models/tasks.dart';
+
 import 'api.dart';
 import 'package:todolist/models/user.dart';
 
@@ -16,6 +18,10 @@ class Repository {
 
   Future<Null> addUserTask(String apiKey, String taskName, String groupName) async {
     apiProvider.addUserTask(apiKey, taskName, groupName);
+  }
+
+  Future<Null> updateUserTask(Task task) async {
+    apiProvider.updateUserTask(task);
   }
 
   Future getSubTasks(String taskKey) 

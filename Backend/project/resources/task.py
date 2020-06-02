@@ -64,18 +64,23 @@ class Tasks(Resource):
         else:
             task = Task.query.filter_by(task_key=header).first()
             if task:
-                task.title = json_data['title'],
-                task.note = json_data['note'],
-                task.completed = json_data['completed'],
-                task.repeats = json_data['repeats'],
-                task.group = json_data['group'],
-                task.reminders = json_data['reminders'],
-                task.task_key = json_data['task_key'],
+                if (task.title != json_data['title']):
+                    task.title = json_data['title']
+                if (task.note != json_data['note']):
+                    task.note = json_data['note']
+                if (task.completed != json_data['completed']):
+                    task.completed = json_data['completed'],
+                if (task.repeats != json_data['repeats']):
+                    task.repeats = json_data['repeats'],
+                if (task.group != json_data['group']):
+                    task.group = json_data['group'],
+                if (task.reminders != json_data['reminders']):
+                    task.reminders = json_data['reminders'],
 
                 db.session.commit()
 
                 result = Task.serialize(task)
-                return {"status": 'success', 'data': result}, 200
+                return {"status": 'success', 'data': result}, 201
             else:
                 return {"Messege": "No Task with that task key"}, 402
 

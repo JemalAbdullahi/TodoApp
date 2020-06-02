@@ -42,7 +42,7 @@ class Task(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
     title = db.Column(db.String())
     note = db.Column(db.String())
-    completed = db.Column(db.Boolean(), default=False, nullable=False)
+    completed = db.Column(db.Boolean(), default=True, nullable=True)
     repeats = db.Column(db.String())
     # deadline = db.Column(db.String())
     reminders = db.Column(db.String())
