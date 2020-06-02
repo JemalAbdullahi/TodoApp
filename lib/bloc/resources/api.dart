@@ -114,7 +114,7 @@ class ApiProvider {
   }
 
   Future addSubTask(String taskKey, String subtaskName, String notes) async {
-    final response = await client.post("http://10.0.2.2:5000/api/tasks",
+    final response = await client.post("http://10.0.2.2:5000/api/subtasks",
         headers: {"Authorization": taskKey},
         body: jsonEncode({
           "note": notes,

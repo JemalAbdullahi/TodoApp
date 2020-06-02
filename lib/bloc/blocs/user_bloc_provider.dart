@@ -1,5 +1,7 @@
 //import 'package:todolist/models/tasks.dart';
 
+import 'package:todolist/models/subtasks.dart';
+
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:todolist/models/user.dart';
@@ -26,7 +28,6 @@ class UserBloc {
   }
 }
 
-
 class TaskBloc {
   final _repository = Repository();
   final _taskSubject = BehaviorSubject<List<Task>>();
@@ -41,10 +42,29 @@ class TaskBloc {
     });
   }
 
-
   Stream<List<Task>> get getTasks => _taskSubject.stream;
-  Future<Null> _updateTasks(String apiKey) async {
-    _tasks = await _repository.getUserTasks(apiKey);
+  Future<Null> _updateTasks(String taskKey) async {
+    _tasks = await _repository.getUserTasks(taskKey);
+  }
+}
+
+class SubTaskBloc {
+  final _repository = Repository();
+  final _subTaskSubject = BehaviorSubject<List<SubTask>>();
+  String taskKey;
+
+  var _subTasks = <SubTask>[];
+
+  SubTaskBloc(String taskKey) {
+    this.taskKey = taskKey;
+    _updateSubTasks(taskKey).then((_) {
+      _subTaskSubject.add(_subTasks);
+    });
+  }
+
+  Stream<List<SubTask>> get getSubTasks => _subTaskSubject.stream;
+  Future<Null> _updateSubTasks(String taskKey) async {
+    _subTasks = await _repository.getSubTasks(taskKey);
   }
 }
 

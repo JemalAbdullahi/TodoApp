@@ -6,14 +6,12 @@ import string
 
 
 class Tasks(Resource):
-
     def post(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
 
-
         if not header:
-            return {"Messege" : "No api key!"}, 400
+            return {"Messege": "No api key!"}, 400
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -22,16 +20,16 @@ class Tasks(Resource):
                 while task:
                     task_key = self.generate_key()
                     task = Task.query.filter_by(task_key=task_key).first()
-                    
+
                 task = Task(
-                    title = json_data['title'],
-                    user_id = user.id,
-                    note = json_data['note'],
-                    completed = json_data['completed'],
-                    repeats = json_data['repeats'],
-                    group = json_data['group'],
-                    reminders = json_data['reminders'],
-                    task_key = task_key,
+                    title=json_data['title'],
+                    user_id=user.id,
+                    note=json_data['note'],
+                    completed=json_data['completed'],
+                    repeats=json_data['repeats'],
+                    group=json_data['group'],
+                    reminders=json_data['reminders'],
+                    task_key=task_key,
                 )
                 db.session.add(task)
                 db.session.commit()
@@ -39,7 +37,7 @@ class Tasks(Resource):
                 result = Task.serialize(task)
                 return {"status": 'success', 'data': result}, 201
             else:
-                return {"Messege" : "No user with that api key"}, 402
+                return {"Messege": "No user with that api key"}, 402
 
     def get(self):
         result = []
@@ -47,7 +45,7 @@ class Tasks(Resource):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege" : "No api key!"}, 400
+            return {"Messege": "No api key!"}, 400
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -55,33 +53,31 @@ class Tasks(Resource):
                 for task in tasks:
                     result.append(Task.serialize(task))
 
-
             return {"status": 'success', 'data': result}, 201
 
     def put(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
 
-
         if not header:
-            return {"Messege" : "No task key!"}, 400
+            return {"Messege": "No task key!"}, 400
         else:
             task = Task.query.filter_by(task_key=header).first()
-            if task:   
+            if task:
                 task.title = json_data['title'],
                 task.note = json_data['note'],
                 task.completed = json_data['completed'],
                 task.repeats = json_data['repeats'],
                 task.group = json_data['group'],
-                task.reminders = json_data['reminders']
-    
+                task.reminders = json_data['reminders'],
+                task.task_key = json_data['task_key'],
+
                 db.session.commit()
-                
 
                 result = Task.serialize(task)
                 return {"status": 'success', 'data': result}, 200
             else:
-                return {"Messege" : "No Task with that task key"}, 402
+                return {"Messege": "No Task with that task key"}, 402
 
     def generate_key(self):
         return ''.join(

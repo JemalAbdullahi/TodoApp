@@ -10,8 +10,9 @@ class Task {
   List<DateTime> reminders;
   int taskId;   //project Id
   String title; //project title
+  String taskKey;
   
-  Task(this.title, this.group, this.completed, this.taskId, this.note);
+  Task(this.title, this.group, this.completed, this.taskId, this.note, this.taskKey);
 
     factory Task.fromJson(Map<String, dynamic> parsedJson) {
     return Task(
@@ -20,6 +21,7 @@ class Task {
       parsedJson['completed'],
       parsedJson['id'],
       parsedJson['note'],
+      parsedJson['task_key'],
       );
   }
 

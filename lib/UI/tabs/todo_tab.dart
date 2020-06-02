@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
+import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/task_list_item_widget.dart';
@@ -10,20 +11,15 @@ import 'package:todolist/widgets/task_list_item_widget.dart';
 class ToDoTab extends StatefulWidget {
   final VoidCallback addTaskDialog;
   final TaskBloc tasksBloc;
+  final Repository repository;
 
-  ToDoTab(this.addTaskDialog, this.tasksBloc);
+  ToDoTab(this.addTaskDialog, this.tasksBloc, this.repository);
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
 
 class _ToDoTabState extends State<ToDoTab> {
   List<Task> tasks = [];
-
-  @override
-  void initState() {
-    //tasks = tasksBloc;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +83,7 @@ class _ToDoTabState extends State<ToDoTab> {
       key: Key(item.taskId.toString()),
       title: TaskListItemWidget(
         task: item,
-        addTaskDialog: widget.addTaskDialog,
+        repository: widget.repository,
       ),
     );
   }

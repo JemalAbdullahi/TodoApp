@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 
 import 'package:todolist/UI/tabs/tasklist_tab.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
+import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/tasks.dart';
 
 class TaskListItemWidget extends StatefulWidget {
   final Task task;
   final String keyValue;
-  final VoidCallback addTaskDialog;
+  final Repository repository;
 
-  TaskListItemWidget({this.task, this.keyValue, this.addTaskDialog});
+  TaskListItemWidget({this.task, this.keyValue, this.repository});
 
   @override
   _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
 }
 
 class _TaskListItemWidgetState extends State<TaskListItemWidget> {
+  SubTaskBloc subTaskBloc;
+
+  @override
+  void initState() {
+    subTaskBloc = SubTaskBloc(widget.task.taskKey);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     //print(widget.task.group);
@@ -23,16 +32,14 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => TaskListTab(widget.addTaskDialog),
+          builder: (_) => TaskListTab(widget.repository, widget.task.taskKey, subTaskBloc),
         ),
       ),
       child: Container(
         height: 90,
-        //width: 20,
-        //color: Theme.of(context).primaryColorDark,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: darkBlue, //Theme.of(context).primaryColorDark,
+          color: darkBlue, 
           boxShadow: [
             new BoxShadow(
               color: Colors.black.withOpacity(0.5),
@@ -77,26 +84,3 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
     );
   }
 }
-
-/*
-ListTile(
-        leading: Checkbox(value: false, onChanged: null),
-        title: Text(title, style: toDoListTileStyle),
-        subtitle: Text(
-          'Group',
-          style: toDoListSubtitleStyle,
-          textAlign: TextAlign.right,
-        ),
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 25.0,
-          ),
-        ],
-        color: darkBlue,
-      ),
-
-*/
