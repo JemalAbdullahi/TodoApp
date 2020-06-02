@@ -1,4 +1,5 @@
 {
-    "python.formatting.provider": "yapf",
-    "python.pythonPath": "C:\\Users\\Jemal\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe"
+  "python.formatting.provider": "yapf",
+  "python.pythonPath": "Backend\\env\\Scripts\\python.exe",
+  "python.autoComplete.extraPaths": ["./Backend/project"]
 }
