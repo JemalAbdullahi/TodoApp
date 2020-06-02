@@ -58,6 +58,31 @@ class Tasks(Resource):
 
             return {"status": 'success', 'data': result}, 201
 
+    def put(self):
+        header = request.headers["Authorization"]
+        json_data = request.get_json(force=True)
+
+
+        if not header:
+            return {"Messege" : "No task key!"}, 400
+        else:
+            task = Task.query.filter_by(task_key=header).first()
+            if task:   
+                task.title = json_data['title'],
+                task.note = json_data['note'],
+                task.completed = json_data['completed'],
+                task.repeats = json_data['repeats'],
+                task.group = json_data['group'],
+                task.reminders = json_data['reminders']
+    
+                db.session.commit()
+                
+
+                result = Task.serialize(task)
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {"Messege" : "No Task with that task key"}, 402
+
     def generate_key(self):
         return ''.join(
             random.choice(string.ascii_letters + string.digits)
