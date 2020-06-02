@@ -10,6 +10,7 @@ class Task {
   List<DateTime> reminders;
   int taskId;   //project Id
   String title; //project title
+  int index;
   String taskKey;
   
   Task(this.title, this.group, this.completed, this.taskId, this.note, this.taskKey);

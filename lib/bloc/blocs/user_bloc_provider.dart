@@ -31,20 +31,24 @@ class UserBloc {
 class TaskBloc {
   final _repository = Repository();
   final _taskSubject = BehaviorSubject<List<Task>>();
-  String apiKey;
+  String _apiKey;
 
   var _tasks = <Task>[];
 
   TaskBloc(String apiKey) {
-    this.apiKey = apiKey;
-    _updateTasks(apiKey).then((_) {
+    this._apiKey = apiKey;
+    updateTasks().then((_) {
       _taskSubject.add(_tasks);
     });
   }
 
   Stream<List<Task>> get getTasks => _taskSubject.stream;
-  Future<Null> _updateTasks(String taskKey) async {
-    _tasks = await _repository.getUserTasks(taskKey);
+  Future<Null> updateTasks() async {
+    _tasks = await _repository.getUserTasks(_apiKey);
+    var count = 0;
+    for (var task in _tasks) {
+      task.index = count++;
+    }
   }
 }
 

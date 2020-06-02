@@ -24,6 +24,11 @@ class Repository {
     apiProvider.updateUserTask(task);
   }
 
+  Future<Null> deleteUserTask(String taskKey) async {
+    apiProvider.deleteUserTask(taskKey);
+  }
+
+
   Future getSubTasks(String taskKey) 
     => apiProvider.getSubTasks(taskKey);
 

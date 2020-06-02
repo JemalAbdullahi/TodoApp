@@ -110,6 +110,21 @@ class ApiProvider {
     }
   }
 
+  Future deleteUserTask(String taskKey) async {
+    final response = await client.delete(
+      "http://10.0.2.2:5000/api/tasks",
+      headers: {"Authorization": taskKey},
+    );
+    if (response.statusCode == 201) {
+      // If the call to the server was successful
+      print("Task deleted");
+    } else {
+      // If that call was not successful, throw an error.
+       print(json.decode(response.body));
+      throw Exception('Failed to delete tasks');
+    }
+  }
+
   Future<List<SubTask>> getSubTasks(String taskKey) async {
     final response = await client.get(
       "http://10.0.2.2:5000/api/subtasks",
