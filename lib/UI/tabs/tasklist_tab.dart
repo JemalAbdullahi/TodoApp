@@ -59,7 +59,7 @@ class _TaskListTabState extends State<TaskListTab> {
                   if (snapshot.data.length > 0) {
                     return _buildReorderableList(context, snapshot.data);
                   } else if (snapshot.data.length == 0) {
-                    return Center(child: Text('No Data'));
+                    return Center(child: Text(''));
                   }
                 } else if (snapshot.hasError) {
                   return Container();

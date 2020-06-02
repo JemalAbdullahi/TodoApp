@@ -6,6 +6,7 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
 
 - [ ] Connect completed checkbox to sql server
 - [ ] Create deleted action
+- [x] Check as Completed
 - [x] Add to task list
 - [ ] Delete from task list
 - [ ] Create Navigation drawer UI

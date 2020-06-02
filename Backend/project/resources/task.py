@@ -3,6 +3,7 @@ from flask import request
 from models import db, User, Task
 import random
 import string
+from models import SubTask
 
 
 class Tasks(Resource):
@@ -84,6 +85,23 @@ class Tasks(Resource):
             else:
                 return {"Messege": "No Task with that task key"}, 402
 
+    def delete(self):
+        header = request.headers["Authorization"]
+
+        if not header:
+            return {"Messege": "No task key!"}, 400
+        else:
+            task = Task.query.filter_by(task_key=header).first()
+            result = Task.serialize(task)
+            subtasks = SubTask.query.filter_by(task_id=task.id).all()
+            for subtask in subtasks:
+                db.session.delete(subtask)
+            db.session.commit()
+            db.session.delete(task)
+            db.session.commit()
+            return {"status": 'success', 'data': result}, 201
+
+    
     def generate_key(self):
         return ''.join(
             random.choice(string.ascii_letters + string.digits)

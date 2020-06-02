@@ -43,7 +43,7 @@ class _ToDoTabState extends State<ToDoTab> {
                     return _buildReorderableList(context, snapshot.data);
                   }
                   else if (snapshot.data.length==0){
-                    return Center(child: Text('No Data'));
+                    return Center(child: Text(''));
                   }
                 } else if (snapshot.hasError) {
                   return Container();
@@ -78,7 +78,6 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildListTile(BuildContext context, Task item) {
-    print(item.group);
     return ListTile(
       key: Key(item.taskId.toString()),
       title: TaskListItemWidget(
@@ -87,10 +86,4 @@ class _ToDoTabState extends State<ToDoTab> {
       ),
     );
   }
-
-/*   void _getList() {
-    for (int i = 0; i < 3; i++) {
-      tasks.add(Task('To Do: ' + i.toString(), false, i, ""));
-    }
-  } */
 }

@@ -27,7 +27,6 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    //print(widget.task.group);
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -56,7 +55,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                   value: widget.task.completed,
                   onChanged: (bool newValue) {
                     setState(() {
-                      widget.task.completed = true;
+                      widget.task.completed = newValue;
                       widget.repository.updateUserTask(widget.task);
                     });
                   }),
