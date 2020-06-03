@@ -59,7 +59,7 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           apiKey = snapshot.data;
-          print(apiKey);
+          //print(apiKey);
           if (apiKey.length > 0 && apiKey != null) {
             tasksBloc = TaskBloc(apiKey);
           }
@@ -73,7 +73,8 @@ class _SignInState extends State<SignIn> {
                 repository: repository,
                 logout: logout,
                 addTaskDialog: addTaskDialog,
-                tasksBloc: tasksBloc)
+                tasksBloc: tasksBloc,
+                deleteTask: delTask)
             : LoginPage(
                 login: login,
                 newUser: false,
@@ -111,6 +112,12 @@ class _SignInState extends State<SignIn> {
 
   void addTask(String taskName, String groupName) async {
     await repository.addUserTask(this.apiKey, taskName, groupName);
+    setState(() {
+      build(context);
+    });
+  }
+
+  void delTask() {
     setState(() {
       build(context);
     });

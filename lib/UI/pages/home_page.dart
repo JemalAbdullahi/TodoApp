@@ -7,6 +7,7 @@ import 'package:todolist/bloc/resources/repository.dart';
 class HomePage extends StatefulWidget {
   final VoidCallback logout;
   final VoidCallback addTaskDialog;
+  final VoidCallback deleteTask;
   final TaskBloc tasksBloc;
   final String title;
   final Repository repository;
@@ -16,7 +17,8 @@ class HomePage extends StatefulWidget {
       this.title,
       this.logout,
       this.addTaskDialog,
-      this.tasksBloc});
+      this.tasksBloc,
+      this.deleteTask});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -25,6 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    print("Home Page State");
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -40,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         body: Container(
-          child: ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository),
+          child: ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository, widget.deleteTask),
         ),
       ),
     );

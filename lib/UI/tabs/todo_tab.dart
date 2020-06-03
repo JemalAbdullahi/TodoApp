@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:todolist/UI/title_card.dart';
@@ -9,10 +11,11 @@ import 'package:todolist/widgets/task_list_item_widget.dart';
 
 class ToDoTab extends StatefulWidget {
   final VoidCallback addTaskDialog;
+  final VoidCallback delTask;
   final TaskBloc tasksBloc;
   final Repository repository;
 
-  ToDoTab(this.addTaskDialog, this.tasksBloc, this.repository);
+  ToDoTab(this.addTaskDialog, this.tasksBloc, this.repository, this.delTask);
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
@@ -22,6 +25,7 @@ class _ToDoTabState extends State<ToDoTab> {
 
   @override
   Widget build(BuildContext context) {
+    print("TAB BUILD CONTEXT");
     return Stack(
       children: <Widget>[
         Container(
@@ -50,20 +54,19 @@ class _ToDoTabState extends State<ToDoTab> {
             return CircularProgressIndicator();
           }, // access the data in our Stream here
         ),
-        //_buildReorderableList(context, tasks),
         TitleCard('To Do', widget.addTaskDialog),
       ],
     );
   }
 
   Widget _buildReorderableList(List<Task> tasks) {
+    print("Reorderable List");
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
-      child: ReorderableListView(
+      child: ListView(
         padding: EdgeInsets.only(top: 300),
-        children:
-            tasks.map((Task item) => _buildListTile(item)).toList(),
-        onReorder: (oldIndex, newIndex) {
+        children: tasks.map((Task item) => _buildListTile(item)).toList(),
+        /* onReorder: (oldIndex, newIndex) {
           setState(
             () {
               Task item = tasks[oldIndex];
@@ -72,14 +75,15 @@ class _ToDoTabState extends State<ToDoTab> {
               tasks.insert(newIndex, item);
             },
           );
-        },
+        }, */
       ),
     );
   }
 
   Widget _buildListTile(Task item) {
+    print("Build List Tile");
     return Dismissible(
-      key: Key(item.taskId.toString()),
+      key: Key(item.title),
       background: Container(
         alignment: AlignmentDirectional.centerEnd,
         color: darkRed,
@@ -88,26 +92,56 @@ class _ToDoTabState extends State<ToDoTab> {
           color: lightBlueGradient,
         ),
       ),
-      onDismissed: (direction){
-        setState(() {
-          //int index = item.index;
-          deleteTask(item);
-          widget.tasksBloc.updateTasks();
-          //tasks.removeAt(index);
+      onResize: () {
+        bool undo = false;
+        removeTask(item);
+        // Show a snackbar. This snackbar could also contain "Undo" actions.
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("Task " + item.title + " dismissed"),
+          duration: Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              // Some code to undo the change.
+              undo = true;
+              tasks.insert(item.index, item);
+              widget.delTask();
+            },
+          ),
+        ));
+        Timer(Duration(seconds: 3), () {
+          if (!undo) {
+            deleteTask(item);
+          }else{
+            widget.delTask();
+          }
         });
       },
-      child: TaskListItemWidget(
-        task: item,
-        repository: widget.repository,
+      resizeDuration: Duration(seconds: 5),
+      direction: DismissDirection.endToStart,
+      child: ListTile(
+        title: TaskListItemWidget(
+          task: item,
+          repository: widget.repository,
+        ),
       ),
     );
   }
 
-  void deleteTask(Task task) async {
+  void removeTask(Task task) {
+    if (tasks.contains(task)) {
+      setState(() {
+        tasks.remove(task);
+      });
+    }
+  }
+
+  void addTask(Task task) {
+    tasks.insert(task.index, task);
+  }
+
+  Future<Null> deleteTask(Task task) async {
+    removeTask(task);
     await widget.repository.deleteUserTask(task.taskKey);
-    //tasks.removeAt(task.index);
-    // setState(() {
-    //   build(context);
-    // });
   }
 }
