@@ -31,6 +31,7 @@ class Tasks(Resource):
                     group=json_data['group'],
                     reminders=json_data['reminders'],
                     task_key=task_key,
+                    index = json_data['index'],
                 )
                 db.session.add(task)
                 db.session.commit()
@@ -42,7 +43,6 @@ class Tasks(Resource):
 
     def get(self):
         result = []
-        # json_data = request.get_json(force=True)
         header = request.headers["Authorization"]
 
         if not header:
@@ -77,6 +77,8 @@ class Tasks(Resource):
                     task.group = json_data['group']
                 if (task.reminders != json_data['reminders']):
                     task.reminders = json_data['reminders']
+                if (task.index != json_data['index']):
+                    task.index = json_data['index']
 
                 db.session.commit()
 

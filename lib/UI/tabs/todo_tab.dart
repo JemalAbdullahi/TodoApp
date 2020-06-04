@@ -11,11 +11,13 @@ import 'package:todolist/widgets/task_list_item_widget.dart';
 
 class ToDoTab extends StatefulWidget {
   final VoidCallback addTaskDialog;
-  final VoidCallback delTask;
+  final VoidCallback rebuildMainContext;
+  final void Function(Task) reAddTask;
   final TaskBloc tasksBloc;
   final Repository repository;
 
-  ToDoTab(this.addTaskDialog, this.tasksBloc, this.repository, this.delTask);
+  ToDoTab(this.addTaskDialog, this.tasksBloc, this.repository,
+      this.rebuildMainContext, this.reAddTask);
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
@@ -61,21 +63,27 @@ class _ToDoTabState extends State<ToDoTab> {
 
   Widget _buildReorderableList(List<Task> tasks) {
     print("Reorderable List");
+    int ind = 0;
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
-      child: ListView(
+      child: ReorderableListView(
         padding: EdgeInsets.only(top: 300),
-        children: tasks.map((Task item) => _buildListTile(item)).toList(),
-        /* onReorder: (oldIndex, newIndex) {
+        children: tasks.map((Task item) {
+          _buildListTile(item);
+          if (item.index == -1) {
+            item.index = ind++;
+          }
+        }).toList(),
+        onReorder: (oldIndex, newIndex) {
           setState(
             () {
               Task item = tasks[oldIndex];
               tasks.remove(item);
-              item.index = newIndex;
               tasks.insert(newIndex, item);
+              item.index = newIndex;
             },
           );
-        }, */
+        },
       ),
     );
   }
@@ -92,32 +100,25 @@ class _ToDoTabState extends State<ToDoTab> {
           color: lightBlueGradient,
         ),
       ),
-      onResize: () {
-        bool undo = false;
+      onDismissed: (direction) {
+        //bool undo = false;
         removeTask(item);
+        deleteTask(item);
         // Show a snackbar. This snackbar could also contain "Undo" actions.
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text("Task " + item.title + " dismissed"),
-          duration: Duration(seconds: 3),
           action: SnackBarAction(
             label: 'Undo',
             onPressed: () {
               // Some code to undo the change.
-              undo = true;
+              //undo = true;
+              widget.reAddTask(item);
               tasks.insert(item.index, item);
-              widget.delTask();
+              //widget.rebuildMainContext();
             },
           ),
         ));
-        Timer(Duration(seconds: 3), () {
-          if (!undo) {
-            deleteTask(item);
-          }else{
-            widget.delTask();
-          }
-        });
       },
-      resizeDuration: Duration(seconds: 5),
       direction: DismissDirection.endToStart,
       child: ListTile(
         title: TaskListItemWidget(

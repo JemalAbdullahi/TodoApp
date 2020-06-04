@@ -40,6 +40,7 @@ class Task(db.Model):
 
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    index = db.Column(db.Integer())
     title = db.Column(db.String())
     note = db.Column(db.String())
     completed = db.Column(db.Boolean(), default=False, nullable=False)
@@ -49,7 +50,7 @@ class Task(db.Model):
     task_key = db.Column(db.String())
 
     def __init__(self, title, user_id, note, completed, repeats, group,
-                 reminders, task_key):
+                 reminders, task_key, index):
         self.title = title
         self.user_id = user_id
         self.reminders = reminders
@@ -58,15 +59,17 @@ class Task(db.Model):
         self.group = group
         self.repeats = repeats
         self.task_key = task_key
+        self.index = index
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
     def serialize(self):
         return {
+            'id': self.id,
             'title': self.title,
             'user_id': self.user_id,
-            'id': self.id,
+            'index': self.index,
             'group': self.group,
             'repeats': self.repeats,
             'reminders': self.reminders,
@@ -88,9 +91,10 @@ class SubTask(db.Model):
     # deadline = db.Column(db.String())
     reminders = db.Column(db.String())
     group = db.Column(db.String())
+    index = db.Column(db.Integer())
 
     def __init__(self, title, task_id, note, completed, repeats, group,
-                 reminders):
+                 reminders, index):
         self.title = title
         self.task_id = task_id
         #self.deadline = deadline
@@ -99,6 +103,7 @@ class SubTask(db.Model):
         self.note = note
         self.group = group
         self.repeats = repeats
+        self.index = index
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -113,4 +118,5 @@ class SubTask(db.Model):
             'reminders': self.reminders,
             'completed': self.completed,
             'note': self.note,
+            'index': self.index
         }

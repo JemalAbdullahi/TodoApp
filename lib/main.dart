@@ -11,6 +11,7 @@ import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
 import 'models/authentication/auth_service.dart';
+import 'models/tasks.dart';
 
 main() => runApp(
       ChangeNotifierProvider<AuthService>(
@@ -59,22 +60,21 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           apiKey = snapshot.data;
-          //print(apiKey);
           if (apiKey.length > 0 && apiKey != null) {
             tasksBloc = TaskBloc(apiKey);
           }
-        } else {
-          print("No data");
         }
-        //String apiKey = snapshot.data;
-        //apiKey.length > 0 ? getHomePage() :
+        /* else {
+          print("No data");
+        } */
         return apiKey.length > 0
             ? HomePage(
                 repository: repository,
                 logout: logout,
                 addTaskDialog: addTaskDialog,
                 tasksBloc: tasksBloc,
-                deleteTask: delTask)
+                rebuildMainContext: rebuildMainContext,
+                reAddTask: reAddTask)
             : LoginPage(
                 login: login,
                 newUser: false,
@@ -84,14 +84,11 @@ class _SignInState extends State<SignIn> {
   }
 
   Future signInUser() async {
-    //String userName = "";
     apiKey = await getApiKey();
     if (apiKey != null) {
       if (apiKey.length > 0) {
         userBloc.signinUser("", "", apiKey);
-      } else {
-        print("No api key");
-      }
+      } else {}
     } else {
       apiKey = "";
     }
@@ -110,25 +107,22 @@ class _SignInState extends State<SignIn> {
     return prefs.getString("API_Token");
   }
 
-  void addTask(String taskName, String groupName) async {
-    await repository.addUserTask(this.apiKey, taskName, groupName);
+  void addTask(String taskName, String groupName, int index) async {
+    await repository.addUserTask(this.apiKey, taskName, groupName, index);
     setState(() {
       build(context);
     });
   }
 
-  void delTask() {
+  void reAddTask(Task task) {
+    addTask(task.title, task.group, task.index);
+  }
+
+  void rebuildMainContext() {
     setState(() {
       build(context);
     });
   }
-
-  // void addSubTask(String taskKey, String subtaskName, String notes) async {
-  //   await repository.addSubTask(taskKey, subtaskName, notes);
-  //   setState(() {
-  //     build(context);
-  //   });
-  // }
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -155,6 +149,7 @@ class _SignInState extends State<SignIn> {
                 Text("Add New Task", style: loginTitleStyle),
                 TextField(
                   controller: _taskNameController,
+                  autofocus: true,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(
                         left: 14.0, bottom: 8.0, top: 8.0),
@@ -204,9 +199,12 @@ class _SignInState extends State<SignIn> {
                         side: BorderSide(color: Colors.transparent),
                       ),
                       onPressed: () {
-                        if (_taskNameController.text != null) {
+                        if (_taskNameController.text != null &&
+                            _taskNameController.text != '') {
                           addTask(_taskNameController.text,
-                              _groupNameController.text);
+                              _groupNameController.text, -1);
+                          Navigator.pop(context);
+                        } else {
                           Navigator.pop(context);
                         }
                       },

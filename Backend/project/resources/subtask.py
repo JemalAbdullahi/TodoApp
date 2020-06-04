@@ -23,6 +23,7 @@ class SubTasks(Resource):
                     repeats=json_data['repeats'],
                     group=json_data['group'],
                     reminders=json_data['reminders'],
+                    index=json_data['index'],
                 )
                 db.session.add(subtask)
                 db.session.commit()

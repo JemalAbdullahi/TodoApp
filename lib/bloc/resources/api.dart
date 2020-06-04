@@ -70,16 +70,18 @@ class ApiProvider {
     }
   }
 
-  Future addUserTask(String apiKey, String taskName, String groupName) async {
+  Future addUserTask(
+      String apiKey, String taskName, String groupName, int index) async {
     final response = await client.post("http://10.0.2.2:5000/api/tasks",
         headers: {"Authorization": apiKey},
         body: jsonEncode({
+          "title": taskName,
           "note": "",
-          "repeats": "",
           "completed": false,
+          "repeats": "",
           "group": groupName,
           "reminders": "",
-          "title": taskName
+          "index": index
         }));
     if (response.statusCode == 201) {
       print("Task added");
@@ -94,12 +96,13 @@ class ApiProvider {
     final response = await client.put("http://10.0.2.2:5000/api/tasks",
         headers: {"Authorization": task.taskKey},
         body: jsonEncode({
+          "title": task.title,
           "note": task.note,
           "repeats": task.repeats,
           "completed": task.completed,
           "group": task.group,
           "reminders": task.reminders,
-          "title": task.title
+          "index": task.index
         }));
     if (response.statusCode == 201) {
       print("Task Updated");
@@ -120,7 +123,7 @@ class ApiProvider {
       print("Task deleted");
     } else {
       // If that call was not successful, throw an error.
-       print(json.decode(response.body));
+      print(json.decode(response.body));
       throw Exception('Failed to delete tasks');
     }
   }
@@ -148,16 +151,18 @@ class ApiProvider {
     }
   }
 
-  Future addSubTask(String taskKey, String subtaskName, String notes) async {
+  Future addSubTask(
+      String taskKey, String subtaskName, String notes, int index) async {
     final response = await client.post("http://10.0.2.2:5000/api/subtasks",
         headers: {"Authorization": taskKey},
         body: jsonEncode({
+          "title": subtaskName,
           "note": notes,
           "repeats": "",
           "completed": false,
           "group": "",
           "reminders": "",
-          "title": subtaskName
+          "index": index
         }));
     if (response.statusCode == 201) {
       print("SubTask added");

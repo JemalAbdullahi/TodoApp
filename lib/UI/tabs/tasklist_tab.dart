@@ -99,7 +99,8 @@ class _TaskListTabState extends State<TaskListTab> {
     print(item.group);
     return ListTile(
       key: Key(item.subtaskId.toString()),
-      title: SubTaskListItemWidget(subTask: item, repository: widget.repository),
+      title:
+          SubTaskListItemWidget(subTask: item, repository: widget.repository),
     );
   }
 
@@ -175,7 +176,8 @@ class _TaskListTabState extends State<TaskListTab> {
                           addSubTask(
                               widget.taskKey,
                               _subtaskNameController.text,
-                              _noteController.text);
+                              _noteController.text,
+                              -1);
                           Navigator.pop(context);
                         }
                       },
@@ -191,8 +193,9 @@ class _TaskListTabState extends State<TaskListTab> {
     );
   }
 
-  void addSubTask(String taskKey, String subtaskName, String notes) async {
-    await widget.repository.addSubTask(taskKey, subtaskName, notes);
+  void addSubTask(
+      String taskKey, String subtaskName, String notes, int index) async {
+    await widget.repository.addSubTask(taskKey, subtaskName, notes, index);
     setState(() {
       build(this.context);
     });

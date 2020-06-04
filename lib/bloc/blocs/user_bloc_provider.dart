@@ -45,10 +45,6 @@ class TaskBloc {
   Stream<List<Task>> get getTasks => _taskSubject.stream;
   Future<Null> updateTasks() async {
     _tasks = await _repository.getUserTasks(_apiKey);
-    var count = 0;
-    for (var task in _tasks) {
-      task.index = count++;
-    }
   }
 }
 

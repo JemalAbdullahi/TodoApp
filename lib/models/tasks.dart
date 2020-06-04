@@ -1,21 +1,21 @@
-
 class Task {
   String group; // which group added that project
   List<Task> tasks; // tasks associated with the project
-  String note;    
+  String note;
   DateTime timeToComplete;
-  bool completed;   // has all tasks within the project been completed
+  bool completed; // has all tasks within the project been completed
   String repeats;
   //DateTime deadline;
   List<DateTime> reminders;
-  int taskId;   //project Id
+  int taskId; //project Id
   String title; //project title
   int index;
   String taskKey;
-  
-  Task(this.title, this.group, this.completed, this.taskId, this.note, this.taskKey);
 
-    factory Task.fromJson(Map<String, dynamic> parsedJson) {
+  Task(this.title, this.group, this.completed, this.taskId, this.note,
+      this.taskKey, this.index);
+
+  factory Task.fromJson(Map<String, dynamic> parsedJson) {
     return Task(
       parsedJson['title'],
       parsedJson['group'],
@@ -23,7 +23,7 @@ class Task {
       parsedJson['id'],
       parsedJson['note'],
       parsedJson['task_key'],
-      );
+      parsedJson['index'],
+    );
   }
-
 }
