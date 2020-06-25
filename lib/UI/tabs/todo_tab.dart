@@ -40,12 +40,57 @@ class _ToDoTabState extends State<ToDoTab> {
           ),
         ),
         StreamBuilder(
+          key: UniqueKey(),
           // Wrap our widget with a StreamBuilder
           stream: widget.tasksBloc.getTasks, // pass our Stream getter here
           initialData: [], // provide an initial data
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot != null) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                print("None Data: " + snapshot.toString());
+                return Container(
+                  child: Center(
+                    child: Text("No Connection Message"),
+                  ),
+                );
+              case ConnectionState.active:
+                print("Active Data: " + snapshot.toString());
+                if (snapshot.data.isEmpty) {
+                  return Center(
+                      child: Container(child: Text("No Data Available")));
+                } else {
+                  tasks = snapshot.data;
+                  setIndex();
+                  return _buildListView();
+                  //return _buildReorderableList();
+                }
+                break;
+              case ConnectionState.waiting:
+                print("Waiting Data: " + snapshot.toString());
+                return Container(
+                  child: Center(
+                    child: Text("Loading Message"),
+                  ),
+                );
+              case ConnectionState.done:
+                print("Done Data: " + snapshot.toString());
+                if (snapshot.data.isEmpty) {
+                  return Container(
+                    child: Center(
+                      child: Text("No Data Available"),
+                    ),
+                  );
+                } else {
+                  tasks = snapshot.data;
+                  setIndex();
+                  return _buildReorderableList();
+                }
+            }
+            return CircularProgressIndicator();
+            /* if (snapshot.hasData && snapshot != null) {
               if (snapshot.data.length > 0) {
+                print("Data: " + snapshot.toString());
+                //return Center(child: CircularProgressIndicator());
                 return _buildReorderableList(snapshot.data);
               } else if (snapshot.data.length == 0) {
                 return Center(child: Text(''));
@@ -54,25 +99,51 @@ class _ToDoTabState extends State<ToDoTab> {
               return Container();
             }
             return CircularProgressIndicator();
-          }, // access the data in our Stream here
+          }, */ // access the data in our Stream here
+          },
         ),
         TitleCard('To Do', widget.addTaskDialog),
       ],
     );
   }
 
-  Widget _buildReorderableList(List<Task> tasks) {
-    print("Reorderable List");
-    int ind = 0;
-    return Theme(
-      data: ThemeData(canvasColor: Colors.transparent),
-      child: ReorderableListView(
+  Widget _buildListView() {
+    /* return ReorderableListView(
+        //key: UniqueKey(),
         padding: EdgeInsets.only(top: 300),
         children: tasks.map((Task item) {
           _buildListTile(item);
-          if (item.index == -1) {
-            item.index = ind++;
-          }
+        }).toList(),
+        onReorder: (oldIndex, newIndex) {
+          setState(
+            () {
+              Task item = tasks[oldIndex];
+              tasks.remove(item);
+              tasks.insert(newIndex, item);
+              item.index = newIndex;
+            },
+          );
+        },
+      ); */
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return _buildListTile(tasks[index]);
+      },
+      itemCount: tasks.length,
+      padding: EdgeInsets.only(top: 200),
+    );
+  }
+
+  Widget _buildReorderableList() {
+    print("Reorderable List" + tasks.toString());
+    return Theme(
+      data: ThemeData(canvasColor: Colors.transparent),
+      key: UniqueKey(),
+      child: ReorderableListView(
+        key: UniqueKey(),
+        padding: EdgeInsets.only(top: 300),
+        children: tasks.map((Task item) {
+          _buildListTile(item);
         }).toList(),
         onReorder: (oldIndex, newIndex) {
           setState(
@@ -88,10 +159,27 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
+  void setIndex() {
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].index != i) {
+        tasks[i].index = i;
+        widget.repository.updateUserTask(tasks[i]);
+      }
+    }
+  }
+
   Widget _buildListTile(Task item) {
-    print("Build List Tile");
+    print("Build List Tile: " + item.title);
+
     return Dismissible(
-      key: Key(item.title),
+      key: ValueKey(item.taskKey),
+      child: ListTile(
+        key: Key(item.title),
+        title: TaskListItemWidget(
+          task: item,
+          repository: widget.repository,
+        ),
+      ),
       background: Container(
         alignment: AlignmentDirectional.centerEnd,
         color: darkRed,
@@ -101,31 +189,20 @@ class _ToDoTabState extends State<ToDoTab> {
         ),
       ),
       onDismissed: (direction) {
-        //bool undo = false;
         removeTask(item);
         deleteTask(item);
-        // Show a snackbar. This snackbar could also contain "Undo" actions.
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text("Task " + item.title + " dismissed"),
           action: SnackBarAction(
             label: 'Undo',
             onPressed: () {
-              // Some code to undo the change.
-              //undo = true;
               widget.reAddTask(item);
               tasks.insert(item.index, item);
-              //widget.rebuildMainContext();
             },
           ),
         ));
       },
       direction: DismissDirection.endToStart,
-      child: ListTile(
-        title: TaskListItemWidget(
-          task: item,
-          repository: widget.repository,
-        ),
-      ),
     );
   }
 

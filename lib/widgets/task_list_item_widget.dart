@@ -11,7 +11,7 @@ class TaskListItemWidget extends StatefulWidget {
   final String keyValue;
   final Repository repository;
 
-  TaskListItemWidget({this.task, this.keyValue, this.repository});
+  TaskListItemWidget({this.task, this.repository, this.keyValue});
 
   @override
   _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
@@ -28,6 +28,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: UniqueKey(),
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
