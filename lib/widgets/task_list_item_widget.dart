@@ -8,10 +8,10 @@ import 'package:todolist/models/tasks.dart';
 
 class TaskListItemWidget extends StatefulWidget {
   final Task task;
-  final String keyValue;
+  //final String keyValue;
   final Repository repository;
 
-  TaskListItemWidget({this.task, this.keyValue, this.repository});
+  TaskListItemWidget({this.task, this.repository});
 
   @override
   _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
