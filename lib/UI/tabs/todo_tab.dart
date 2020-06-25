@@ -55,10 +55,14 @@ class _ToDoTabState extends State<ToDoTab> {
                 );
               case ConnectionState.active:
                 print("Active Data: " + snapshot.toString());
-                if(snapshot.data.isEmpty){
-                  return Center(child: Container(child: Text("No Data Available")));
-                }else{
-                  return _buildReorderableList(snapshot.data);
+                if (snapshot.data.isEmpty) {
+                  return Center(
+                      child: Container(child: Text("No Data Available")));
+                } else {
+                  tasks = snapshot.data;
+                  setIndex();
+                  return _buildListView();
+                  //return _buildReorderableList();
                 }
                 break;
               case ConnectionState.waiting:
@@ -77,7 +81,9 @@ class _ToDoTabState extends State<ToDoTab> {
                     ),
                   );
                 } else {
-                  return _buildReorderableList(snapshot.data);
+                  tasks = snapshot.data;
+                  setIndex();
+                  return _buildReorderableList();
                 }
             }
             return CircularProgressIndicator();
@@ -101,7 +107,34 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  Widget _buildReorderableList(List<Task> tasks) {
+  Widget _buildListView() {
+    /* return ReorderableListView(
+        //key: UniqueKey(),
+        padding: EdgeInsets.only(top: 300),
+        children: tasks.map((Task item) {
+          _buildListTile(item);
+        }).toList(),
+        onReorder: (oldIndex, newIndex) {
+          setState(
+            () {
+              Task item = tasks[oldIndex];
+              tasks.remove(item);
+              tasks.insert(newIndex, item);
+              item.index = newIndex;
+            },
+          );
+        },
+      ); */
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return _buildListTile(tasks[index]);
+      },
+      itemCount: tasks.length,
+      padding: EdgeInsets.only(top: 200),
+    );
+  }
+
+  Widget _buildReorderableList() {
     print("Reorderable List" + tasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
@@ -111,7 +144,6 @@ class _ToDoTabState extends State<ToDoTab> {
         padding: EdgeInsets.only(top: 300),
         children: tasks.map((Task item) {
           _buildListTile(item);
-          setIndex();
         }).toList(),
         onReorder: (oldIndex, newIndex) {
           setState(
@@ -129,15 +161,25 @@ class _ToDoTabState extends State<ToDoTab> {
 
   void setIndex() {
     for (int i = 0; i < tasks.length; i++) {
-      tasks[i].index = i;
-      widget.repository.updateUserTask(tasks[i]);
+      if (tasks[i].index != i) {
+        tasks[i].index = i;
+        widget.repository.updateUserTask(tasks[i]);
+      }
     }
   }
 
   Widget _buildListTile(Task item) {
     print("Build List Tile: " + item.title);
+
     return Dismissible(
-      key: UniqueKey(),
+      key: ValueKey(item.taskKey),
+      child: ListTile(
+        key: Key(item.title),
+        title: TaskListItemWidget(
+          task: item,
+          repository: widget.repository,
+        ),
+      ),
       background: Container(
         alignment: AlignmentDirectional.centerEnd,
         color: darkRed,
@@ -161,13 +203,6 @@ class _ToDoTabState extends State<ToDoTab> {
         ));
       },
       direction: DismissDirection.endToStart,
-      child: ListTile(
-        //key: Key(item.title),
-        title: TaskListItemWidget(
-          task: item,
-          repository: widget.repository,
-        ),
-      ),
     );
   }
 
