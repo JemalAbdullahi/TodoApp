@@ -9,7 +9,7 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
 - [x] Check as Completed
 - [x] Add to task list
 - [x] Delete from task list
-- [ ] Undo Delete from task list action
+- [x] Undo Delete from task list action
 - [ ] Delete from subtask list action
 - [ ] Undo Delete from subtask list action
 - [ ] Create Navigation drawer UI

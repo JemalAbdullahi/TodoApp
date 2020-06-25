@@ -61,9 +61,8 @@ class _ToDoTabState extends State<ToDoTab> {
                       child: Container(child: Text("No Data Available")));
                 } else {
                   tasks = snapshot.data;
-                  setIndex();
-                  return _buildListView();
-                  //return _buildReorderableList();
+                  _setIndex();
+                  return _buildReorderableList();
                 }
                 break;
               case ConnectionState.waiting:
@@ -86,7 +85,7 @@ class _ToDoTabState extends State<ToDoTab> {
                   );
                 } else {
                   tasks = snapshot.data;
-                  setIndex();
+                  _setIndex();
                   return _buildReorderableList();
                 }
             }
@@ -98,16 +97,6 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  Widget _buildListView() {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return _buildListTile(tasks[index]);
-      },
-      itemCount: tasks.length,
-      padding: EdgeInsets.only(top: 200),
-    );
-  }
-
   Widget _buildReorderableList() {
     print("Reorderable List" + tasks.toString());
     return Theme(
@@ -116,8 +105,8 @@ class _ToDoTabState extends State<ToDoTab> {
       child: ReorderableListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 300),
-        children: tasks.map((Task item) {
-          _buildListTile(item);
+        children: tasks.map<Dismissible>((Task item) {
+          return _buildListTile(item);
         }).toList(),
         onReorder: (oldIndex, newIndex) {
           setState(
@@ -126,6 +115,7 @@ class _ToDoTabState extends State<ToDoTab> {
               tasks.remove(item);
               tasks.insert(newIndex, item);
               item.index = newIndex;
+              widget.repository.updateUserTask(item);
             },
           );
         },
@@ -133,20 +123,29 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  void setIndex() {
+/*   void _checkIndex() {
     for (int i = 0; i < tasks.length; i++) {
-          Task item = tasks[i];
+      Task item = tasks[i];
       if (item.index > -1 && item.index < tasks.length) {
-        if(item.index == i+1){
-            item.index = i;
-            widget.repository.updateUserTask(item);
-          }else if(item.index != i){
-            tasks.remove(item);
-            tasks.insert(item.index, item);
-          }
+        if (item.index == i + 1) {
+          item.index = i;
+          widget.repository.updateUserTask(item);
+        } else if (item.index != i) {
+          tasks.remove(item);
+          tasks.insert(item.index, item);
+        }
       } else {
         item.index = i;
         widget.repository.updateUserTask(item);
+      }
+    }
+  } */
+
+  void _setIndex() {
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].index != i) {
+        tasks[i].index = i;
+        widget.repository.updateUserTask(tasks[i]);
       }
     }
   }
@@ -181,6 +180,7 @@ class _ToDoTabState extends State<ToDoTab> {
             onPressed: () {
               widget.reAddTask(item);
               tasks.insert(item.index, item);
+              _setIndex();
             },
           ),
         ));
@@ -193,6 +193,7 @@ class _ToDoTabState extends State<ToDoTab> {
     if (tasks.contains(task)) {
       setState(() {
         tasks.remove(task);
+        _setIndex();
       });
     }
   }
