@@ -10,11 +10,11 @@ import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/task_list_item_widget.dart';
 
 class ToDoTab extends StatefulWidget {
-  final VoidCallback addTaskDialog;
-  final VoidCallback rebuildMainContext;
-  final void Function(Task) reAddTask;
   final TaskBloc tasksBloc;
   final Repository repository;
+  final VoidCallback addTaskDialog;
+  final void Function(Task) reAddTask;
+  final VoidCallback rebuildMainContext;//Not Used
 
   ToDoTab(this.addTaskDialog, this.tasksBloc, this.repository,
       this.rebuildMainContext, this.reAddTask);
@@ -47,15 +47,14 @@ class _ToDoTabState extends State<ToDoTab> {
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
-                print("None Data: " + snapshot.toString());
-
+                //print("None Data: " + snapshot.toString());
                 return Container(
                   child: Center(
                     child: Text("No Connection Message"),
                   ),
                 );
               case ConnectionState.active:
-                print("Active Data: " + snapshot.toString());
+                //print("Active Data: " + snapshot.toString());
                 if (snapshot.data.isEmpty) {
                   return Center(
                       child: Container(child: Text("No Data Available")));
@@ -66,7 +65,7 @@ class _ToDoTabState extends State<ToDoTab> {
                 }
                 break;
               case ConnectionState.waiting:
-                print("Waiting Data: " + snapshot.toString());
+                //print("Waiting Data: " + snapshot.toString());
                 if (tasks.length == 0) {
                   return Container(
                     child: Center(
@@ -154,7 +153,7 @@ class _ToDoTabState extends State<ToDoTab> {
     print("Build List Tile: " + item.title);
 
     return Dismissible(
-      key: ValueKey(item.taskKey),
+      key: Key(item.taskKey),
       child: ListTile(
         key: Key(item.title),
         title: TaskListItemWidget(

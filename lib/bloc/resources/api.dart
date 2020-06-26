@@ -124,7 +124,7 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
-      throw Exception('Failed to delete tasks');
+      throw Exception('Failed to delete task');
     }
   }
 
@@ -158,8 +158,8 @@ class ApiProvider {
         body: jsonEncode({
           "title": subtaskName,
           "note": notes,
-          "repeats": "",
           "completed": false,
+          "repeats": "",
           "group": "",
           "reminders": "",
           "index": index
@@ -170,6 +170,42 @@ class ApiProvider {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
       throw Exception('Failed to load tasks');
+    }
+  }
+
+  Future updateSubTask(SubTask subtask) async {
+    final response = await client.put("http://10.0.2.2:5000/api/subtasks",
+        headers: {"Authorization": subtask.subtaskKey},
+        body: jsonEncode({
+          "title": subtask.title,
+          "note": subtask.note,
+          "repeats": subtask.repeats,
+          "completed": subtask.completed,
+          "group": subtask.group,
+          "reminders": subtask.reminders,
+          "index": subtask.index
+        }));
+    if (response.statusCode == 201) {
+      print("SubTask Updated");
+    } else {
+      // If that call was not successful, throw an error.
+      print(json.decode(response.body));
+      throw Exception('Failed to update tasks');
+    }
+  }
+
+  Future deleteSubTask(String subtaskKey) async {
+    final response = await client.delete(
+      "http://10.0.2.2:5000/api/subtasks",
+      headers: {"Authorization": subtaskKey},
+    );
+    if (response.statusCode == 201) {
+      // If the call to the server was successful
+      print("SubTask deleted");
+    } else {
+      // If that call was not successful, throw an error.
+      print(json.decode(response.body));
+      throw Exception('Failed to delete subtask');
     }
   }
 

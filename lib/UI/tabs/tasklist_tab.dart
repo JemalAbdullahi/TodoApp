@@ -7,9 +7,11 @@ import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/widgets/subtask_list_item_widget.dart';
 
 class TaskListTab extends StatefulWidget {
-  final Repository repository;
-  final taskKey;
   final SubTaskBloc subTaskBloc;
+  final Repository repository;
+  //final void Function(SubTask) reAddSubTask;
+  //final VoidCallback addTaskDialog;
+  final taskKey;
 
   TaskListTab(this.repository, this.taskKey, this.subTaskBloc);
 
@@ -18,7 +20,7 @@ class TaskListTab extends StatefulWidget {
 }
 
 class _TaskListTabState extends State<TaskListTab> {
-  List<SubTask> subTasks = [];
+  List<SubTask> subtasks = [];
 
   @override
   Widget build(BuildContext context) {
@@ -53,28 +55,88 @@ class _TaskListTabState extends State<TaskListTab> {
               // Wrap our widget with a StreamBuilder
               stream:
                   widget.subTaskBloc.getSubTasks, // pass our Stream getter here
-              initialData: [], // provide an initial data
+              initialData: subtasks, // provide an initial data
               builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot != null) {
-                  if (snapshot.data.length > 0) {
-                    return _buildReorderableList(context, snapshot.data);
-                  } else if (snapshot.data.length == 0) {
-                    return Center(child: Text(''));
-                  }
-                } else if (snapshot.hasError) {
-                  return Container();
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    print("None Data: " + snapshot.toString());
+                    return Container(
+                      child: Center(
+                        child: Text("No Connection Message"),
+                      ),
+                    );
+                  case ConnectionState.active:
+                    print("Active Data: " + snapshot.toString());
+                    if (snapshot.data.isEmpty) {
+                      return Center(
+                          child: Container(child: Text("No Data Available")));
+                    } else {
+                      subtasks = snapshot.data;
+                      _setIndex();
+                      return _buildReorderableList();
+                    }
+                    break;
+                  case ConnectionState.waiting:
+                    print("Waiting Data: " + snapshot.toString());
+                    if (subtasks.length == 0) {
+                      return Container(
+                        child: Center(
+                          child: Text("Loading Message"),
+                        ),
+                      );
+                    }
+                    break;
+                  case ConnectionState.done:
+                    print("Done Data: " + snapshot.toString());
+                    if (snapshot.data.isEmpty) {
+                      return Container(
+                        child: Center(
+                          child: Text("No Data Available"),
+                        ),
+                      );
+                    } else {
+                      subtasks = snapshot.data;
+                      _setIndex();
+                      return _buildReorderableList();
+                    }
                 }
                 return CircularProgressIndicator();
-              }, // access the data in our Stream here
+              },
             ),
-            TitleCard('Task List', addSubTaskDialog),
+            TitleCard('SubTask List', addSubTaskDialog),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildReorderableList(BuildContext context, List<SubTask> subTasks) {
+  Widget _buildReorderableList() {
+    print("Reorderable List" + subtasks.toString());
+    return Theme(
+      data: ThemeData(canvasColor: Colors.transparent),
+      key: UniqueKey(),
+      child: ReorderableListView(
+        key: UniqueKey(),
+        padding: EdgeInsets.only(top: 300),
+        children: subtasks.map<Dismissible>((SubTask item) {
+          return _buildListTile(item);
+        }).toList(),
+        onReorder: (oldIndex, newIndex) {
+          setState(
+            () {
+              SubTask item = subtasks[oldIndex];
+              subtasks.remove(item);
+              subtasks.insert(newIndex, item);
+              item.index = newIndex;
+              widget.repository.updateSubTask(item);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  /* Widget _buildReorderableList(BuildContext context, List<SubTask> subTasks) {
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       child: ReorderableListView(
@@ -93,14 +155,51 @@ class _TaskListTabState extends State<TaskListTab> {
         },
       ),
     );
-  }
+  } */
 
-  Widget _buildListTile(BuildContext context, SubTask item) {
+  /* Widget _buildListTile(SubTask item) {
     print(item.group);
     return ListTile(
       key: Key(item.subtaskId.toString()),
       title:
           SubTaskListItemWidget(subTask: item, repository: widget.repository),
+    );
+  } */
+
+  Widget _buildListTile(SubTask item) {
+    print("Build List Tile: " + item.title);
+
+    return Dismissible(
+      key: Key(item.subtaskKey),
+      child: ListTile(
+        key: Key(item.title),
+        title:
+            SubTaskListItemWidget(subTask: item, repository: widget.repository),
+      ),
+      background: Container(
+        alignment: AlignmentDirectional.centerEnd,
+        color: darkRed,
+        child: Icon(
+          Icons.delete,
+          color: darkBlueGradient,
+        ),
+      ),
+      onDismissed: (direction) {
+        removeSubTask(item);
+        deleteSubTask(item);
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("Task " + item.title + " dismissed"),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              reAddSubTask(item);
+              subtasks.insert(item.index, item);
+              _setIndex();
+            },
+          ),
+        ));
+      },
+      direction: DismissDirection.endToStart,
     );
   }
 
@@ -195,9 +294,41 @@ class _TaskListTabState extends State<TaskListTab> {
 
   void addSubTask(
       String taskKey, String subtaskName, String notes, int index) async {
-    await widget.repository.addSubTask(taskKey, subtaskName, notes, index);
-    setState(() {
-      build(this.context);
-    });
+    await widget.repository
+        .addSubTask(taskKey, subtaskName, notes, index)
+        .then((_) => setState(() {
+              build(this.context);
+            }));
   }
+
+  void reAddSubTask(SubTask subtask) {
+    addSubTask(widget.taskKey, subtask.title, subtask.note, subtask.index);
+  }
+
+  void removeSubTask(SubTask subtask) {
+    if (subtasks.contains(subtask)) {
+      setState(() {
+        subtasks.remove(subtask);
+        _setIndex();
+      });
+    }
+  }
+
+  Future<Null> deleteSubTask(SubTask subtask) async {
+    removeSubTask(subtask);
+    await widget.repository.deleteSubTask(subtask.subtaskKey);
+  }
+
+  /* void reAddSubTask(SubTask subtask) {
+    addSubTask(subtask.title, subtask.note, subtask.index);
+  } */
+
+  void _setIndex() {
+    for (int i = 0; i < subtasks.length; i++) {
+      if (subtasks[i].index != i) {
+        subtasks[i].index = i;
+        widget.repository.updateSubTask(subtasks[i]);
+      }
+    }
+  } //unused so far
 }

@@ -25,6 +25,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
     subTaskBloc = SubTaskBloc(widget.task.taskKey);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -32,14 +33,18 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => TaskListTab(widget.repository, widget.task.taskKey, subTaskBloc),
+          builder: (BuildContext context){
+            return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+              return TaskListTab(widget.repository, widget.task.taskKey, subTaskBloc);
+            });
+          }
         ),
       ),
       child: Container(
         height: 90,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: darkBlue, 
+          color: darkBlue,
           boxShadow: [
             new BoxShadow(
               color: Colors.black.withOpacity(0.5),

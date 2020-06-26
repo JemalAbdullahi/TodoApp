@@ -92,9 +92,10 @@ class SubTask(db.Model):
     reminders = db.Column(db.String())
     group = db.Column(db.String())
     index = db.Column(db.Integer())
+    subtask_key = db.Column(db.String())
 
     def __init__(self, title, task_id, note, completed, repeats, group,
-                 reminders, index):
+                 reminders, index, subtask_key):
         self.title = title
         self.task_id = task_id
         #self.deadline = deadline
@@ -104,6 +105,7 @@ class SubTask(db.Model):
         self.group = group
         self.repeats = repeats
         self.index = index
+        self.subtask_key = subtask_key
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -118,5 +120,6 @@ class SubTask(db.Model):
             'reminders': self.reminders,
             'completed': self.completed,
             'note': self.note,
-            'index': self.index
+            'index': self.index,
+            'subtask_key': self.subtask_key
         }
