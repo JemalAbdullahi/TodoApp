@@ -38,6 +38,7 @@ class _SubTaskListItemWidgetState extends State<SubTaskListItemWidget> {
                   onChanged: (bool newValue) {
                     setState(() {
                       widget.subTask.completed = newValue;
+                      widget.repository.updateSubTask(widget.subTask);
                     });
                   }),
               Text(widget.subTask.title, style: toDoListTileStyle),

@@ -289,7 +289,7 @@ class _TaskListTabState extends State<TaskListTab> {
   }
 
   Future<Null> deleteSubTask(SubTask subtask) async {
-    removeSubTask(subtask);
+    //removeSubTask(subtask);
     await widget.repository.deleteSubTask(subtask.subtaskKey);
   }
 
