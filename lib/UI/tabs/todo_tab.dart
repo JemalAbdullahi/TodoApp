@@ -27,7 +27,7 @@ class _ToDoTabState extends State<ToDoTab> {
 
   @override
   Widget build(BuildContext context) {
-    print("TAB BUILD CONTEXT");
+    //print("TAB BUILD CONTEXT");
     return Stack(
       children: <Widget>[
         Container(
@@ -75,7 +75,7 @@ class _ToDoTabState extends State<ToDoTab> {
                 }
                 break;
               case ConnectionState.done:
-                print("Done Data: " + snapshot.toString());
+                //print("Done Data: " + snapshot.toString());
                 if (snapshot.data.isEmpty) {
                   return Container(
                     child: Center(
@@ -97,7 +97,7 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildReorderableList() {
-    print("Reorderable List" + tasks.toString());
+    //print("Reorderable List" + tasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
@@ -122,24 +122,6 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-/*   void _checkIndex() {
-    for (int i = 0; i < tasks.length; i++) {
-      Task item = tasks[i];
-      if (item.index > -1 && item.index < tasks.length) {
-        if (item.index == i + 1) {
-          item.index = i;
-          widget.repository.updateUserTask(item);
-        } else if (item.index != i) {
-          tasks.remove(item);
-          tasks.insert(item.index, item);
-        }
-      } else {
-        item.index = i;
-        widget.repository.updateUserTask(item);
-      }
-    }
-  } */
-
   void _setIndex() {
     for (int i = 0; i < tasks.length; i++) {
       if (tasks[i].index != i) {
@@ -150,8 +132,7 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildListTile(Task item) {
-    print("Build List Tile: " + item.title);
-
+    //print("Build List Tile: " + item.title);
     return Dismissible(
       key: Key(item.taskKey),
       child: ListTile(
@@ -172,7 +153,7 @@ class _ToDoTabState extends State<ToDoTab> {
       onDismissed: (direction) {
         removeTask(item);
         deleteTask(item);
-        Scaffold.of(context).showSnackBar(SnackBar(
+        Scaffold.of( context).showSnackBar(SnackBar(
           content: Text("Task " + item.title + " dismissed"),
           action: SnackBarAction(
             label: 'Undo',

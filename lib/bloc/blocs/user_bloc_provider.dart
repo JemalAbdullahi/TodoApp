@@ -37,13 +37,13 @@ class TaskBloc {
 
   TaskBloc(String apiKey) {
     this._apiKey = apiKey;
-    updateTasks().then((_) {
+    _updateTasks().then((_) {
       _taskSubject.add(_tasks);
     });
   }
 
   Stream<List<Task>> get getTasks => _taskSubject.stream;
-  Future<Null> updateTasks() async {
+  Future<Null> _updateTasks() async {
     _tasks = await _repository.getUserTasks(_apiKey);
   }
 }
@@ -58,7 +58,7 @@ class SubTaskBloc {
   SubTaskBloc(String taskKey) {
     this.taskKey = taskKey;
     _updateSubTasks(taskKey).then((_) {
-      _subTaskSubject.add(_subTasks);
+      _subTaskSubject.add(_subTasks); 
     });
   }
 

@@ -9,8 +9,6 @@ import 'package:todolist/widgets/subtask_list_item_widget.dart';
 class TaskListTab extends StatefulWidget {
   final SubTaskBloc subTaskBloc;
   final Repository repository;
-  //final void Function(SubTask) reAddSubTask;
-  //final VoidCallback addTaskDialog;
   final taskKey;
 
   TaskListTab(this.repository, this.taskKey, this.subTaskBloc);
@@ -21,9 +19,12 @@ class TaskListTab extends StatefulWidget {
 
 class _TaskListTabState extends State<TaskListTab> {
   List<SubTask> subtasks = [];
+  SubTaskBloc sBloc;
 
   @override
   Widget build(BuildContext context) {
+    print("Building TaskList Context");
+    sBloc = new SubTaskBloc(widget.taskKey);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -53,20 +54,19 @@ class _TaskListTabState extends State<TaskListTab> {
             ),
             StreamBuilder(
               // Wrap our widget with a StreamBuilder
-              stream:
-                  widget.subTaskBloc.getSubTasks, // pass our Stream getter here
+              stream: sBloc.getSubTasks, // pass our Stream getter here
               initialData: subtasks, // provide an initial data
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
-                    print("None Data: " + snapshot.toString());
+                    //print("None Data: " + snapshot.toString());
                     return Container(
                       child: Center(
                         child: Text("No Connection Message"),
                       ),
                     );
                   case ConnectionState.active:
-                    print("Active Data: " + snapshot.toString());
+                    //print("Active Data: " + snapshot.toString());
                     if (snapshot.data.isEmpty) {
                       return Center(
                           child: Container(child: Text("No Data Available")));
@@ -77,7 +77,7 @@ class _TaskListTabState extends State<TaskListTab> {
                     }
                     break;
                   case ConnectionState.waiting:
-                    print("Waiting Data: " + snapshot.toString());
+                    //print("Waiting Data: " + snapshot.toString());
                     if (subtasks.length == 0) {
                       return Container(
                         child: Center(
@@ -87,7 +87,7 @@ class _TaskListTabState extends State<TaskListTab> {
                     }
                     break;
                   case ConnectionState.done:
-                    print("Done Data: " + snapshot.toString());
+                    //print("Done Data: " + snapshot.toString());
                     if (snapshot.data.isEmpty) {
                       return Container(
                         child: Center(
@@ -111,7 +111,7 @@ class _TaskListTabState extends State<TaskListTab> {
   }
 
   Widget _buildReorderableList() {
-    print("Reorderable List" + subtasks.toString());
+    //print("Reorderable List" + subtasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
@@ -126,9 +126,14 @@ class _TaskListTabState extends State<TaskListTab> {
             () {
               SubTask item = subtasks[oldIndex];
               subtasks.remove(item);
-              subtasks.insert(newIndex, item);
+              if (newIndex < subtasks.length) {
+                subtasks.insert(newIndex, item);
+              } else if (newIndex == subtasks.length) {
+                subtasks.add(item);
+              }
               item.index = newIndex;
               widget.repository.updateSubTask(item);
+              _updateIndex();
             },
           );
         },
@@ -136,39 +141,8 @@ class _TaskListTabState extends State<TaskListTab> {
     );
   }
 
-  /* Widget _buildReorderableList(BuildContext context, List<SubTask> subTasks) {
-    return Theme(
-      data: ThemeData(canvasColor: Colors.transparent),
-      child: ReorderableListView(
-        padding: EdgeInsets.only(top: 300),
-        children: subTasks
-            .map((SubTask item) => _buildListTile(context, item))
-            .toList(),
-        onReorder: (oldIndex, newIndex) {
-          setState(
-            () {
-              SubTask item = subTasks[oldIndex];
-              subTasks.remove(item);
-              subTasks.insert(newIndex, item);
-            },
-          );
-        },
-      ),
-    );
-  } */
-
-  /* Widget _buildListTile(SubTask item) {
-    print(item.group);
-    return ListTile(
-      key: Key(item.subtaskId.toString()),
-      title:
-          SubTaskListItemWidget(subTask: item, repository: widget.repository),
-    );
-  } */
-
   Widget _buildListTile(SubTask item) {
-    print("Build List Tile: " + item.title);
-
+    //print("Build List Tile: " + item.title);
     return Dismissible(
       key: Key(item.subtaskKey),
       child: ListTile(
@@ -194,10 +168,10 @@ class _TaskListTabState extends State<TaskListTab> {
             onPressed: () {
               reAddSubTask(item);
               subtasks.insert(item.index, item);
-              _setIndex();
             },
           ),
         ));
+        _updateIndex();
       },
       direction: DismissDirection.endToStart,
     );
@@ -319,16 +293,30 @@ class _TaskListTabState extends State<TaskListTab> {
     await widget.repository.deleteSubTask(subtask.subtaskKey);
   }
 
-  /* void reAddSubTask(SubTask subtask) {
-    addSubTask(subtask.title, subtask.note, subtask.index);
-  } */
-
   void _setIndex() {
+    for (int i = 0; i < subtasks.length; i++) {
+      SubTask item = subtasks[i];
+      subtasks.remove(item);
+      if (item.index >= subtasks.length || item.index == -1) {
+        subtasks.add(item);
+        item.index = subtasks.length-1;
+        widget.repository.updateSubTask(item);
+      } else {
+        subtasks.insert(item.index, item);
+      }
+      print("Subtask: " +
+          subtasks[i].title +
+          " | " +
+          subtasks[i].index.toString());
+    }
+  }
+
+  void _updateIndex() {
     for (int i = 0; i < subtasks.length; i++) {
       if (subtasks[i].index != i) {
         subtasks[i].index = i;
         widget.repository.updateSubTask(subtasks[i]);
       }
     }
-  } //unused so far
+  }
 }

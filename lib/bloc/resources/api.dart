@@ -84,7 +84,7 @@ class ApiProvider {
           "index": index
         }));
     if (response.statusCode == 201) {
-      print("Task added");
+      print("Task " + taskName + " added");
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
@@ -105,7 +105,7 @@ class ApiProvider {
           "index": task.index
         }));
     if (response.statusCode == 201) {
-      print("Task Updated");
+      print("Task " + task.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
@@ -165,7 +165,7 @@ class ApiProvider {
           "index": index
         }));
     if (response.statusCode == 201) {
-      print("SubTask added");
+      print("SubTask " + subtaskName + " added");
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
@@ -186,7 +186,7 @@ class ApiProvider {
           "index": subtask.index
         }));
     if (response.statusCode == 201) {
-      print("SubTask Updated");
+      print("SubTask " + subtask.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
