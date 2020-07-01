@@ -23,7 +23,7 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
   - [ ] Credits
   - [ ] Settings
   - [ ] Log out
-  - [ ] Animated
+  - [x] Animated
 
 ### Goal
 
