@@ -4,11 +4,11 @@ import 'package:todolist/UI/tabs/todo_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/tasks.dart';
+import 'package:todolist/widgets/sidebar_menu.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback logout;
   final VoidCallback addTaskDialog;
-  final VoidCallback rebuildMainContext;
   final void Function(Task) reAddTask;
   final TaskBloc tasksBloc;
   final String title;
@@ -20,7 +20,6 @@ class HomePage extends StatefulWidget {
       this.logout,
       this.addTaskDialog,
       this.tasksBloc,
-      this.rebuildMainContext,
       this.reAddTask});
 
   @override
@@ -28,6 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isMenuOpen = false;
+
   @override
   Widget build(BuildContext context) {
     print("Home Page State");
@@ -36,17 +37,31 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(icon: Icon(Icons.menu), onPressed: null),
+          iconTheme: IconThemeData(color: Colors.black),
+          leading: IconButton(
+            icon: isMenuOpen ? Icon(Icons.arrow_back) : Icon(Icons.menu),
+            onPressed: () {
+              setState(() {
+                isMenuOpen = !isMenuOpen;
+              });
+            },
+          ),
           actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.account_circle, color: Colors.black),
+                icon: Icon(Icons.account_circle),
                 onPressed: () {
                   widget.logout();
                 })
           ],
         ),
         body: Container(
-          child: ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository, widget.rebuildMainContext, widget.reAddTask),
+          child: Stack(
+            children: <Widget>[
+              ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository,
+                  widget.reAddTask),
+              SideBarMenu(isMenuOpen: isMenuOpen)
+            ],
+          ),
         ),
       ),
     );

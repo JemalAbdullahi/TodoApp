@@ -72,7 +72,6 @@ class _SignInState extends State<SignIn> {
                 logout: logout,
                 addTaskDialog: addTaskDialog,
                 tasksBloc: tasksBloc,
-                rebuildMainContext: rebuildMainContext,
                 reAddTask: reAddTask)
             : LoginPage(
                 login: login,
@@ -115,12 +114,6 @@ class _SignInState extends State<SignIn> {
 
   void reAddTask(Task task) {
     addTask(task.title, task.group, task.index);
-  }
-
-  void rebuildMainContext() {
-    setState(() {
-      build(context);
-    });
   }
 
   logout() async {

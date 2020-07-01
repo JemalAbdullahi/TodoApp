@@ -32,8 +32,8 @@ class Repository {
   Future getSubTasks(String taskKey) => apiProvider.getSubTasks(taskKey);
 
   Future<Null> addSubTask(
-      String taskKey, String subtaskName, String notes, int index) async {
-    apiProvider.addSubTask(taskKey, subtaskName, notes, index);
+      String taskKey, String subtaskName, String notes, int index, bool completed) async {
+    apiProvider.addSubTask(taskKey, subtaskName, notes, index, completed);
   }
 
   Future<Null> updateSubTask(SubTask subtask) async {

@@ -41,6 +41,7 @@ class ApiProvider {
     if (response.statusCode == 201) {
       // If the call to the server was successful, parse the JSON
       await saveApiKey(result["data"]["api_key"]);
+      return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
@@ -152,13 +153,13 @@ class ApiProvider {
   }
 
   Future addSubTask(
-      String taskKey, String subtaskName, String notes, int index) async {
+      String taskKey, String subtaskName, String notes, int index, bool completed) async {
     final response = await client.post("http://10.0.2.2:5000/api/subtasks",
         headers: {"Authorization": taskKey},
         body: jsonEncode({
           "title": subtaskName,
           "note": notes,
-          "completed": false,
+          "completed": completed,
           "repeats": "",
           "group": "",
           "reminders": "",

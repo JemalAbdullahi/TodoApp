@@ -10,17 +10,22 @@ import 'package:todolist/models/tasks.dart';
 class UserBloc {
   final _repository = Repository();
   final _userGetter = PublishSubject<User>();
+  User _user;
 
   Observable<User> get getUser => _userGetter.stream;
 
+  User getUserObject() {
+    return _user;
+  }
+
   registerUser(String username, String password, String email) async {
-    User user = await _repository.registerUser(username, password, email);
-    _userGetter.sink.add(user);
+    _user = await _repository.registerUser(username, password, email);
+    _userGetter.sink.add(_user);
   }
 
   signinUser(String username, String password, String apiKey) async {
-    User user = await _repository.signinUser(username, password, apiKey);
-    _userGetter.sink.add(user);
+    _user = await _repository.signinUser(username, password, apiKey);
+    _userGetter.sink.add(_user);
   }
 
   dispose() {
