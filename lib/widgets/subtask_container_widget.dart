@@ -5,14 +5,12 @@ import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/widgets/background_color_container.dart';
-import 'package:todolist/widgets/subtask_list_item_widget.dart';
+import 'package:todolist/widgets/subtask_list_tile.dart';
 
 class SubtaskContainerWidget extends StatefulWidget {
-  SubtaskContainerWidget({
-    Key key,
-    @required this.taskKey,
-    @required this.repository
-  }) : super(key: key);
+  SubtaskContainerWidget(
+      {Key key, @required this.taskKey, @required this.repository})
+      : super(key: key);
 
   final String taskKey;
   final Repository repository;
@@ -23,14 +21,17 @@ class SubtaskContainerWidget extends StatefulWidget {
 
 class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
   List<SubTask> subtasks = [];
-    SubTaskBloc sBloc;
+  SubTaskBloc sBloc;
 
   @override
   Widget build(BuildContext context) {
     sBloc = new SubTaskBloc(widget.taskKey);
     return Stack(
       children: <Widget>[
-        BackgroundColorContainer(startColor: darkBlueGradient, endColor: darkBlue,),
+        BackgroundColorContainer(
+          startColor: darkBlueGradient,
+          endColor: darkBlue,
+        ),
         StreamBuilder(
           // Wrap our widget with a StreamBuilder
           stream: sBloc.getSubTasks, // pass our Stream getter here
@@ -51,7 +52,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
                       child: Container(child: Text("No Data Available")));
                 } else {
                   subtasks = snapshot.data;
-                  _setIndex();
+                  setIndex();
                   return _buildReorderableList();
                 }
                 break;
@@ -75,7 +76,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
                   );
                 } else {
                   subtasks = snapshot.data;
-                  _setIndex();
+                  setIndex();
                   return _buildReorderableList();
                 }
             }
@@ -95,8 +96,18 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
       child: ReorderableListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 300),
-        children: subtasks.map<Dismissible>((SubTask item) {
-          return _buildListTile(item);
+        children: subtasks.map((SubTask item) {
+          return SubtaskListTile(
+            key: Key(item.subtaskKey),
+            widget: widget,
+            context: context,
+            subtasks: subtasks,
+            item: item,
+            setIndex: setIndex,
+            updateIndex: updateIndex,
+            reAddSubTask: reAddSubTask,
+            deleteSubTask: deleteSubTask,
+          );
         }).toList(),
         onReorder: (oldIndex, newIndex) {
           setState(
@@ -110,47 +121,11 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
               }
               item.index = newIndex;
               widget.repository.updateSubTask(item);
-              _updateIndex();
+              updateIndex();
             },
           );
         },
       ),
-    );
-  }
-
-  Widget _buildListTile(SubTask item) {
-    //print("Build List Tile: " + item.title);
-    return Dismissible(
-      key: Key(item.subtaskKey),
-      child: ListTile(
-        key: Key(item.title),
-        title:
-            SubTaskListItemWidget(subTask: item, repository: widget.repository),
-      ),
-      background: Container(
-        alignment: AlignmentDirectional.centerEnd,
-        color: darkRed,
-        child: Icon(
-          Icons.delete,
-          color: darkBlueGradient,
-        ),
-      ),
-      onDismissed: (direction) {
-        //removeSubTask(item);
-        deleteSubTask(item);
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text("Task " + item.title + " dismissed"),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              reAddSubTask(item);
-              subtasks.insert(item.index, item);
-            },
-          ),
-        ));
-        _updateIndex();
-      },
-      direction: DismissDirection.endToStart,
     );
   }
 
@@ -244,8 +219,8 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
     );
   }
 
-  void addSubTask(
-      String taskKey, String subtaskName, String notes, int index, bool completed) async {
+  void addSubTask(String taskKey, String subtaskName, String notes, int index,
+      bool completed) async {
     await widget.repository
         .addSubTask(taskKey, subtaskName, notes, index, completed)
         .then((_) => setState(() {
@@ -254,51 +229,54 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
   }
 
   void reAddSubTask(SubTask subtask) {
-    addSubTask(widget.taskKey, subtask.title, subtask.note, subtask.index, subtask.completed);
+    addSubTask(widget.taskKey, subtask.title, subtask.note, subtask.index,
+        subtask.completed);
+  }
+
+  void setIndex() {
+    for (int i = 0; i < subtasks.length; i++) {
+      SubTask item = subtasks[i];
+      if (item.index != i) {
+        subtasks.remove(item);
+        if (item.index >= subtasks.length || item.index == -1) {
+          subtasks.add(item);
+          item.index = subtasks.length - 1;
+          widget.repository.updateSubTask(item);
+        } else {
+          subtasks.insert(item.index, item);
+        }
+        print("Set Subtask: " +
+            subtasks[i].title +
+            " | " +
+            subtasks[i].index.toString());
+      }
+    }
+  }
+
+  void updateIndex() {
+    for (int i = 0; i < subtasks.length; i++) {
+      if (subtasks[i].index != i) {
+        subtasks[i].index = i;
+        widget.repository.updateSubTask(subtasks[i]);
+        print("Updated Subtask: " +
+            subtasks[i].title +
+            " | " +
+            subtasks[i].index.toString());
+      }
+    }
   }
 
   void removeSubTask(SubTask subtask) {
     if (subtasks.contains(subtask)) {
       setState(() {
         subtasks.remove(subtask);
-        _setIndex();
+        updateIndex();
       });
     }
   }
 
   Future<Null> deleteSubTask(SubTask subtask) async {
-    removeSubTask(subtask);
     await widget.repository.deleteSubTask(subtask.subtaskKey);
-  }
-
-  void _setIndex() {
-    for (int i = 0; i < subtasks.length; i++) {
-      SubTask item = subtasks[i];
-      subtasks.remove(item);
-      if (item.index >= subtasks.length || item.index == -1) {
-        subtasks.add(item);
-        item.index = subtasks.length-1;
-        widget.repository.updateSubTask(item);
-      } else {
-        subtasks.insert(item.index, item);
-      }
-      print("Set Subtask: " +
-          subtasks[i].title +
-          " | " +
-          subtasks[i].index.toString());
-    }
-  }
-
-  void _updateIndex() {
-    for (int i = 0; i < subtasks.length; i++) {
-      if (subtasks[i].index != i) {
-        subtasks[i].index = i;
-        widget.repository.updateSubTask(subtasks[i]);
-        print("Updated Subtask: " +
-          subtasks[i].title +
-          " | " +
-          subtasks[i].index.toString());
-      }
-    }
+    removeSubTask(subtask);
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/pages/home_page.dart';
 import 'package:flutter/services.dart';
@@ -9,16 +8,10 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
-import 'models/authentication/auth_service.dart';
 import 'models/tasks.dart';
 
 main() => runApp(
-      ChangeNotifierProvider<AuthService>(
-        child: MyApp(),
-        create: (BuildContext context) {
-          return AuthService();
-        },
-      ),
+      MyApp(),
     );
 
 class MyApp extends StatelessWidget {

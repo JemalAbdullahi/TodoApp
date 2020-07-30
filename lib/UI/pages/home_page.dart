@@ -4,7 +4,7 @@ import 'package:todolist/UI/tabs/todo_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/tasks.dart';
-import 'package:todolist/widgets/sidebar_menu.dart';
+import 'package:todolist/widgets/sidebar_widgets/sidebar_menu.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback logout;
