@@ -3,7 +3,6 @@ import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
-import 'package:todolist/models/user.dart';
 import 'dart:convert';
 import 'package:todolist/models/user.dart';
 

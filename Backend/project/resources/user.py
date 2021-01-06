@@ -5,17 +5,13 @@ import random
 import string
 
 
-class User(Resource):
-    # Read User
+class Users(Resource):
     def get(self):
         users = User.query.all()
         user_list = []
         for i in range(0, len(users)):
             user_list.append(users[i].serialize())
         return {"status": str(user_list)}, 200
-
-
-# Create User
 
     def post(self):
         json_data = request.get_json(force=True)
@@ -53,11 +49,9 @@ class User(Resource):
 
         return {"status": 'success', 'data': result}, 201
 
-    #Update User
     def put(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
-
         if not header:
             return {'Messege': "No API key!"}, 400
         else:
