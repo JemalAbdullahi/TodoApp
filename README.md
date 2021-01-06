@@ -2,6 +2,12 @@
 
 A Flutter project to create a To Do List App utilizing flutter for the front end User Interface and flask RESTful API for the Backend (python).
 
+# Personal note - How to run DB:
+- cd Backend/env/Scripts
+- activate.bat
+- cd ../../project
+- python run.py
+
 ## To Do
 
 - [x] Connect completed checkbox to sql server

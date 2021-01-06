@@ -60,7 +60,7 @@ class _ToDoTabState extends State<ToDoTab> {
                 if (tasks.length == 0) {
                   return Container(
                     child: Center(
-                      child: Text("Loading Message"),
+                      child: Text(""),
                     ),
                   );
                 }

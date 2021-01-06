@@ -61,7 +61,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
                 if (subtasks.length == 0) {
                   return Container(
                     child: Center(
-                      child: Text("Loading Message"),
+                      child: Text(""),
                     ),
                   );
                 }

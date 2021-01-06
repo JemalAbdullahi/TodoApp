@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/pages/sidebar_pages/how_to_use_page.dart';
+import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
 import 'package:todolist/widgets/sidebar_widgets/my_button.dart';
 
 class SideBarButtonList extends StatefulWidget {
@@ -6,10 +8,12 @@ class SideBarButtonList extends StatefulWidget {
     Key key,
     @required this.offset,
     @required this.menuContainerHeight,
+    @required this.logout,
   }) : super(key: key);
 
   final Offset offset;
   final double menuContainerHeight;
+  final VoidCallback logout;
 
   @override
   _SideBarButtonListState createState() => _SideBarButtonListState();
@@ -59,15 +63,28 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
       child: Column(
         children: <Widget>[
           MyButton(
-              text: "Profile",
-              iconData: Icons.person,
-              textSize: getSize(0),
-              height: (widget.menuContainerHeight) / 5),
+            text: "Profile",
+            iconData: Icons.person,
+            textSize: getSize(0),
+            height: (widget.menuContainerHeight) / 5,
+            buttonFunction: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+          ),
           MyButton(
               text: "How to Use",
               iconData: Icons.info,
               textSize: getSize(1),
-              height: (widget.menuContainerHeight) / 5),
+              height: (widget.menuContainerHeight) / 5,
+              buttonFunction: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HowToPage()),
+              );
+            },),
           MyButton(
               text: "Credits",
               iconData: Icons.people,
@@ -79,10 +96,12 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
               textSize: getSize(3),
               height: (widget.menuContainerHeight) / 5),
           MyButton(
-              text: "Logout",
-              iconData: Icons.exit_to_app,
-              textSize: getSize(4),
-              height: (widget.menuContainerHeight) / 5),
+            text: "Logout",
+            iconData: Icons.exit_to_app,
+            textSize: getSize(4),
+            height: (widget.menuContainerHeight) / 5,
+            buttonFunction: widget.logout,
+          ),
         ],
       ),
     );

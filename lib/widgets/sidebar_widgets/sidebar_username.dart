@@ -17,7 +17,6 @@ class SideBarUsername extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              //"Hi",
               userBloc.getUserObject() != null
                   ? userBloc.getUserObject().username
                   : "",

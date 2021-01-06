@@ -6,9 +6,11 @@ class SideBarMenu extends StatefulWidget {
   const SideBarMenu({
     Key key,
     @required this.isMenuOpen,
+    @required this.logout,
   }) : super(key: key);
 
   final bool isMenuOpen;
+  final VoidCallback logout;
 
   @override
   _SideBarMenuState createState() => _SideBarMenuState();
@@ -59,7 +61,9 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     Divider(thickness: 1),
                     SideBarButtonList(
                         offset: _offset,
-                        menuContainerHeight: menuContainerHeight),
+                        menuContainerHeight: menuContainerHeight,
+                        logout: widget.logout,
+                        ),
                   ],
                 ),
               ),

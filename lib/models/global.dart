@@ -32,6 +32,18 @@ final boxDecorationStyle = BoxDecoration(
   ],
 );
 
+final profileBoxDecorationStyle = BoxDecoration(
+  color: Color(0xff57CBF2),
+  borderRadius: BorderRadius.circular(10.0),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 6.0,
+      offset: Offset(0, 2),
+    ),
+  ],
+);
+
 TextStyle cardTitleStyle = new TextStyle(
   fontFamily: 'Avenir', 
   fontWeight: FontWeight.bold, 

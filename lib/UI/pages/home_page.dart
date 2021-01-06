@@ -46,20 +46,13 @@ class _HomePageState extends State<HomePage> {
               });
             },
           ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.account_circle),
-                onPressed: () {
-                  widget.logout();
-                })
-          ],
         ),
         body: Container(
           child: Stack(
             children: <Widget>[
               ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository,
                   widget.reAddTask),
-              SideBarMenu(isMenuOpen: isMenuOpen)
+              SideBarMenu(isMenuOpen: isMenuOpen, logout: widget.logout,)
             ],
           ),
         ),
