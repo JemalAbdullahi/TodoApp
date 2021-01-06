@@ -28,6 +28,10 @@ class UserBloc {
     _userGetter.sink.add(_user);
   }
 
+  updateUserProfile(String oldPassword, String newPassword, String email, String apiKey) async{
+    _user = await _repository.updateUserProfile(oldPassword, newPassword, email, apiKey);
+  }
+
   dispose() {
     _userGetter.close();
   }

@@ -14,6 +14,9 @@ class Repository {
   Future signinUser(String username, String password, String apiKey) =>
       apiProvider.signinUser(username, password, apiKey);
 
+  Future updateUserProfile(String oldPassword, String newPassword, String email, String apiKey)=>
+      apiProvider.updateUserProfile(oldPassword, newPassword, email, apiKey);
+
   Future getUserTasks(String apiKey) => apiProvider.getUserTasks(apiKey);
 
   Future<Null> addUserTask(

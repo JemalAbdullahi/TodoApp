@@ -93,7 +93,8 @@ class ApiProvider {
     }
   }
 
-  Future updateUserProfile(String email, String newPassword, String oldPassword, String apiKey) async {
+  Future updateUserProfile(String oldPassword, String newPassword, String email,
+      String apiKey) async {
     final response = await client.put("http://10.0.2.2:5000/api/user",
         headers: {"Authorization": apiKey},
         body: jsonEncode({
@@ -169,8 +170,8 @@ class ApiProvider {
     }
   }
 
-  Future addSubTask(
-      String taskKey, String subtaskName, String notes, int index, bool completed) async {
+  Future addSubTask(String taskKey, String subtaskName, String notes, int index,
+      bool completed) async {
     final response = await client.post("http://10.0.2.2:5000/api/subtasks",
         headers: {"Authorization": taskKey},
         body: jsonEncode({

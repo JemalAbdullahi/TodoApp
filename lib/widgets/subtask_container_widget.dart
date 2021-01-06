@@ -197,7 +197,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
                         side: BorderSide(color: Colors.transparent),
                       ),
                       onPressed: () {
-                        if (_subtaskNameController.text != null) {
+                        if (_subtaskNameController.text.isNotEmpty) {
                           addSubTask(
                               widget.taskKey,
                               _subtaskNameController.text,

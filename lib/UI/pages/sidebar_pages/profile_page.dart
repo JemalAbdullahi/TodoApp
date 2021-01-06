@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -7,16 +8,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController firstnameText = new TextEditingController();
+  //TextEditingController firstnameText = new TextEditingController();
 
   TextEditingController confirmPassword = new TextEditingController();
-
+  String _confirmPassword;
   TextEditingController oldPassword = new TextEditingController();
-
+  String _password;
   TextEditingController newPassword = new TextEditingController();
-
+  String _newPassword;
   TextEditingController emailText = new TextEditingController();
-
+  String _email;
   final profileLabelStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.bold,
@@ -114,9 +115,9 @@ class _ProfilePageState extends State<ProfilePage> {
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
           height: 60,
-          child: TextField(
-            controller: firstnameText,
-            keyboardType: TextInputType.text,
+          child: TextFormField(
+            controller: oldPassword,
+            keyboardType: TextInputType.visiblePassword,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -125,6 +126,15 @@ class _ProfilePageState extends State<ProfilePage> {
               hintText: 'Old Password',
               hintStyle: hintTextStyle,
             ),
+            validator: (String value){
+              if(value.isEmpty){
+                return 'Current Password is required';
+              }
+              return null;
+            },
+            onSaved: (String value){
+              _password = value;
+            },
           ),
         ),
       ],
@@ -168,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
           height: 60,
-          child: TextField(
+          child: TextFormField(
             controller: emailText,
             keyboardType: TextInputType.text,
             style: TextStyle(color: Colors.white),
@@ -179,6 +189,12 @@ class _ProfilePageState extends State<ProfilePage> {
               hintText: 'Change your Email',
               hintStyle: hintTextStyle,
             ),
+            validator: (String value){
+              if(value.isNotEmpty && !RegExp("^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*").hasMatch(value)){
+                return 'Enter a valid email address';
+              }
+              return null;
+            },
           ),
         ),
       ],
@@ -195,9 +211,9 @@ class _ProfilePageState extends State<ProfilePage> {
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
           height: 60,
-          child: TextField(
+          child: TextFormField(
             controller: newPassword,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.visiblePassword,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -206,6 +222,11 @@ class _ProfilePageState extends State<ProfilePage> {
               hintText: 'Enter a New Password',
               hintStyle: hintTextStyle,
             ),
+            validator: (String value){
+              if(value.isNotEmpty){
+                
+              }
+            } ,
           ),
         ),
       ],
@@ -265,21 +286,27 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   updateProfileFunc() {
-    if (oldPassword.text != null && oldPassword.text != "") {
-      if (newPassword.text != null && confirmPassword.text != null) {
+    var user = userBloc.getUserObject();
+    if (oldPassword.text.isNotEmpty) {
+      if (newPassword.text.isNotEmpty && confirmPassword.text.isNotEmpty) {
         if (newPassword.text == confirmPassword.text) {
-          if (emailText.text != null) {
+          if (emailText.text.isNotEmpty) {
+            userBloc.updateUserProfile(oldPassword.text, newPassword.text, emailText.text, user.apiKey);
             //update Password and Email
           } else {
+            userBloc.updateUserProfile(oldPassword.text, newPassword.text, user.emailAddress, user.apiKey);
             // update password
           }
-        }else{
-          //error Both Password Fields must be entered
+        } else {
+          print("Both Password Fields must be the same");
+          //error Both Password Fields must be the same
         }
-      } else if (emailText.text != null) {
+      } else if (emailText.text.isNotEmpty) {
+        userBloc.updateUserProfile(oldPassword.text, user.password, emailText.text, user.apiKey);
         //update email
       }
     } else {
+      print("Must enter Old Password.");
       // Display error; must enter old password
     }
   }

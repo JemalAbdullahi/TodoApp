@@ -52,7 +52,7 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           apiKey = snapshot.data;
-          if (apiKey.length > 0 && apiKey != null) {
+          if (apiKey.length > 0 && apiKey.isNotEmpty) {
             tasksBloc = TaskBloc(apiKey);
           }
         }
@@ -76,7 +76,7 @@ class _SignInState extends State<SignIn> {
 
   Future signInUser() async {
     apiKey = await getApiKey();
-    if (apiKey != null) {
+    if (apiKey.isNotEmpty) {
       if (apiKey.length > 0) {
         userBloc.signinUser("", "", apiKey);
       } else {}
@@ -184,8 +184,7 @@ class _SignInState extends State<SignIn> {
                         side: BorderSide(color: Colors.transparent),
                       ),
                       onPressed: () {
-                        if (_taskNameController.text != null &&
-                            _taskNameController.text != '') {
+                        if (_taskNameController.text.isNotEmpty) {
                           addTask(_taskNameController.text,
                               _groupNameController.text, -1);
                           Navigator.pop(context);

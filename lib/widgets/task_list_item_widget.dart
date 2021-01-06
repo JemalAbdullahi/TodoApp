@@ -32,13 +32,13 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
       key: UniqueKey(),
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (BuildContext context){
-            return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
-              return TaskListTab(widget.repository, widget.task.taskKey, subTaskBloc);
-            });
-          }
-        ),
+        MaterialPageRoute(builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return TaskListTab(
+                widget.repository, widget.task.taskKey, subTaskBloc);
+          });
+        }),
       ),
       child: Container(
         height: 90,
@@ -69,7 +69,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  widget.task.group != null
+                  widget.task.group.isNotEmpty
                       ? Text(
                           widget.task.group,
                           style: toDoListSubtitleStyle,
