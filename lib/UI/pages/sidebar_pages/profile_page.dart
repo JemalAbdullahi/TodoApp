@@ -9,11 +9,11 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController firstnameText = new TextEditingController();
 
-  TextEditingController lastnameText = new TextEditingController();
+  TextEditingController confirmPassword = new TextEditingController();
 
-  TextEditingController usernameText = new TextEditingController();
+  TextEditingController oldPassword = new TextEditingController();
 
-  TextEditingController passwordText = new TextEditingController();
+  TextEditingController newPassword = new TextEditingController();
 
   TextEditingController emailText = new TextEditingController();
 
@@ -65,9 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 _buildCircleAvatar(),
                 SizedBox(height: 25),
-                _buildFirstNameTF(),
-                SizedBox(height: 20),
-                _buildLastNameTF(),
+                _oldPassword(),
                 SizedBox(height: 20),
                 _buildEmailTF(),
                 SizedBox(height: 20),
@@ -93,11 +91,24 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildFirstNameTF() {
+  Widget _oldPassword() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text('First Name', style: profileLabelStyle),
+        RichText(
+          text: TextSpan(
+              text: 'Old Password',
+              style: profileLabelStyle,
+              children: [
+                TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16),
+                )
+              ]),
+        ),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -110,8 +121,8 @@ class _ProfilePageState extends State<ProfilePage> {
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.account_circle, color: Colors.white),
-              hintText: 'Change your First Name',
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
+              hintText: 'Old Password',
               hintStyle: hintTextStyle,
             ),
           ),
@@ -120,32 +131,32 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildLastNameTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Last Name', style: profileLabelStyle),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: profileBoxDecorationStyle,
-          height: 60,
-          child: TextField(
-            controller: lastnameText,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.account_circle, color: Colors.white),
-              hintText: 'Change your Last Name',
-              hintStyle: hintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildLastNameTF() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: <Widget>[
+  //       Text('Last Name', style: profileLabelStyle),
+  //       SizedBox(height: 10),
+  //       Container(
+  //         alignment: Alignment.centerLeft,
+  //         decoration: profileBoxDecorationStyle,
+  //         height: 60,
+  //         child: TextField(
+  //           controller: lastnameText,
+  //           keyboardType: TextInputType.text,
+  //           style: TextStyle(color: Colors.white),
+  //           decoration: InputDecoration(
+  //             border: InputBorder.none,
+  //             contentPadding: EdgeInsets.only(top: 14.0),
+  //             prefixIcon: Icon(Icons.account_circle, color: Colors.white),
+  //             hintText: 'Change your Last Name',
+  //             hintStyle: hintTextStyle,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildEmailTF() {
     return Column(
@@ -185,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
           decoration: profileBoxDecorationStyle,
           height: 60,
           child: TextField(
-            controller: passwordText,
+            controller: newPassword,
             keyboardType: TextInputType.text,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
@@ -212,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage> {
           decoration: profileBoxDecorationStyle,
           height: 60,
           child: TextField(
-            controller: passwordText,
+            controller: confirmPassword,
             keyboardType: TextInputType.text,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
@@ -229,7 +240,47 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildSaveButton() {
-    return RaisedButton(
-        onPressed: null, child: Text('Save'), disabledColor: darkBlueGradient);
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        autofocus: false,
+        onPressed: updateProfileFunc(),
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        color: Colors.white,
+        disabledColor: Colors.white,
+        child: Text(
+          'Update Profile',
+          style: TextStyle(
+              color: Color(0xff527daa),
+              letterSpacing: 1.5,
+              fontFamily: 'OpenSans',
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0),
+        ),
+      ),
+    );
+  }
+
+  updateProfileFunc() {
+    if (oldPassword.text != null && oldPassword.text != "") {
+      if (newPassword.text != null && confirmPassword.text != null) {
+        if (newPassword.text == confirmPassword.text) {
+          if (emailText.text != null) {
+            //update Password and Email
+          } else {
+            // update password
+          }
+        }else{
+          //error Both Password Fields must be entered
+        }
+      } else if (emailText.text != null) {
+        //update email
+      }
+    } else {
+      // Display error; must enter old password
+    }
   }
 }

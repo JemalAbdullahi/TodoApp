@@ -9,7 +9,7 @@ api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
 # Route
-api.add_resource(Register, '/register')
+api.add_resource(User, '/user')
 
 api.add_resource(Signin, '/signin')
 

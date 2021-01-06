@@ -3,16 +3,17 @@ import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
+import 'package:todolist/models/user.dart';
 import 'dart:convert';
 import 'package:todolist/models/user.dart';
 
 class ApiProvider {
   Client client = Client();
-  //final _apiKey = 'your_api_key';
+  // final _apiKey = 'your_api_key';
 
   Future<User> registerUser(
       String username, String password, String email) async {
-    final response = await client.post("http://10.0.2.2:5000/api/register",
+    final response = await client.post("http://10.0.2.2:5000/api/user",
         // headers: "",
         body: jsonEncode({
           "emailaddress": email,
@@ -90,6 +91,23 @@ class ApiProvider {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
       throw Exception('Failed to post tasks');
+    }
+  }
+
+  Future updateUserProfile(String email, String newPassword, String oldPassword, String apiKey) async {
+    final response = await client.put("http://10.0.2.2:5000/api/user",
+        headers: {"Authorization": apiKey},
+        body: jsonEncode({
+          "oldPassword": oldPassword,
+          "newPassword": newPassword,
+          "email": email,
+        }));
+    if (response.statusCode == 201) {
+      print("User Profile Updated");
+    } else {
+      // If that call was not successful, throw an error.
+      print(json.decode(response.body));
+      throw Exception('Failed to Update User Profile');
     }
   }
 
