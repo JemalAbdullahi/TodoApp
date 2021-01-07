@@ -11,13 +11,9 @@ class _ProfilePageState extends State<ProfilePage> {
   //TextEditingController firstnameText = new TextEditingController();
 
   TextEditingController confirmPassword = new TextEditingController();
-  String _confirmPassword;
   TextEditingController oldPassword = new TextEditingController();
-  String _password;
   TextEditingController newPassword = new TextEditingController();
-  String _newPassword;
   TextEditingController emailText = new TextEditingController();
-  String _email;
   final profileLabelStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.bold,
@@ -132,9 +128,6 @@ class _ProfilePageState extends State<ProfilePage> {
               }
               return null;
             },
-            onSaved: (String value){
-              _password = value;
-            },
           ),
         ),
       ],
@@ -222,11 +215,6 @@ class _ProfilePageState extends State<ProfilePage> {
               hintText: 'Enter a New Password',
               hintStyle: hintTextStyle,
             ),
-            validator: (String value){
-              if(value.isNotEmpty){
-                
-              }
-            } ,
           ),
         ),
       ],

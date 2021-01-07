@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/how_to_use_page.dart';
-import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
+import 'package:todolist/UI/pages/sidebar_pages/profile_page_ver_ii.dart';
 import 'package:todolist/widgets/sidebar_widgets/my_button.dart';
 
 class SideBarButtonList extends StatefulWidget {
@@ -75,16 +75,17 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
             },
           ),
           MyButton(
-              text: "How to Use",
-              iconData: Icons.info,
-              textSize: getSize(1),
-              height: (widget.menuContainerHeight) / 5,
-              buttonFunction: () {
+            text: "How to Use",
+            iconData: Icons.info,
+            textSize: getSize(1),
+            height: (widget.menuContainerHeight) / 5,
+            buttonFunction: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HowToPage()),
               );
-            },),
+            },
+          ),
           MyButton(
               text: "Credits",
               iconData: Icons.people,
