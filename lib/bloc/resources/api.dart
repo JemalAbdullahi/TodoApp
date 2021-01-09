@@ -102,12 +102,14 @@ class ApiProvider {
           "newPassword": newPassword,
           "email": email,
         }));
+    final Map result = json.decode(response.body);
     if (response.statusCode == 201) {
       print("User Profile Updated");
+      return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
-      throw Exception('Failed to Update User Profile');
+      throw Exception(result["Message"]);
     }
   }
 
