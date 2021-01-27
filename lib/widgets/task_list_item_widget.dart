@@ -56,6 +56,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Checkbox(
                   value: widget.task.completed,
@@ -65,23 +66,38 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                       widget.repository.updateUserTask(widget.task);
                     });
                   }),
-              Text(widget.task.title, style: toDoListTileStyle),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  widget.task.group.isNotEmpty
-                      ? Text(
-                          widget.task.group,
-                          style: toDoListSubtitleStyle,
-                          textAlign: TextAlign.right,
-                        )
-                      : Text(
-                          'group',
-                          style: toDoListSubtitleStyle,
-                          textAlign: TextAlign.right,
-                        ),
-                  SizedBox(height: 20),
-                ],
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Text(
+                  widget.task.title,
+                  style: toDoListTileStyle,
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  textDirection: TextDirection.ltr,
+                  children: <Widget>[
+                    widget.task.group.isNotEmpty
+                        ? Text(
+                            widget.task.group,
+                            style: toDoListSubtitleStyle,
+                            textAlign: TextAlign.right,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : Text(
+                            'group',
+                            style: toDoListSubtitleStyle,
+                            textAlign: TextAlign.right,
+                          ),
+                    SizedBox(height: 20),
+                  ],
+                ),
               ),
             ],
           ),

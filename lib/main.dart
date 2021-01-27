@@ -20,13 +20,14 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return MaterialApp(
-        title: 'To Do List',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            primaryColorLight: lightBlue,
-            primaryColorDark: darkBlue,
-            fontFamily: 'OpenSans'),
-        home: SignIn());
+      title: 'To Do List',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          primaryColorLight: lightBlue,
+          primaryColorDark: darkBlue,
+          fontFamily: 'OpenSans'),
+      home: SignIn(),
+    );
   }
 }
 
@@ -52,14 +53,14 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           apiKey = snapshot.data;
-          if (apiKey.length > 0 && apiKey.isNotEmpty) {
+          if (apiKey.isNotEmpty) {
             tasksBloc = TaskBloc(apiKey);
           }
         }
         /* else {
           print("No data");
         } */
-        return apiKey.length > 0
+        return apiKey.isNotEmpty
             ? HomePage(
                 repository: repository,
                 logout: logout,
