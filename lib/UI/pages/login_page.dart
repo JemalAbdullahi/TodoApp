@@ -178,8 +178,7 @@ class _LoginPageState extends State<LoginPage> {
   loginFunc() {
     setState(() {
       if (usernameText.text.isNotEmpty && passwordText.text.isNotEmpty) {
-        userBloc.signinUser(usernameText.text, passwordText.text, "").then((_) {
-          print(usernameText.text + " " + passwordText.text);
+        userBloc.signinUser(usernameText.text.trim(), passwordText.text.trim(), "").then((_) {
           widget.login();
         });
       } else
@@ -193,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
         emailText.text.isNotEmpty) {
       print(usernameText.text + passwordText.text + emailText.text);
       userBloc
-          .registerUser(usernameText.text, passwordText.text, emailText.text)
+          .registerUser(usernameText.text.trim(), passwordText.text.trim(), emailText.text.trim())
           .then((_) {
         widget.login();
       });

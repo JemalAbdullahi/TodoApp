@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/how_to_use_page.dart';
-import 'package:todolist/UI/pages/sidebar_pages/profile_page_ver_ii.dart';
+import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
 import 'package:todolist/widgets/sidebar_widgets/my_button.dart';
 
 class SideBarButtonList extends StatefulWidget {
@@ -71,7 +71,7 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
+              ).then((value) => setState(() {}));
             },
           ),
           MyButton(

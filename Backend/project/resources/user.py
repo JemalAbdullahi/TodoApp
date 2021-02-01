@@ -57,10 +57,11 @@ class Users(Resource):
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
-                if user.password != json_data["oldPassword"]:
-                    oldPassword = json_data["oldPassword"]
+                if user.password != json_data["currentPassword"]:
                     return {"Message": "Incorrect Current Password"}
                 else:
+                    if (user.username != json_data['username']):
+                        user.username = json_data['username']
                     if (user.emailaddress != json_data['email']):
                         user.emailaddress = json_data['email']
                     if (user.password != json_data['newPassword']):

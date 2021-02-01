@@ -14,8 +14,10 @@ class Repository {
   Future signinUser(String username, String password, String apiKey) =>
       apiProvider.signinUser(username, password, apiKey);
 
-  Future updateUserProfile(String oldPassword, String newPassword, String email, String apiKey)=>
-      apiProvider.updateUserProfile(oldPassword, newPassword, email, apiKey);
+  Future updateUserProfile(String currentPassword, String newPassword,
+          String email, String username, String apiKey) =>
+      apiProvider.updateUserProfile(
+          currentPassword, newPassword, email, username, apiKey);
 
   Future getUserTasks(String apiKey) => apiProvider.getUserTasks(apiKey);
 
@@ -34,8 +36,8 @@ class Repository {
 
   Future getSubTasks(String taskKey) => apiProvider.getSubTasks(taskKey);
 
-  Future<Null> addSubTask(
-      String taskKey, String subtaskName, String notes, int index, bool completed) async {
+  Future<Null> addSubTask(String taskKey, String subtaskName, String notes,
+      int index, bool completed) async {
     apiProvider.addSubTask(taskKey, subtaskName, notes, index, completed);
   }
 

@@ -93,14 +93,15 @@ class ApiProvider {
     }
   }
 
-  Future updateUserProfile(String oldPassword, String newPassword, String email,
-      String apiKey) async {
+  Future updateUserProfile(String currentPassword, String newPassword,
+      String email, String username, String apiKey) async {
     final response = await client.put("http://10.0.2.2:5000/api/user",
         headers: {"Authorization": apiKey},
         body: jsonEncode({
-          "oldPassword": oldPassword,
+          "currentPassword": currentPassword,
           "newPassword": newPassword,
           "email": email,
+          "username": username,
         }));
     final Map result = json.decode(response.body);
     if (response.statusCode == 201) {
