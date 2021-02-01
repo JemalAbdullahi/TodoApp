@@ -28,8 +28,14 @@ class UserBloc {
     _userGetter.sink.add(_user);
   }
 
-  updateUserProfile(String oldPassword, String newPassword, String email, String apiKey) async{
-    _user = await _repository.updateUserProfile(oldPassword, newPassword, email, apiKey);
+  updateUserProfile(String currentPassword, String newPassword, String email,
+      String username, String apiKey) async {
+    try {
+      _user = await _repository.updateUserProfile(
+          currentPassword, newPassword, email, username, apiKey);
+    } catch (e) {
+      throw Exception(e.message);
+    }
   }
 
   dispose() {
@@ -67,7 +73,7 @@ class SubTaskBloc {
   SubTaskBloc(String taskKey) {
     this.taskKey = taskKey;
     _updateSubTasks(taskKey).then((_) {
-      _subTaskSubject.add(_subTasks); 
+      _subTaskSubject.add(_subTasks);
     });
   }
 

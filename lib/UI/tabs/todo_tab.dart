@@ -26,7 +26,6 @@ class _ToDoTabState extends State<ToDoTab> {
 
   @override
   Widget build(BuildContext context) {
-    //print("TAB BUILD CONTEXT");
     return Stack(
       children: <Widget>[
         BackgroundColorContainer(startColor: lightBlue, endColor: lightBlueGradient,),

@@ -148,8 +148,6 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _newUser = true;
         });
-        //_newUser = true;
-        //build(context);
         print("Sign UP");
       },
       child: RichText(
@@ -180,8 +178,7 @@ class _LoginPageState extends State<LoginPage> {
   loginFunc() {
     setState(() {
       if (usernameText.text.isNotEmpty && passwordText.text.isNotEmpty) {
-        userBloc.signinUser(usernameText.text, passwordText.text, "").then((_) {
-          print(usernameText.text + " " + passwordText.text);
+        userBloc.signinUser(usernameText.text.trim(), passwordText.text.trim(), "").then((_) {
           widget.login();
         });
       } else
@@ -191,12 +188,11 @@ class _LoginPageState extends State<LoginPage> {
 
   signupFunc() {
     if (usernameText.text.isNotEmpty &&
-            passwordText.text.isNotEmpty &&
-            emailText.text.isNotEmpty
-        ) {
+        passwordText.text.isNotEmpty &&
+        emailText.text.isNotEmpty) {
       print(usernameText.text + passwordText.text + emailText.text);
       userBloc
-          .registerUser(usernameText.text, passwordText.text, emailText.text)
+          .registerUser(usernameText.text.trim(), passwordText.text.trim(), emailText.text.trim())
           .then((_) {
         widget.login();
       });
@@ -214,108 +210,94 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _getSigninScreen() {
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xff5CD6FF),
-                Color(0xff57CBF2),
-                Color(0xff4EB6D9),
-                Color(0xff2F80ED),
-              ],
-            ),
-          ),
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xff5CD6FF),
+            Color(0xff57CBF2),
+            Color(0xff4EB6D9),
+            Color(0xff2F80ED),
+          ],
         ),
-        Container(
-          height: double.infinity,
-          child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Sign In',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    color: Colors.white,
-                    fontFamily: 'OpenSans',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 30.0),
-                _buildUsernameTF(),
-                SizedBox(height: 30),
-                _buildPasswordTF(),
-                _buildForgotPasswordBtn(),
-                _buildLoginBtn('LOGIN'),
-                _buildSignupBtn(),
-              ],
+      ),
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Sign In',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.white,
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        )
-      ],
+            SizedBox(height: 30.0),
+            _buildUsernameTF(),
+            SizedBox(height: 30),
+            _buildPasswordTF(),
+            _buildForgotPasswordBtn(),
+            _buildLoginBtn('LOGIN'),
+            _buildSignupBtn(),
+          ],
+        ),
+      ),
     );
   }
 
 //---------------------------------------
   Widget _getSignUpScreen() {
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xff5CD6FF),
-                Color(0xff57CBF2),
-                Color(0xff4EB6D9),
-                Color(0xff2F80ED),
-              ],
-            ),
-          ),
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xff5CD6FF),
+            Color(0xff57CBF2),
+            Color(0xff4EB6D9),
+            Color(0xff2F80ED),
+          ],
         ),
-        Container(
-          height: double.infinity,
-          child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Sign Up',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    color: Colors.white,
-                    fontFamily: 'OpenSans',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 30.0),
-                _buildUsernameTF(),
-                SizedBox(height: 30),
-                _buildPasswordTF(),
-                SizedBox(height: 30),
-                _buildEmailTF(emailText),
-                _buildSigningUpBtn('SIGN UP'),
-                _buildBackToSignIn()
-              ],
+      ),
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Sign Up',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.white,
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        )
-      ],
+            SizedBox(height: 30.0),
+            _buildUsernameTF(),
+            SizedBox(height: 30),
+            _buildPasswordTF(),
+            SizedBox(height: 30),
+            _buildEmailTF(emailText),
+            _buildSigningUpBtn('SIGN UP'),
+            _buildBackToSignIn()
+          ],
+        ),
+      ),
     );
   }
 

@@ -3,5 +3,8 @@
   "python.autoComplete.extraPaths": [
     "./Backend/project"
   ],
-  "python.linting.enabled": true
+  "python.linting.enabled": true,
+  "python.analysis.extraPaths": [
+    "./Backend/project"
+  ]
 }

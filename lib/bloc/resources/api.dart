@@ -93,21 +93,24 @@ class ApiProvider {
     }
   }
 
-  Future updateUserProfile(String oldPassword, String newPassword, String email,
-      String apiKey) async {
+  Future updateUserProfile(String currentPassword, String newPassword,
+      String email, String username, String apiKey) async {
     final response = await client.put("http://10.0.2.2:5000/api/user",
         headers: {"Authorization": apiKey},
         body: jsonEncode({
-          "oldPassword": oldPassword,
+          "currentPassword": currentPassword,
           "newPassword": newPassword,
           "email": email,
+          "username": username,
         }));
+    final Map result = json.decode(response.body);
     if (response.statusCode == 201) {
       print("User Profile Updated");
+      return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
-      throw Exception('Failed to Update User Profile');
+      throw Exception(result["Message"]);
     }
   }
 

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/user.dart';
+
+//import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
+//import 'package:todolist/models/global.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -8,16 +13,21 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //TextEditingController firstnameText = new TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  User _user = userBloc.getUserObject();
 
-  TextEditingController confirmPassword = new TextEditingController();
-  String _confirmPassword;
-  TextEditingController oldPassword = new TextEditingController();
-  String _password;
-  TextEditingController newPassword = new TextEditingController();
-  String _newPassword;
-  TextEditingController emailText = new TextEditingController();
-  String _email;
+  String _currentPassword,
+      _newPassword,
+      _confirmPassword,
+      _emailAddress,
+      _username;
+
+  TextEditingController _currentPasswordController = TextEditingController();
+  TextEditingController _newPasswordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController _emailAddressController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+
   final profileLabelStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.bold,
@@ -36,6 +46,13 @@ class _ProfilePageState extends State<ProfilePage> {
     ],
   );
 
+  final passwordValidator = MultiValidator([
+    MinLengthValidator(8,
+        errorText: 'password must be at least 8 characters long'),
+    PatternValidator(r'(?=.*?[#?!@$%^&*-])',
+        errorText: 'passwords must have at least one special character')
+  ]);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,227 +64,220 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.pop(context);
           },
         ),
+        title: Text('Edit Profile'),
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-          height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [lightBlueGradient, lightBlue],
-            ),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-          child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: <Widget>[
-                _buildCircleAvatar(),
-                SizedBox(height: 25),
-                _oldPassword(),
-                SizedBox(height: 20),
-                _buildEmailTF(),
-                SizedBox(height: 20),
-                _buildPasswordTF(),
-                SizedBox(height: 20),
-                _buildRePasswordTF(),
-                SizedBox(height: 10),
-                _buildSaveButton()
-              ],
-            ),
-          )),
+      body: _buildFormContainer(),
     );
   }
 
-  Widget _buildCircleAvatar() {
-    return CircleAvatar(
-      radius: 40,
-      backgroundColor: darkBlueGradient,
-      child: Text(
-        'JA',
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+  Widget _buildFormContainer() {
+    return Builder(builder: (BuildContext context) {
+      return Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [lightBlueGradient, lightBlue],
+          ),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: _buildForm(context),
+        ),
+      );
+    });
+  }
+
+  Widget _buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          _usernameField(),
+          SizedBox(height: 20),
+          _emailAddressField(),
+          SizedBox(height: 20),
+          _newPasswordField(),
+          SizedBox(height: 20),
+          _confirmPasswordField(),
+          SizedBox(height: 20),
+          _currentPasswordField(),
+          SizedBox(height: 20),
+          _buildSaveButton(context)
+        ],
       ),
     );
   }
 
-  Widget _oldPassword() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        RichText(
-          text: TextSpan(
-              text: 'Old Password',
-              style: profileLabelStyle,
-              children: [
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16),
-                )
-              ]),
+  Widget _currentPasswordField() {
+    return Container(
+      alignment: Alignment.centerLeft,
+      decoration: profileBoxDecorationStyle,
+      child: TextFormField(
+        controller: _currentPasswordController,
+        obscureText: true,
+        keyboardType: TextInputType.visiblePassword,
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
+          prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
+          hintText: 'Current Password',
+          hintStyle: hintTextStyle,
+          errorMaxLines: 2,
+          errorStyle: TextStyle(fontSize: 16, color: Colors.red),
         ),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: profileBoxDecorationStyle,
-          height: 60,
-          child: TextFormField(
-            controller: oldPassword,
-            keyboardType: TextInputType.visiblePassword,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
-              hintText: 'Old Password',
-              hintStyle: hintTextStyle,
-            ),
-            validator: (String value){
-              if(value.isEmpty){
-                return 'Current Password is required';
-              }
-              return null;
-            },
-            onSaved: (String value){
-              _password = value;
-            },
-          ),
-        ),
-      ],
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Current Password is Required';
+          }
+          if (value != _user.password) {
+            return 'Incorrect Password';
+          }
+          return null;
+        },
+        onSaved: (newValue) => _currentPassword = newValue.trim(),
+      ),
     );
   }
 
-  // Widget _buildLastNameTF() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: <Widget>[
-  //       Text('Last Name', style: profileLabelStyle),
-  //       SizedBox(height: 10),
-  //       Container(
-  //         alignment: Alignment.centerLeft,
-  //         decoration: profileBoxDecorationStyle,
-  //         height: 60,
-  //         child: TextField(
-  //           controller: lastnameText,
-  //           keyboardType: TextInputType.text,
-  //           style: TextStyle(color: Colors.white),
-  //           decoration: InputDecoration(
-  //             border: InputBorder.none,
-  //             contentPadding: EdgeInsets.only(top: 14.0),
-  //             prefixIcon: Icon(Icons.account_circle, color: Colors.white),
-  //             hintText: 'Change your Last Name',
-  //             hintStyle: hintTextStyle,
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  Widget _buildEmailTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Email Address', style: profileLabelStyle),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: profileBoxDecorationStyle,
-          height: 60,
-          child: TextFormField(
-            controller: emailText,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.email, color: Colors.white),
-              hintText: 'Change your Email',
-              hintStyle: hintTextStyle,
-            ),
-            validator: (String value){
-              if(value.isNotEmpty && !RegExp("^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*").hasMatch(value)){
-                return 'Enter a valid email address';
-              }
-              return null;
-            },
-          ),
-        ),
-      ],
+  Widget _usernameField() {
+    _usernameController.text = _user.username;
+    return Container(
+      alignment: Alignment.centerLeft,
+      decoration: profileBoxDecorationStyle,
+      child: TextFormField(
+        controller: _usernameController,
+        keyboardType: TextInputType.text,
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
+            prefixIcon: Icon(Icons.person, color: Colors.white),
+            hintText: 'Username',
+            hintStyle: hintTextStyle,
+            errorMaxLines: 2,
+            errorStyle: TextStyle(fontSize: 16)),
+        onSaved: (newValue) => _username = newValue.trim(),
+      ),
     );
   }
 
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Password', style: profileLabelStyle),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: profileBoxDecorationStyle,
-          height: 60,
-          child: TextFormField(
-            controller: newPassword,
-            keyboardType: TextInputType.visiblePassword,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.lock, color: Colors.white),
-              hintText: 'Enter a New Password',
-              hintStyle: hintTextStyle,
-            ),
-            validator: (String value){
-              if(value.isNotEmpty){
-                
-              }
-            } ,
-          ),
-        ),
-      ],
+  Widget _emailAddressField() {
+    _emailAddressController.text = _user.emailAddress;
+    return Container(
+      alignment: Alignment.centerLeft,
+      decoration: profileBoxDecorationStyle,
+      child: TextFormField(
+        controller: _emailAddressController,
+        keyboardType: TextInputType.emailAddress,
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
+            prefixIcon: Icon(Icons.email, color: Colors.white),
+            hintText: 'Email Address',
+            hintStyle: hintTextStyle,
+            errorMaxLines: 2,
+            errorStyle: TextStyle(fontSize: 16)),
+        validator: EmailValidator(errorText: 'Enter a Valid Email'),
+        onSaved: (newValue) => _emailAddress = newValue.trim(),
+      ),
     );
   }
 
-  Widget _buildRePasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Confirm Password', style: profileLabelStyle),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: profileBoxDecorationStyle,
-          height: 60,
-          child: TextField(
-            controller: confirmPassword,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.lock, color: Colors.white),
-              hintText: 'Confirm New Password',
-              hintStyle: hintTextStyle,
-            ),
-          ),
-        ),
-      ],
+  Widget _newPasswordField() {
+    _newPasswordController.text = _user.password;
+    _newPassword = _user.password;
+    return Container(
+      alignment: Alignment.centerLeft,
+      decoration: profileBoxDecorationStyle,
+      child: TextFormField(
+        controller: _newPasswordController,
+        obscureText: true,
+        keyboardType: TextInputType.visiblePassword,
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
+            prefixIcon: Icon(Icons.lock, color: Colors.white),
+            hintText: 'New Password',
+            hintStyle: hintTextStyle,
+            errorMaxLines: 2,
+            errorStyle: TextStyle(fontSize: 16)),
+        validator: passwordValidator,
+        onSaved: (newValue) => _newPassword = newValue.trim(),
+      ),
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _confirmPasswordField() {
+    _confirmPasswordController.text = _user.password;
+    return Container(
+      alignment: Alignment.centerLeft,
+      decoration: profileBoxDecorationStyle,
+      child: TextFormField(
+        controller: _confirmPasswordController,
+        obscureText: true,
+        keyboardType: TextInputType.visiblePassword,
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
+            prefixIcon: Icon(Icons.lock, color: Colors.white),
+            hintText: 'Re-Enter New Password',
+            hintStyle: hintTextStyle,
+            errorMaxLines: 2,
+            errorStyle: TextStyle(fontSize: 16)),
+        validator: (val) => MatchValidator(errorText: 'Passwords Do Not Match')
+            .validateMatch(val, _newPassword),
+        onSaved: (newValue) => _confirmPassword = newValue.trim(),
+      ),
+    );
+  }
+
+  Widget _buildSaveButton(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
         autofocus: false,
-        onPressed: updateProfileFunc(),
+        onPressed: () async {
+          if (_formKey.currentState.validate()) {
+            try {
+              _formKey.currentState.save();
+              await userBloc.updateUserProfile(_currentPassword,
+                  _confirmPassword, _emailAddress, _username, _user.apiKey);
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Success: Profile Updated!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } catch (e) {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(e.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+            return;
+          } else {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failure: Profile Did Not Update!'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         color: Colors.white,
@@ -283,31 +293,5 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
-  }
-
-  updateProfileFunc() {
-    var user = userBloc.getUserObject();
-    if (oldPassword.text.isNotEmpty) {
-      if (newPassword.text.isNotEmpty && confirmPassword.text.isNotEmpty) {
-        if (newPassword.text == confirmPassword.text) {
-          if (emailText.text.isNotEmpty) {
-            userBloc.updateUserProfile(oldPassword.text, newPassword.text, emailText.text, user.apiKey);
-            //update Password and Email
-          } else {
-            userBloc.updateUserProfile(oldPassword.text, newPassword.text, user.emailAddress, user.apiKey);
-            // update password
-          }
-        } else {
-          print("Both Password Fields must be the same");
-          //error Both Password Fields must be the same
-        }
-      } else if (emailText.text.isNotEmpty) {
-        userBloc.updateUserProfile(oldPassword.text, user.password, emailText.text, user.apiKey);
-        //update email
-      }
-    } else {
-      print("Must enter Old Password.");
-      // Display error; must enter old password
-    }
   }
 }

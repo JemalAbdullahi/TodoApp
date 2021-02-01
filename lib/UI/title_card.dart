@@ -81,6 +81,7 @@ class __TitleCardButtonState extends State<_TitleCardButton> {
       scale: 1.1,
       origin: Offset(-1800, -950),
       child: FloatingActionButton(
+        tooltip: "Press to Add a Task",
         onPressed: () {
           widget.addTaskDialog();
         },

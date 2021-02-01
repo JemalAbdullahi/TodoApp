@@ -71,20 +71,21 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
+              ).then((value) => setState(() {}));
             },
           ),
           MyButton(
-              text: "How to Use",
-              iconData: Icons.info,
-              textSize: getSize(1),
-              height: (widget.menuContainerHeight) / 5,
-              buttonFunction: () {
+            text: "How to Use",
+            iconData: Icons.info,
+            textSize: getSize(1),
+            height: (widget.menuContainerHeight) / 5,
+            buttonFunction: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HowToPage()),
               );
-            },),
+            },
+          ),
           MyButton(
               text: "Credits",
               iconData: Icons.people,
