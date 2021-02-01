@@ -25,8 +25,8 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
     - [x] Name
     - [x] Password (change)
     - [x] Email Address (change)
-  - [ ] How to Use
-  - [ ] Credits
+  - [ ] Groups
+  - [ ] Friends
   - [ ] Settings
   - [ ] Log out
   - [x] Animated
