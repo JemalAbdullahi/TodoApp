@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.pop(context);
           },
         ),
-        title: Text('Profile'),
+        title: Text('Edit Profile'),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
