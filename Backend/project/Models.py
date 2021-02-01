@@ -11,16 +11,22 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(), unique=True)
-    password = db.Column(db.String())
-    emailaddress = db.Column(db.String())
+    firstname = db.Column(db.String())
+    lastname = db.Column(db.String())
+    phonenumber = db.Column(db.String(15), unique=True)
+    username = db.Column(db.String(64), unique=True)
+    password = db.Column(db.String(128))
+    emailaddress = db.Column(db.String(120))
     api_key = db.Column(db.String())
 
-    def __init__(self, api_key, emailaddress, password, username):
+    def __init__(self, api_key, emailaddress, password, username, firstname, lastname, phonenumber):
         self.api_key = api_key
         self.emailaddress = emailaddress
         self.password = password
         self.username = username
+        self.firstname = firstname
+        self.lastname = lastname
+        self.phonenumber = phonenumber
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -32,6 +38,9 @@ class User(db.Model):
             'username': self.username,
             'password': self.password,
             'emailaddress': self.emailaddress,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'phonenumber': self.phonenumber,
         }
 
 
