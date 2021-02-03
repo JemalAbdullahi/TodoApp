@@ -1,5 +1,101 @@
 {
-  "todo": [],
+  "todo": [
+    {
+      "assignedTo": {
+        "name": "Jemal"
+      },
+      "category": "User",
+      "creation_time": "2021-02-03T00:28:26.783Z",
+      "description": {
+        "content": "Create Avatar Widget",
+        "mime": "text/markdown"
+      },
+      "details": {
+        "content": "- [] Selection of basic avatars\n- [] Upload image for avatar\n- [] Click avatar to view/update Profile",
+        "mime": "text/markdown"
+      },
+      "id": "4",
+      "prio": 0,
+      "references": [],
+      "title": "Avatar"
+    },
+    {
+      "assignedTo": {
+        "name": "Jemal"
+      },
+      "category": "Group",
+      "creation_time": "2021-02-03T00:31:12.612Z",
+      "description": {
+        "content": "Create List for Groups ",
+        "mime": "text/markdown"
+      },
+      "details": {
+        "content": "- [] Get User's groups from database",
+        "mime": "text/markdown"
+      },
+      "id": "5",
+      "prio": 0,
+      "references": [],
+      "title": "Create Groups List"
+    },
+    {
+      "assignedTo": {
+        "name": "Jemal"
+      },
+      "category": "Sign Up Page",
+      "creation_time": "2021-02-03T00:24:09.130Z",
+      "description": {
+        "content": "Added required text fields to synchronize with user database",
+        "mime": "text/markdown"
+      },
+      "details": {
+        "content": "Fields\n-[]First Name\n-[]Last Name\n-[]Optional Phone Number\n-[]Avatar\n",
+        "mime": "text/markdown"
+      },
+      "id": "2",
+      "prio": 0,
+      "references": [],
+      "title": "Update to Include Added Personal Info"
+    },
+    {
+      "assignedTo": {
+        "name": "Jemal"
+      },
+      "category": "Backend",
+      "creation_time": "2021-02-03T00:26:02.767Z",
+      "description": {
+        "content": "Account for database changes to User",
+        "mime": "text/markdown"
+      },
+      "details": {
+        "content": "- [] First Name\n- [] Last Name\n- [] Phone Number\n- [] Avatar",
+        "mime": "text/markdown"
+      },
+      "id": "3",
+      "prio": 0,
+      "references": [],
+      "title": "Update User CRUD"
+    },
+    {
+      "assignedTo": {
+        "name": "Jemal"
+      },
+      "category": "Backend",
+      "creation_time": "2021-02-03T00:40:51.235Z",
+      "description": {
+        "content": "Create a Group table and a Group Members Table",
+        "mime": "text/markdown"
+      },
+      "details": {
+        "content": "Group Table\n- id\n- name\n\nGroup Members Table\n- group_id fk\n- user_id fk\n--role?\n\nTasks Table\n- group_id fk",
+        "mime": "text/markdown"
+      },
+      "id": "6",
+      "prio": 0,
+      "references": [],
+      "title": "Group Table"
+    }
+  ],
   "in-progress": [],
   "testing": [],
   "done": [
