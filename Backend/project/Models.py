@@ -18,8 +18,9 @@ class User(db.Model):
     password = db.Column(db.String(128))
     emailaddress = db.Column(db.String(120))
     api_key = db.Column(db.String())
+    avatar = db.Column(db.LargeBinary)
 
-    def __init__(self, api_key, emailaddress, password, username, firstname, lastname, phonenumber):
+    def __init__(self, api_key, emailaddress, password, username, firstname, lastname, phonenumber, avatar):
         self.api_key = api_key
         self.emailaddress = emailaddress
         self.password = password
@@ -27,6 +28,7 @@ class User(db.Model):
         self.firstname = firstname
         self.lastname = lastname
         self.phonenumber = phonenumber
+        self.avatar = avatar
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -41,6 +43,7 @@ class User(db.Model):
             'firstname': self.firstname,
             'lastname': self.lastname,
             'phonenumber': self.phonenumber,
+            'avatar': self.avatar,
         }
 
 
