@@ -4,6 +4,8 @@ import 'package:todolist/UI/tabs/todo_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/tasks.dart';
+import 'package:todolist/models/user.dart';
+import 'package:todolist/widgets/global_widgets/avatar.dart';
 import 'package:todolist/widgets/sidebar_widgets/sidebar_menu.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,6 +30,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isMenuOpen = false;
+   User _user = userBloc.getUserObject();
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
           leading: IconButton(
-            icon: isMenuOpen ? Icon(Icons.arrow_back) : Icon(Icons.menu),
+            icon: isMenuOpen ? Icon(Icons.arrow_back) : Avatar(imageProvider: _user.avatar),
             onPressed: () {
               setState(() {
                 isMenuOpen = !isMenuOpen;
@@ -52,7 +56,10 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository,
                   widget.reAddTask),
-              SideBarMenu(isMenuOpen: isMenuOpen, logout: widget.logout,)
+              SideBarMenu(
+                isMenuOpen: isMenuOpen,
+                logout: widget.logout,
+              )
             ],
           ),
         ),

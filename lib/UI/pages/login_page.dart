@@ -20,6 +20,10 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController usernameText = new TextEditingController();
   TextEditingController passwordText = new TextEditingController();
   TextEditingController emailText = new TextEditingController();
+  TextEditingController firstnameText = new TextEditingController();
+  TextEditingController lastnameText  = new TextEditingController();
+  TextEditingController phonenumberText = new TextEditingController();
+
 
   @override
   void initState() {
@@ -27,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-  Widget _buildUsernameTF() {
+/*   Widget _buildUsernameTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -52,9 +56,36 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
     );
+  } */
+  Widget _buildTF(String label, TextEditingController controller, TextInputType keyboardType, IconData iconData, String hintText, bool obscureText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(label, style: labelStyle),
+        SizedBox(height: 10),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: boxDecorationStyle,
+          height: 60,
+          child: TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(iconData, color: Colors.white),
+              hintText: hintText,
+              hintStyle: hintTextStyle,
+            ),
+            obscureText: obscureText,
+          ),
+        ),
+      ],
+    );
   }
 
-  Widget _buildPasswordTF() {
+/*   Widget _buildPasswordTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -81,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
-
+ */
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
@@ -192,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
         emailText.text.isNotEmpty) {
       print(usernameText.text + passwordText.text + emailText.text);
       userBloc
-          .registerUser(usernameText.text.trim(), passwordText.text.trim(), emailText.text.trim())
+          .registerUser(usernameText.text.trim(), passwordText.text.trim(), emailText.text.trim(), firstnameText.text.trim(), lastnameText.text.trim(), phonenumberText.text.trim(), null)
           .then((_) {
         widget.login();
       });
@@ -242,9 +273,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 30.0),
-            _buildUsernameTF(),
+            _buildTF('Username', usernameText, TextInputType.text ,Icons.account_circle, 'Enter Username', false),
             SizedBox(height: 30),
-            _buildPasswordTF(),
+            _buildTF('Password', passwordText, TextInputType.text, Icons.lock, 'Enter a Password', true),
             _buildForgotPasswordBtn(),
             _buildLoginBtn('LOGIN'),
             _buildSignupBtn(),
@@ -288,11 +319,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 30.0),
-            _buildUsernameTF(),
+            _buildTF('Firstname', firstnameText, TextInputType.name ,Icons.person, 'Enter a Firstname', false),
+            SizedBox(height: 30.0),
+            _buildTF('Lastname', lastnameText, TextInputType.name ,Icons.person, 'Enter a Lastname', false),
+            SizedBox(height: 30.0),
+            _buildTF('Username', usernameText, TextInputType.text ,Icons.account_circle, 'Enter a Username', false),
             SizedBox(height: 30),
-            _buildPasswordTF(),
+            _buildTF('Phone Number', phonenumberText, TextInputType.phone ,Icons.phone, 'Enter a Phone Number', false),
             SizedBox(height: 30),
-            _buildEmailTF(emailText),
+            _buildTF('Email', emailText, TextInputType.emailAddress, Icons.email, 'Enter an Email', false),
+            SizedBox(height: 30),
+            _buildTF('Password', passwordText, TextInputType.text, Icons.lock, 'Enter a Password', true),
             _buildSigningUpBtn('SIGN UP'),
             _buildBackToSignIn()
           ],
@@ -301,7 +338,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildEmailTF(TextEditingController emailText) {
+  /* Widget _buildEmailTF(TextEditingController emailText) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -326,7 +363,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
     );
-  }
+  } */
 
   Widget _buildBackToSignIn() {
     return Container(

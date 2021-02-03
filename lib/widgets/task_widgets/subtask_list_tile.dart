@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/subtasks.dart';
-import 'package:todolist/widgets/subtask_container_widget.dart';
-import 'package:todolist/widgets/subtask_list_item_widget.dart';
+import 'package:todolist/widgets/task_widgets/subtask_container_widget.dart';
+import 'package:todolist/widgets/task_widgets/subtask_list_item_widget.dart';
 
 class SubtaskListTile extends StatefulWidget {
   const SubtaskListTile({

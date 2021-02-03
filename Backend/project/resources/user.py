@@ -36,8 +36,10 @@ class Users(Resource):
 
         user = User(
             api_key=api_key,
-            #firstname=json_data['firstname'],
-            #lastname=json_data['lastname'],
+            firstname=json_data['firstname'],
+            lastname=json_data['lastname'],
+            phonenumber=json_data['phonenumber'],
+            avatar=json_data['avatar'],
             emailaddress=json_data['emailaddress'],
             password=json_data['password'],
             username=json_data['username'],
@@ -62,6 +64,14 @@ class Users(Resource):
                 else:
                     if (user.username != json_data['username']):
                         user.username = json_data['username']
+                    if (user.firstname != json_data['firstname']):
+                        user.firstname = json_data['firstname']
+                    if (user.lastname != json_data['lastname']):
+                        user.lastname = json_data['lastname']
+                    if (user.phonenumber != json_data['phonenumber']):
+                        user.phonenumber = json_data['phonenumber']
+                    if (user.avatar != json_data['avatar']):
+                        user.avatar = json_data['avatar']
                     if (user.emailaddress != json_data['email']):
                         user.emailaddress = json_data['email']
                     if (user.password != json_data['newPassword']):

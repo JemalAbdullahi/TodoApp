@@ -4,11 +4,13 @@ class BackgroundColorContainer extends StatelessWidget {
   const BackgroundColorContainer({
     Key key,
     @required this.startColor,
-    @required this.endColor
+    @required this.endColor,
+    this.widget,
   }) : super(key: key);
 
   final Color startColor;
   final Color endColor;
+  final Widget widget;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class BackgroundColorContainer extends StatelessWidget {
           colors: [startColor, endColor],
         ),
       ),
+      child: widget,
     );
   }
 }

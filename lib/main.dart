@@ -19,13 +19,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
       title: 'To Do List',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primaryColorLight: lightBlue,
           primaryColorDark: darkBlue,
-          fontFamily: 'OpenSans'),
+          fontFamily: 'Segoe UI'),
       home: SignIn(),
     );
   }

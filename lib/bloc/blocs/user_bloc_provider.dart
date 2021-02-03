@@ -1,5 +1,6 @@
 //import 'package:todolist/models/tasks.dart';
 
+import 'package:flutter/cupertino.dart';
 import 'package:todolist/models/subtasks.dart';
 
 import '../resources/repository.dart';
@@ -18,8 +19,10 @@ class UserBloc {
     return _user;
   }
 
-  registerUser(String username, String password, String email) async {
-    _user = await _repository.registerUser(username, password, email);
+  registerUser(String username, String password, String email, String firstname,
+      String lastname, String phonenumber, ImageProvider avatar) async {
+    _user = await _repository.registerUser(
+        username, password, email, firstname, lastname, phonenumber, avatar);
     _userGetter.sink.add(_user);
   }
 
@@ -28,11 +31,19 @@ class UserBloc {
     _userGetter.sink.add(_user);
   }
 
-  updateUserProfile(String currentPassword, String newPassword, String email,
-      String username, String apiKey) async {
+  updateUserProfile(
+      String currentPassword,
+      String newPassword,
+      String email,
+      String username,
+      String firstname,
+      String lastname,
+      String phonenumber,
+      ImageProvider avatar,
+      String apiKey) async {
     try {
-      _user = await _repository.updateUserProfile(
-          currentPassword, newPassword, email, username, apiKey);
+      _user = await _repository.updateUserProfile(currentPassword, newPassword,
+          email, username, firstname, lastname, phonenumber, avatar, apiKey);
     } catch (e) {
       throw Exception(e.message);
     }

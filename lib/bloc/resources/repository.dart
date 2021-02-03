@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
 
@@ -8,16 +9,32 @@ import 'package:todolist/models/user.dart';
 class Repository {
   final apiProvider = ApiProvider();
 
-  Future<User> registerUser(String username, String password, String email) =>
-      apiProvider.registerUser(username, password, email);
+  Future<User> registerUser(
+          String username,
+          String password,
+          String email,
+          String firstname,
+          String lastname,
+          String phonenumber,
+          ImageProvider avatar) =>
+      apiProvider.registerUser(
+          username, password, email, firstname, lastname, phonenumber, avatar);
 
   Future signinUser(String username, String password, String apiKey) =>
       apiProvider.signinUser(username, password, apiKey);
 
-  Future updateUserProfile(String currentPassword, String newPassword,
-          String email, String username, String apiKey) =>
-      apiProvider.updateUserProfile(
-          currentPassword, newPassword, email, username, apiKey);
+  Future updateUserProfile(
+          String currentPassword,
+          String newPassword,
+          String email,
+          String username,
+          String firstname,
+          String lastname,
+          String phonenumber,
+          ImageProvider avatar,
+          String apiKey) =>
+      apiProvider.updateUserProfile(currentPassword, newPassword, email,
+          username, firstname, lastname, phonenumber, avatar, apiKey);
 
   Future getUserTasks(String apiKey) => apiProvider.getUserTasks(apiKey);
 
