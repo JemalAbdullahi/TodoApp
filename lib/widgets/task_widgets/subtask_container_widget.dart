@@ -4,8 +4,8 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/subtasks.dart';
-import 'package:todolist/widgets/background_color_container.dart';
-import 'package:todolist/widgets/subtask_list_tile.dart';
+import 'package:todolist/widgets/global_widgets/background_color_container.dart';
+import 'package:todolist/widgets/task_widgets/subtask_list_tile.dart';
 
 class SubtaskContainerWidget extends StatefulWidget {
   SubtaskContainerWidget(

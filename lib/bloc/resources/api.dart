@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/models/subtasks.dart';
@@ -11,13 +12,23 @@ class ApiProvider {
   // final _apiKey = 'your_api_key';
 
   Future<User> registerUser(
-      String username, String password, String email) async {
+      String username,
+      String password,
+      String email,
+      String firstname,
+      String lastname,
+      String phonenumber,
+      ImageProvider avatar) async {
     final response = await client.post("http://10.0.2.2:5000/api/user",
         // headers: "",
         body: jsonEncode({
           "emailaddress": email,
           "username": username,
           "password": password,
+          "firstname": firstname,
+          "lastname": lastname,
+          "phonenumber": phonenumber,
+          "avatar": avatar,
         }));
     final Map result = json.decode(response.body);
     if (response.statusCode == 201) {
@@ -93,8 +104,16 @@ class ApiProvider {
     }
   }
 
-  Future updateUserProfile(String currentPassword, String newPassword,
-      String email, String username, String apiKey) async {
+  Future updateUserProfile(
+      String currentPassword,
+      String newPassword,
+      String email,
+      String username,
+      String firstname,
+      String lastname,
+      String phonenumber,
+      ImageProvider avatar,
+      String apiKey) async {
     final response = await client.put("http://10.0.2.2:5000/api/user",
         headers: {"Authorization": apiKey},
         body: jsonEncode({
@@ -102,6 +121,10 @@ class ApiProvider {
           "newPassword": newPassword,
           "email": email,
           "username": username,
+          "firstname": firstname,
+          "lastname": lastname,
+          "phonenumber": phonenumber,
+          "avatar": avatar,
         }));
     final Map result = json.decode(response.body);
     if (response.statusCode == 201) {

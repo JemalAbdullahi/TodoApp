@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/models/global.dart';
-import 'package:todolist/widgets/background_color_container.dart';
-import 'package:todolist/widgets/custom_appbar.dart';
+import 'package:todolist/widgets/global_widgets/background_color_container.dart';
+import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
+
 
 class GroupPage extends StatefulWidget {
   @override

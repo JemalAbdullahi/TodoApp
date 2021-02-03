@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/subtasks.dart';
-import 'package:todolist/widgets/subtask_container_widget.dart';
+import 'package:todolist/widgets/task_widgets/subtask_container_widget.dart';
 
 class TaskListTab extends StatefulWidget {
   final SubTaskBloc subTaskBloc;
