@@ -22,7 +22,7 @@ class HowToPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            List: [lightBlueGradient, lightBlue],
+            colors: [lightBlueGradient, lightBlue],
           ),
         ),
         child: RichText(

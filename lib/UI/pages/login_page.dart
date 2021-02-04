@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:todolist/models/user.dart';
-//import 'package:todolist/models/global.dart';
+import 'package:flutter/src/painting/gradient.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   final VoidCallback login;
@@ -262,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          List: [
+          colors: [
             Color(0xff5CD6FF),
             Color(0xff57CBF2),
             Color(0xff4EB6D9),
@@ -310,7 +310,7 @@ class _LoginPageState extends State<LoginPage> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          List: [
+          colors: [
             Color(0xff5CD6FF),
             Color(0xff57CBF2),
             Color(0xff4EB6D9),

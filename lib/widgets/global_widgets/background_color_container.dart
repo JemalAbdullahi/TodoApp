@@ -19,7 +19,7 @@ class BackgroundColorContainer extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          List: [startColor, endColor],
+          colors: [startColor, endColor],
         ),
       ),
       child: widget,
