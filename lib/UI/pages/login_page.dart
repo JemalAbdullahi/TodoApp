@@ -21,9 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordText = new TextEditingController();
   TextEditingController emailText = new TextEditingController();
   TextEditingController firstnameText = new TextEditingController();
-  TextEditingController lastnameText  = new TextEditingController();
+  TextEditingController lastnameText = new TextEditingController();
   TextEditingController phonenumberText = new TextEditingController();
-
 
   @override
   void initState() {
@@ -57,7 +56,13 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   } */
-  Widget _buildTF(String label, TextEditingController controller, TextInputType keyboardType, IconData iconData, String hintText, bool obscureText) {
+  Widget _buildTF(
+      String label,
+      TextEditingController controller,
+      TextInputType keyboardType,
+      IconData iconData,
+      String hintText,
+      bool obscureText) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -209,7 +214,9 @@ class _LoginPageState extends State<LoginPage> {
   loginFunc() {
     setState(() {
       if (usernameText.text.isNotEmpty && passwordText.text.isNotEmpty) {
-        userBloc.signinUser(usernameText.text.trim(), passwordText.text.trim(), "").then((_) {
+        userBloc
+            .signinUser(usernameText.text.trim(), passwordText.text.trim(), "")
+            .then((_) {
           widget.login();
         });
       } else
@@ -223,7 +230,14 @@ class _LoginPageState extends State<LoginPage> {
         emailText.text.isNotEmpty) {
       print(usernameText.text + passwordText.text + emailText.text);
       userBloc
-          .registerUser(usernameText.text.trim(), passwordText.text.trim(), emailText.text.trim(), firstnameText.text.trim(), lastnameText.text.trim(), phonenumberText.text.trim(), null)
+          .registerUser(
+              usernameText.text.trim(),
+              passwordText.text.trim(),
+              emailText.text.trim(),
+              firstnameText.text.trim(),
+              lastnameText.text.trim(),
+              phonenumberText.text.trim(),
+              null)
           .then((_) {
         widget.login();
       });
@@ -248,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
+          List: [
             Color(0xff5CD6FF),
             Color(0xff57CBF2),
             Color(0xff4EB6D9),
@@ -273,9 +287,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 30.0),
-            _buildTF('Username', usernameText, TextInputType.text ,Icons.account_circle, 'Enter Username', false),
+            _buildTF('Username', usernameText, TextInputType.text,
+                Icons.account_circle, 'Enter Username', false),
             SizedBox(height: 30),
-            _buildTF('Password', passwordText, TextInputType.text, Icons.lock, 'Enter a Password', true),
+            _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
+                'Enter a Password', true),
             _buildForgotPasswordBtn(),
             _buildLoginBtn('LOGIN'),
             _buildSignupBtn(),
@@ -294,7 +310,7 @@ class _LoginPageState extends State<LoginPage> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
+          List: [
             Color(0xff5CD6FF),
             Color(0xff57CBF2),
             Color(0xff4EB6D9),
@@ -319,17 +335,23 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 30.0),
-            _buildTF('Firstname', firstnameText, TextInputType.name ,Icons.person, 'Enter a Firstname', false),
+            _buildTF('Firstname', firstnameText, TextInputType.name,
+                Icons.person, 'Enter a Firstname', false),
             SizedBox(height: 30.0),
-            _buildTF('Lastname', lastnameText, TextInputType.name ,Icons.person, 'Enter a Lastname', false),
+            _buildTF('Lastname', lastnameText, TextInputType.name, Icons.person,
+                'Enter a Lastname', false),
             SizedBox(height: 30.0),
-            _buildTF('Username', usernameText, TextInputType.text ,Icons.account_circle, 'Enter a Username', false),
+            _buildTF('Username', usernameText, TextInputType.text,
+                Icons.account_circle, 'Enter a Username', false),
             SizedBox(height: 30),
-            _buildTF('Phone Number', phonenumberText, TextInputType.phone ,Icons.phone, 'Enter a Phone Number', false),
+            _buildTF('Phone Number', phonenumberText, TextInputType.phone,
+                Icons.phone, 'Enter a Phone Number', false),
             SizedBox(height: 30),
-            _buildTF('Email', emailText, TextInputType.emailAddress, Icons.email, 'Enter an Email', false),
+            _buildTF('Email', emailText, TextInputType.emailAddress,
+                Icons.email, 'Enter an Email', false),
             SizedBox(height: 30),
-            _buildTF('Password', passwordText, TextInputType.text, Icons.lock, 'Enter a Password', true),
+            _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
+                'Enter a Password', true),
             _buildSigningUpBtn('SIGN UP'),
             _buildBackToSignIn()
           ],
