@@ -6,6 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 ma = Marshmallow()
 db = SQLAlchemy()
 
+group_member_table = db.Table(
+    'group_member', db.Model.metadata,
+    db.Column('group_id', db.Integer(), db.ForeignKey('group.id')),
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')))
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -19,8 +24,12 @@ class User(db.Model):
     emailaddress = db.Column(db.String(120))
     api_key = db.Column(db.String())
     avatar = db.Column(db.LargeBinary)
+    groups = db.relationship("Group",
+                             secondary=group_member_table,
+                             backref="members")
 
-    def __init__(self, api_key, emailaddress, password, username, firstname, lastname, phonenumber, avatar):
+    def __init__(self, api_key, emailaddress, password, username, firstname,
+                 lastname, phonenumber, avatar):
         self.api_key = api_key
         self.emailaddress = emailaddress
         self.password = password
@@ -44,6 +53,7 @@ class User(db.Model):
             'lastname': self.lastname,
             'phonenumber': self.phonenumber,
             'avatar': self.avatar,
+            'groups': self.groups,
         }
 
 
@@ -51,7 +61,8 @@ class Task(db.Model):
     __tablename__ = 'tasks'
 
     id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer(),
+                        db.ForeignKey('users.id', ondelete="CASCADE"))
     index = db.Column(db.Integer())
     title = db.Column(db.String())
     note = db.Column(db.String())
@@ -95,7 +106,8 @@ class SubTask(db.Model):
     __tablename__ = 'subtasks'
 
     id = db.Column(db.Integer(), primary_key=True)
-    task_id = db.Column(db.Integer(), db.ForeignKey('tasks.id'))
+    task_id = db.Column(db.Integer(),
+                        db.ForeignKey('tasks.id', ondelete="CASCADE"))
     title = db.Column(db.String())
     note = db.Column(db.String())
     completed = db.Column(db.Boolean(), default=False, nullable=False)
@@ -134,4 +146,27 @@ class SubTask(db.Model):
             'note': self.note,
             'index': self.index,
             'subtask_key': self.subtask_key
+        }
+
+
+class Group(db.Model):
+    __tablename__ = 'group'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String())
+    group_key = db.Column(db.String())
+
+    def __init__(self, name, group_key):
+        self.name = name
+        self.group_key = group_key
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'members': self.members,
+            'group_key': self.group_key,
         }
