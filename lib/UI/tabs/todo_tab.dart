@@ -143,7 +143,7 @@ class _ToDoTabState extends State<ToDoTab> {
       onDismissed: (direction) {
         removeTask(item);
         deleteTask(item);
-        Scaffold.of( context).showSnackBar(SnackBar(
+        Scaffold.of(context).showSnackBar(SnackBar(
           content: Text("Task " + item.title + " dismissed"),
           action: SnackBarAction(
             label: 'Undo',
