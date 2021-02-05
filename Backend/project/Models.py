@@ -9,7 +9,7 @@ db = SQLAlchemy()
 group_member_table = db.Table(
     'group_member', db.Model.metadata,
     db.Column('group_id', db.Integer(), db.ForeignKey('group.id')),
-    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')))
+    db.Column('user_id', db.Integer(), db.ForeignKey('users.id')))
 
 
 class User(db.Model):
