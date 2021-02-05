@@ -1,9 +1,8 @@
 from flask_restful import Resource
 from flask import request
-from models import db, User, Task
+from Models import db, User, Task, SubTask
 import random
 import string
-from models import SubTask
 
 
 class Tasks(Resource):
@@ -11,6 +10,8 @@ class Tasks(Resource):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
 
+        if not json_data:
+            return {'Message': 'No input data provided'}, 400
         if not header:
             return {"Messege": "No api key!"}, 400
         else:
@@ -31,7 +32,7 @@ class Tasks(Resource):
                     group=json_data['group'],
                     reminders=json_data['reminders'],
                     task_key=task_key,
-                    index = json_data['index'],
+                    index=json_data['index'],
                 )
                 db.session.add(task)
                 db.session.commit()
@@ -103,7 +104,6 @@ class Tasks(Resource):
             db.session.commit()
             return {"status": 'success', 'data': result}, 201
 
-    
     def generate_key(self):
         return ''.join(
             random.choice(string.ascii_letters + string.digits)

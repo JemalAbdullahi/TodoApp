@@ -1,12 +1,11 @@
 from flask_restful import Resource
 from flask import request
-from models import db, User
+from Models import db, User
 import random
 import string
 
 
 class Signin(Resource):
-
     def post(self):
         result = ""
         json_data = request.get_json(force=True)
@@ -37,4 +36,6 @@ class Signin(Resource):
         return User.serialize(user)
 
     def generate_key(self):
-        return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(50))
+        return ''.join(
+            random.choice(string.ascii_letters + string.digits)
+            for _ in range(50))

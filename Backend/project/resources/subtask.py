@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask import request
-from models import db, SubTask, Task, User
+from Models import db, SubTask, Task, User
 import random
 import string
 
@@ -84,7 +84,7 @@ class SubTasks(Resource):
                 return {"status": 'success', 'data': result}, 201
             else:
                 return {"Messege": "No SubTask with that subtask key"}, 402
-                
+
     def delete(self):
         header = request.headers["Authorization"]
 
