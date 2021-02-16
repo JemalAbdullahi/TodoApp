@@ -14,7 +14,7 @@ class TitleCard extends StatelessWidget {
       children: <Widget>[
         _TitleCardBackground(),
         _TitleCardTitle(title),
-        _TitleCardButton(addTask),
+        //_TitleCardButton(addTask),
       ],
     );
   }
@@ -77,9 +77,10 @@ class __TitleCardButtonState extends State<_TitleCardButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 1.1,
-      origin: Offset(-1800, -950),
+    return Align(
+      /* scale: 1.1,
+      origin: Offset(-3300, -500) */
+      alignment: Alignment(0.9, 0.95),
       child: FloatingActionButton(
         tooltip: "Press to Add a Task",
         onPressed: () {

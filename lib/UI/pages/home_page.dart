@@ -7,6 +7,7 @@ import 'package:todolist/models/tasks.dart';
 //import 'package:todolist/models/user.dart';
 import 'package:todolist/widgets/global_widgets/avatar.dart';
 import 'package:todolist/widgets/sidebar_widgets/sidebar_menu.dart';
+import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback logout;
@@ -36,30 +37,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     print("Home Page State");
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
-          leading: IconButton(
-            icon: isMenuOpen ? Icon(Icons.arrow_back) : Avatar(),
-            onPressed: () {
-              setState(() {
-                isMenuOpen = !isMenuOpen;
-              });
-            },
+      child: KeyboardSizeProvider(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+            leading: IconButton(
+              icon: isMenuOpen ? Icon(Icons.arrow_back) : Avatar(),
+              onPressed: () {
+                setState(() {
+                  isMenuOpen = !isMenuOpen;
+                });
+              },
+            ),
           ),
-        ),
-        body: Container(
-          child: Stack(
-            children: <Widget>[
-              ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository,
-                  widget.reAddTask),
-              SideBarMenu(
-                isMenuOpen: isMenuOpen,
-                logout: widget.logout,
-              )
-            ],
+          body: Container(
+            child: Stack(
+              children: <Widget>[
+                ToDoTab(widget.addTaskDialog, widget.tasksBloc,
+                    widget.repository, widget.reAddTask),
+                SideBarMenu(
+                  isMenuOpen: isMenuOpen,
+                  logout: widget.logout,
+                )
+              ],
+            ),
           ),
         ),
       ),

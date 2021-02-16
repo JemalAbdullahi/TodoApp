@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
-
-
 class LoginPage extends StatefulWidget {
   final VoidCallback login;
   final bool newUser;
@@ -16,6 +14,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _newUser = false;
+  final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController usernameText = new TextEditingController();
   TextEditingController passwordText = new TextEditingController();
   TextEditingController emailText = new TextEditingController();
@@ -71,9 +71,10 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.centerLeft,
           decoration: boxDecorationStyle,
           height: 60,
-          child: TextField(
+          child: TextFormField(
             controller: controller,
             keyboardType: keyboardType,
+            textInputAction: TextInputAction.next,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -81,7 +82,14 @@ class _LoginPageState extends State<LoginPage> {
               prefixIcon: Icon(iconData, color: Colors.white),
               hintText: hintText,
               hintStyle: hintTextStyle,
+              errorStyle: TextStyle(fontSize: 14.0),
             ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return '\t\tPlease Enter some text';
+              }
+              return null;
+            },
             obscureText: obscureText,
           ),
         ),
@@ -135,7 +143,29 @@ class _LoginPageState extends State<LoginPage> {
       child: RaisedButton(
         elevation: 5.0,
         autofocus: false,
-        onPressed: loginFunc,
+        onPressed: () async {
+          if (_formKey.currentState.validate()) {
+            try {
+              await userBloc.signinUser(
+                  usernameText.text.trim(), passwordText.text.trim(), "");
+              widget.login();
+            } catch (e) {
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(e.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          } else {
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text('Fill the Form Completely'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         color: Colors.white,
@@ -210,18 +240,26 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  loginFunc() {
-    setState(() {
-      if (usernameText.text.isNotEmpty && passwordText.text.isNotEmpty) {
-        userBloc
+/*   loginFunc() async {
+    bool loginState = false;
+    if (usernameText.text.isNotEmpty && passwordText.text.isNotEmpty) {
+      try {
+        await userBloc
             .signinUser(usernameText.text.trim(), passwordText.text.trim(), "")
             .then((_) {
-          widget.login();
+          loginState = true;
         });
-      } else
-        print("enter name and password");
-    });
-  }
+      } catch (e) {
+        print(e.message);
+      }
+    } else
+      print("enter name and password");
+    if (loginState) {
+      setState(() {
+        widget.login();
+      });
+    }
+  } */
 
   signupFunc() {
     if (usernameText.text.isNotEmpty &&
@@ -246,6 +284,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: _newUser ? _getSignUpScreen() : _getSigninScreen(),
@@ -272,29 +311,32 @@ class _LoginPageState extends State<LoginPage> {
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Sign In',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.white,
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Sign In',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30.0,
+                  color: Colors.white,
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 30.0),
-            _buildTF('Username', usernameText, TextInputType.text,
-                Icons.account_circle, 'Enter Username', false),
-            SizedBox(height: 30),
-            _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
-                'Enter a Password', true),
-            _buildForgotPasswordBtn(),
-            _buildLoginBtn('LOGIN'),
-            _buildSignupBtn(),
-          ],
+              SizedBox(height: 30.0),
+              _buildTF('Username', usernameText, TextInputType.text,
+                  Icons.account_circle, 'Enter Username', false),
+              SizedBox(height: 30),
+              _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
+                  'Enter a Password', true),
+              _buildForgotPasswordBtn(),
+              _buildLoginBtn('LOGIN'),
+              _buildSignupBtn(),
+            ],
+          ),
         ),
       ),
     );

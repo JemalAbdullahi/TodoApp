@@ -27,8 +27,12 @@ class UserBloc {
   }
 
   signinUser(String username, String password, String apiKey) async {
-    _user = await _repository.signinUser(username, password, apiKey);
-    _userGetter.sink.add(_user);
+    try {
+      _user = await _repository.signinUser(username, password, apiKey);
+    } catch (e) {
+      throw Exception(e.message);
+    } 
+      _userGetter.sink.add(_user);
   }
 
   updateUserProfile(

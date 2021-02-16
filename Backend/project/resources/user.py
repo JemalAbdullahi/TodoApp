@@ -6,13 +6,15 @@ import string
 
 
 class Users(Resource):
+    #Get User List
     def get(self):
         users = User.query.all()
         user_list = []
         for i in range(0, len(users)):
             user_list.append(users[i].serialize())
-        return {"status": str(user_list)}, 200
-
+        return {"status": user_list}, 200
+    
+    #Create New User (Sign Up/register User)
     def post(self):
         json_data = request.get_json(force=True)
 
@@ -21,18 +23,18 @@ class Users(Resource):
 
         user = User.query.filter_by(username=json_data['username']).first()
         if user:
-            return {'message': 'Username not available'}, 400
+            return {'message': 'Username is already taken'}, 409
 
         user = User.query.filter_by(
             emailaddress=json_data['emailaddress']).first()
         if user:
-            return {'message': 'Email address already exists'}, 400
+            return {'message': 'Email address already exists'}, 409
 
         api_key = self.generate_key()
 
         user = User.query.filter_by(api_key=api_key).first()
         if user:
-            return {'message': 'API key already exists'}, 400
+            return {'message': 'API key already exists'}, 409
 
         user = User(
             api_key=api_key,
@@ -50,12 +52,13 @@ class Users(Resource):
         result = User.serialize(user)
 
         return {"status": 'success', 'data': result}, 201
-
+    
+    #Update User Profile
     def put(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
         if not header:
-            return {'Messege': "No API key!"}, 400
+            return {'Messege': "No API key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -80,11 +83,12 @@ class Users(Resource):
                 db.session.commit()
 
                 result = User.serialize(user)
-                return {"status": 'success', 'data': result}, 201
+                return {"status": 'success', 'data': result}, 200
 
             else:
-                return {'Messege': "No User with that api key"}, 402
-
+                return {'Messege': "No User found with that api key"}, 404
+    
+    #Generate new api key
     def generate_key(self):
         return ''.join(
             random.choice(string.ascii_letters + string.digits)

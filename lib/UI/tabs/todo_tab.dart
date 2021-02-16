@@ -8,6 +8,7 @@ import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
+import 'package:todolist/widgets/task_widgets/add_task_widget.dart';
 import 'package:todolist/widgets/task_widgets/task_list_item_widget.dart';
 
 class ToDoTab extends StatefulWidget {
@@ -26,9 +27,13 @@ class _ToDoTabState extends State<ToDoTab> {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).viewInsets.bottom);
     return Stack(
       children: <Widget>[
-        BackgroundColorContainer(startColor: lightBlue, endColor: lightBlueGradient,),
+        BackgroundColorContainer(
+          startColor: lightBlue,
+          endColor: lightBlueGradient,
+        ),
         StreamBuilder(
           key: UniqueKey(),
           // Wrap our widget with a StreamBuilder
@@ -82,6 +87,7 @@ class _ToDoTabState extends State<ToDoTab> {
           },
         ),
         TitleCard('To Do', widget.addTaskDialog),
+        AddTask(),
       ],
     );
   }
@@ -177,5 +183,3 @@ class _ToDoTabState extends State<ToDoTab> {
     await widget.repository.deleteUserTask(task.taskKey);
   }
 }
-
-

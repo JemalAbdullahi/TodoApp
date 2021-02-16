@@ -9,8 +9,16 @@ import 'package:todolist/models/user.dart';
 
 class ApiProvider {
   Client client = Client();
+  static String baseURL = "http://10.0.2.2:5000/api";
+  String signinURL = baseURL + "/signin";
+  String userURL = baseURL + "/user";
+  String taskURL = baseURL + "/tasks";
+  String subtaskURL = baseURL + "/subtasks";
+  String groupURL = baseURL + "/group";
+  String groupmemberURL = baseURL + "/groupmember";
   // final _apiKey = 'your_api_key';
 
+  //Sign Up
   Future<User> registerUser(
       String username,
       String password,
@@ -19,7 +27,7 @@ class ApiProvider {
       String lastname,
       String phonenumber,
       ImageProvider avatar) async {
-    final response = await client.post("http://10.0.2.2:5000/api/user",
+    final response = await client.post(userURL,
         // headers: "",
         body: jsonEncode({
           "emailaddress": email,
@@ -41,27 +49,63 @@ class ApiProvider {
     }
   }
 
+  //Sign In
   Future signinUser(String username, String password, String apiKey) async {
-    final response = await client.post("http://10.0.2.2:5000/api/signin",
+    final response = await client.post(signinURL,
         headers: {"Authorization": apiKey},
         body: jsonEncode({
           "username": username,
           "password": password,
         }));
     final Map result = json.decode(response.body);
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       await saveApiKey(result["data"]["api_key"]);
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
-      throw Exception('Failed to load post');
+      throw Exception(result["message"]);
     }
   }
 
+  // Edit Profile
+  Future updateUserProfile(
+      String currentPassword,
+      String newPassword,
+      String email,
+      String username,
+      String firstname,
+      String lastname,
+      String phonenumber,
+      ImageProvider avatar,
+      String apiKey) async {
+    final response = await client.put(userURL,
+        headers: {"Authorization": apiKey},
+        body: jsonEncode({
+          "currentPassword": currentPassword,
+          "newPassword": newPassword,
+          "email": email,
+          "username": username,
+          "firstname": firstname,
+          "lastname": lastname,
+          "phonenumber": phonenumber,
+          "avatar": avatar,
+        }));
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print("User Profile Updated");
+      return User.fromJson(result["data"]);
+    } else {
+      // If that call was not successful, throw an error.
+      print(json.decode(response.body));
+      throw Exception(result["Message"]);
+    }
+  }
+
+  // Get Tasks
   Future<List<Task>> getUserTasks(String apiKey) async {
     final response = await client.get(
-      "http://10.0.2.2:5000/api/tasks",
+      taskURL,
       headers: {"Authorization": apiKey},
     );
     final Map result = json.decode(response.body);
@@ -82,9 +126,10 @@ class ApiProvider {
     }
   }
 
+  //Add Task
   Future addUserTask(
       String apiKey, String taskName, String groupName, int index) async {
-    final response = await client.post("http://10.0.2.2:5000/api/tasks",
+    final response = await client.post(taskURL,
         headers: {"Authorization": apiKey},
         body: jsonEncode({
           "title": taskName,
@@ -104,41 +149,9 @@ class ApiProvider {
     }
   }
 
-  Future updateUserProfile(
-      String currentPassword,
-      String newPassword,
-      String email,
-      String username,
-      String firstname,
-      String lastname,
-      String phonenumber,
-      ImageProvider avatar,
-      String apiKey) async {
-    final response = await client.put("http://10.0.2.2:5000/api/user",
-        headers: {"Authorization": apiKey},
-        body: jsonEncode({
-          "currentPassword": currentPassword,
-          "newPassword": newPassword,
-          "email": email,
-          "username": username,
-          "firstname": firstname,
-          "lastname": lastname,
-          "phonenumber": phonenumber,
-          "avatar": avatar,
-        }));
-    final Map result = json.decode(response.body);
-    if (response.statusCode == 201) {
-      print("User Profile Updated");
-      return User.fromJson(result["data"]);
-    } else {
-      // If that call was not successful, throw an error.
-      print(json.decode(response.body));
-      throw Exception(result["Message"]);
-    }
-  }
-
+  //Update Task
   Future updateUserTask(Task task) async {
-    final response = await client.put("http://10.0.2.2:5000/api/tasks",
+    final response = await client.put(taskURL,
         headers: {"Authorization": task.taskKey},
         body: jsonEncode({
           "title": task.title,
@@ -149,7 +162,7 @@ class ApiProvider {
           "reminders": task.reminders,
           "index": task.index
         }));
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       print("Task " + task.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
@@ -158,12 +171,13 @@ class ApiProvider {
     }
   }
 
+  //Delete Task
   Future deleteUserTask(String taskKey) async {
     final response = await client.delete(
-      "http://10.0.2.2:5000/api/tasks",
+      taskURL,
       headers: {"Authorization": taskKey},
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // If the call to the server was successful
       print("Task deleted");
     } else {
@@ -173,13 +187,14 @@ class ApiProvider {
     }
   }
 
+  //Get Subtasks
   Future<List<SubTask>> getSubTasks(String taskKey) async {
     final response = await client.get(
-      "http://10.0.2.2:5000/api/subtasks",
+      subtaskURL,
       headers: {"Authorization": taskKey},
     );
     final Map result = json.decode(response.body);
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       List<SubTask> subtasks = [];
       for (Map json_ in result["data"]) {
@@ -196,9 +211,10 @@ class ApiProvider {
     }
   }
 
+  //Add Subtask
   Future addSubTask(String taskKey, String subtaskName, String notes, int index,
       bool completed) async {
-    final response = await client.post("http://10.0.2.2:5000/api/subtasks",
+    final response = await client.post(subtaskURL,
         headers: {"Authorization": taskKey},
         body: jsonEncode({
           "title": subtaskName,
@@ -218,8 +234,9 @@ class ApiProvider {
     }
   }
 
+  //Update Subtask
   Future updateSubTask(SubTask subtask) async {
-    final response = await client.put("http://10.0.2.2:5000/api/subtasks",
+    final response = await client.put(subtaskURL,
         headers: {"Authorization": subtask.subtaskKey},
         body: jsonEncode({
           "title": subtask.title,
@@ -230,7 +247,7 @@ class ApiProvider {
           "reminders": subtask.reminders,
           "index": subtask.index
         }));
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       print("SubTask " + subtask.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
@@ -239,12 +256,13 @@ class ApiProvider {
     }
   }
 
+  //Delete Subtask
   Future deleteSubTask(String subtaskKey) async {
     final response = await client.delete(
-      "http://10.0.2.2:5000/api/subtasks",
+      subtaskURL,
       headers: {"Authorization": subtaskKey},
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // If the call to the server was successful
       print("SubTask deleted");
     } else {
@@ -254,6 +272,7 @@ class ApiProvider {
     }
   }
 
+  //Save API key
   saveApiKey(String apiKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('API_Token', apiKey);

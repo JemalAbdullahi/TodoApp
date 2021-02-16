@@ -6,6 +6,7 @@ import string
 
 
 class Groups(Resource):
+    #Create a Group
     def post(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
@@ -13,7 +14,7 @@ class Groups(Resource):
         if not json_data:
             return {'Message': 'No input data provided'}, 400
         if not header:
-            return {"Messege": "No api key!"}, 400
+            return {"Messege": "No api key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -23,7 +24,7 @@ class Groups(Resource):
                     group_key = self.generate_key()
                     group = Group.query.filter_by(group_key=group_key).first()
 
-                group = Group(name=json_data['name'])
+                group = Group(name=json_data['name'], group_key=group_key)
                 user.groups.append(
                     group
                 )  # can alter to group.members.append(user,user,user) depending on UI implementaion
@@ -33,14 +34,15 @@ class Groups(Resource):
                 result = Group.serialize(group)
                 return {"status": 'success', 'data': result}, 201
             else:
-                return {"Messege": "No user with that api key"}, 402
-
+                return {"Messege": "No user with that api key"}, 404
+    
+    #List User's Groups
     def get(self):
         result = []
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No api key!"}, 400
+            return {"Messege": "No api key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -48,14 +50,15 @@ class Groups(Resource):
                 for group in groups:
                     result.append(Group.serialize(group))
 
-            return {"status": 'success', 'data': result}, 201
+            return {"status": 'success', 'data': result}, 200
 
-    def put(self):
+    #Update Group
+    def patch(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
 
         if not header:
-            return {"Messege": "No group key!"}, 400
+            return {"Messege": "No group key!"}, 401
         else:
             group = Group.query.filter_by(group_key=header).first()
             if group:
@@ -66,21 +69,24 @@ class Groups(Resource):
                 db.session.commit()
 
                 result = Group.serialize(group)
-                return {"status": 'success', 'data': result}, 201
+                return {"status": 'success', 'data': result}, 200
             else:
-                return {"Messege": "No Group with that group key"}, 402
+                return {"Messege": "No Group with that group key"}, 404
 
     def delete(self):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No group key!"}, 400
+            return {"Messege": "No group key!"}, 401
         else:
             group = Group.query.filter_by(group_key=header).first()
-            result = Group.serialize(group)
-            db.session.delete(group)
-            db.session.commit()
-            return {"status": 'success', 'data': result}, 201
+            if group:
+                result = Group.serialize(group)
+                db.session.delete(group)
+                db.session.commit()
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {"status": 'Group Not Found'}, 404
 
     def generate_key(self):
         return ''.join(

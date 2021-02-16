@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/pages/home_page.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
@@ -17,9 +17,8 @@ main() => runApp(
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
       title: 'To Do List',
       debugShowCheckedModeBanner: false,
@@ -80,7 +79,9 @@ class _SignInState extends State<SignIn> {
     apiKey = await getApiKey();
     if (apiKey.isNotEmpty) {
       if (apiKey.length > 0) {
-        userBloc.signinUser("", "", apiKey);
+        try {userBloc.signinUser("", "", apiKey);}catch(e){
+          print(e);
+        }
       } else {}
     } else {
       apiKey = "";

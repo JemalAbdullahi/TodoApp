@@ -6,6 +6,7 @@ import string
 
 
 class Tasks(Resource):
+    #Create Task
     def post(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
@@ -13,7 +14,7 @@ class Tasks(Resource):
         if not json_data:
             return {'Message': 'No input data provided'}, 400
         if not header:
-            return {"Messege": "No api key!"}, 400
+            return {"Messege": "No api key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -40,14 +41,14 @@ class Tasks(Resource):
                 result = Task.serialize(task)
                 return {"status": 'success', 'data': result}, 201
             else:
-                return {"Messege": "No user with that api key"}, 402
-
+                return {"Messege": "No user with that api key"}, 404
+    # List Task
     def get(self):
         result = []
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No api key!"}, 400
+            return {"Messege": "No api key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -55,14 +56,14 @@ class Tasks(Resource):
                 for task in tasks:
                     result.append(Task.serialize(task))
 
-            return {"status": 'success', 'data': result}, 201
-
+            return {"status": 'success', 'data': result}, 200
+    #Update Task
     def put(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
 
         if not header:
-            return {"Messege": "No task key!"}, 400
+            return {"Messege": "No task key!"}, 401
         else:
             task = Task.query.filter_by(task_key=header).first()
             if task:
@@ -84,25 +85,28 @@ class Tasks(Resource):
                 db.session.commit()
 
                 result = Task.serialize(task)
-                return {"status": 'success', 'data': result}, 201
+                return {"status": 'success', 'data': result}, 200
             else:
-                return {"Messege": "No Task with that task key"}, 402
-
+                return {"Messege": "No Task with that task key"}, 404
+    #Delete Task
     def delete(self):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No task key!"}, 400
+            return {"Messege": "No task key!"}, 401
         else:
             task = Task.query.filter_by(task_key=header).first()
-            result = Task.serialize(task)
-            subtasks = SubTask.query.filter_by(task_id=task.id).all()
-            for subtask in subtasks:
-                db.session.delete(subtask)
-            db.session.commit()
-            db.session.delete(task)
-            db.session.commit()
-            return {"status": 'success', 'data': result}, 201
+            if task:
+                result = Task.serialize(task)
+                subtasks = SubTask.query.filter_by(task_id=task.id).all()
+                for subtask in subtasks:
+                    db.session.delete(subtask)
+                db.session.commit()
+                db.session.delete(task)
+                db.session.commit()
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {"status": 'No Task found with that task key'}, 404
 
     def generate_key(self):
         return ''.join(

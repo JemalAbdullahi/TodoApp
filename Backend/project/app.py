@@ -1,5 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
+from resources.group import Groups
+from resources.groupmembers import GroupMembers
 from resources.user import Users
 from resources.Signin import Signin
 from resources.task import Tasks
@@ -10,6 +12,10 @@ api = Api(api_bp)
 
 # Route
 api.add_resource(Users, '/user')
+
+api.add_resource(Groups, '/group')
+
+api.add_resource(GroupMembers, '/groupmember')
 
 api.add_resource(Signin, '/signin')
 

@@ -9,15 +9,14 @@ class GroupMembers(Resource):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No group key!"}, 400
+            return {"Messege": "No group key!"}, 401
         else:
             group = Group.query.filter_by(group_key=header).first()
             if group:
-                members = group.members
-                for member in members:
-                    result.append(User.serialize(member))
-
-            return {"status": 'success', 'data': result}, 201
+                result = group.getmembers()
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {"status": "Group Not Found"}, 404
 
 
     def post(self):
@@ -27,18 +26,23 @@ class GroupMembers(Resource):
         if not json_data:
             return {'Message': 'No input data provided'}, 400
         if not header:
-            return {"Messege": "No group key!"}, 400
+            return {"Messege": "No group key!"}, 401
         else:
             group = Group.query.filter_by(group_key=header).first()
             if group:
                 member = User.query.filter_by(username = json_data['username']).first()
-                group.members.append(member)
-                db.session.commit()
-
-                result = Group.serialize(group)
-                return {"status": 'success', 'data': result}, 201
+                if member:
+                    for m in group.members:
+                        if member.username == m.username:
+                            return {"status": "User is already added"}, 409
+                    group.members.append(member)
+                    db.session.commit()
+                    result = group.getmembers()
+                    return {"status": 'success', 'data': result}, 201
+                else:
+                    return {"status": 'No user found by that username'}
             else:
-                return {"Messege": "No user with that api key"}, 402
+                return {"Messege": "No Group Found with that group key"}, 404
 
     
     """ Update Group Members: to be create if roles are implemented
@@ -63,16 +67,26 @@ class GroupMembers(Resource):
                 return {"Messege": "No Group with that group key"}, 402 
     """
 
-    """ Delete Members to be created at a later date
+    #Delete Members to be created at a later date
     def delete(self):
         header = request.headers["Authorization"]
+        json_data = request.get_json(force=True)
 
         if not header:
-            return {"Messege": "No group key!"}, 400
+            return {"Messege": "No group key!"}, 401
+        if not json_data:
+            return {'Message': 'No input data provided'}, 400
         else:
             group = Group.query.filter_by(group_key=header).first()
-            result = Group.serialize(group)
-            db.session.delete(group)
-            db.session.commit()
-            return {"status": 'success', 'data': result}, 201
-    """
+            if group:
+                for m in group.members:
+                    if m.username == json_data["username"]:
+                        result = User.serialize(m)
+                        group.members.remove(m)
+                        db.session.commit()
+                        return {"status": 'success', "data": result}, 200
+                return {"status": "Member Not Found in Group"}, 404
+            else:
+                return {"status": "Group Not Found"}, 404
+                
+   

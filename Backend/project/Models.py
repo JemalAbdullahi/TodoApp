@@ -8,8 +8,10 @@ db = SQLAlchemy()
 
 group_member_table = db.Table(
     'group_member', db.Model.metadata,
-    db.Column('group_id', db.Integer(), db.ForeignKey('group.id')),
-    db.Column('user_id', db.Integer(), db.ForeignKey('users.id')))
+    db.Column('group_id', db.Integer(),
+              db.ForeignKey('groups.id', ondelete="CASCADE")),
+    db.Column('user_id', db.Integer(),
+              db.ForeignKey('users.id', ondelete="CASCADE")))
 
 
 class User(db.Model):
@@ -53,7 +55,6 @@ class User(db.Model):
             'lastname': self.lastname,
             'phonenumber': self.phonenumber,
             'avatar': self.avatar,
-            'groups': self.groups,
         }
 
 
@@ -150,7 +151,7 @@ class SubTask(db.Model):
 
 
 class Group(db.Model):
-    __tablename__ = 'group'
+    __tablename__ = 'groups'
 
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String())
@@ -167,6 +168,13 @@ class Group(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'members': self.members,
+            'members': self.getmembers(),
             'group_key': self.group_key,
         }
+
+    def getmembers(self):
+        members = []
+        for member in self.members:
+            members.append(User.serialize(member))
+
+        return members
