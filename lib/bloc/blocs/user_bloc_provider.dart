@@ -1,6 +1,7 @@
 //import 'package:todolist/models/tasks.dart';
 
 import 'package:flutter/cupertino.dart';
+import 'package:todolist/models/group.dart';
 import 'package:todolist/models/subtasks.dart';
 
 import '../resources/repository.dart';
@@ -56,6 +57,32 @@ class UserBloc {
   dispose() {
     _userGetter.close();
   }
+}
+
+class GroupBloc{
+  final _repository = Repository();
+  final _groupSubject = BehaviorSubject<List<Group>>();
+  String _apiKey;
+
+  var _groups = <Group>[];
+
+  GroupBloc(String apiKey){
+    this._apiKey = apiKey;
+    _updateGroups().then((_){
+      _groupSubject.add(_groups);
+    });
+  }
+  /* Testing GroupBloc 
+  Future<List<Group>> testGroupList() async{
+    return await _repository.getUserGroups(_apiKey);
+  } 
+  */
+
+  Stream<List<Group>> get getGroups => _groupSubject.stream;
+  Future<Null> _updateGroups() async{
+    _groups = await _repository.getUserGroups(_apiKey);
+  }
+
 }
 
 class TaskBloc {

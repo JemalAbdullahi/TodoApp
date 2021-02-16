@@ -24,7 +24,9 @@ class Groups(Resource):
                     group_key = self.generate_key()
                     group = Group.query.filter_by(group_key=group_key).first()
 
-                group = Group(name=json_data['name'], group_key=group_key, is_public=json_data['is_public'])
+                group = Group(name=json_data['name'],
+                              group_key=group_key,
+                              is_public=json_data['is_public'])
                 user.groups.append(
                     group
                 )  # can alter to group.members.append(user,user,user) depending on UI implementaion
@@ -35,7 +37,7 @@ class Groups(Resource):
                 return {"status": 'success', 'data': result}, 201
             else:
                 return {"Messege": "No user with that api key"}, 404
-    
+
     #List User's Groups
     def get(self):
         result = []
@@ -46,9 +48,7 @@ class Groups(Resource):
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
-                groups = user.groups
-                for group in groups:
-                    result.append(Group.serialize(group))
+                result = user.get_groups()
 
             return {"status": 'success', 'data': result}, 200
 
@@ -64,7 +64,7 @@ class Groups(Resource):
             if group:
                 if (group.name != json_data['name']):
                     group.name = json_data['name']
-                if(group.is_public != json_data['is_public']):
+                if (group.is_public != json_data['is_public']):
                     group.is_public = json_data['is_public']
                 #add members field
 

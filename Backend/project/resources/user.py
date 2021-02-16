@@ -11,7 +11,7 @@ class Users(Resource):
         users = User.query.all()
         user_list = []
         for user in users:
-            user_list.append(user.serialize())
+            user_list.append(user.serialize_public())
         return {"status": user_list}, 200
 
     #Create New User (Sign Up/register User)
@@ -19,22 +19,22 @@ class Users(Resource):
         json_data = request.get_json(force=True)
 
         if not json_data:
-            return {'message': 'No input data provided'}, 400
+            return {'Message': 'No input data provided'}, 400
 
         user = User.query.filter_by(username=json_data['username']).first()
         if user:
-            return {'message': 'Username is already taken'}, 409
+            return {'Message': 'Username is already taken'}, 409
 
         user = User.query.filter_by(
             emailaddress=json_data['emailaddress']).first()
         if user:
-            return {'message': 'Email address already exists'}, 409
+            return {'Message': 'Email address already exists'}, 409
 
         api_key = self.generate_key()
 
         user = User.query.filter_by(api_key=api_key).first()
         if user:
-            return {'message': 'API key already exists'}, 409
+            return {'Message': 'API key already exists'}, 409
 
         user = User(
             api_key=api_key,

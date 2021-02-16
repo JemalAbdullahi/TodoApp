@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist/models/group.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
 import 'dart:convert';
@@ -18,6 +19,7 @@ class ApiProvider {
   String groupmemberURL = baseURL + "/groupmember";
   // final _apiKey = 'your_api_key';
 
+//User CRUD Functions
   //Sign Up
   Future<User> registerUser(
       String username,
@@ -101,7 +103,32 @@ class ApiProvider {
       throw Exception(result["Message"]);
     }
   }
+//Group CRUD Functions
+  // Get User's Group's
+  Future<List<Group>> getUserGroups(String apiKey) async {
+    final response = await client.get(
+      groupURL,
+      headers: {"Authorization": apiKey},
+    );
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      List<Group> groups = [];
+      for (Map json_ in result["data"]) {
+        try {
+          groups.add(Group.fromJson(json_));
+        } catch (Exception) {
+          print(Exception);
+        }
+      }
+      return groups;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception(result["Message"]);
+    }
+  }
 
+//Task CRUD Functions
   // Get Tasks
   Future<List<Task>> getUserTasks(String apiKey) async {
     final response = await client.get(
@@ -109,7 +136,7 @@ class ApiProvider {
       headers: {"Authorization": apiKey},
     );
     final Map result = json.decode(response.body);
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       List<Task> tasks = [];
       for (Map json_ in result["data"]) {
@@ -122,30 +149,26 @@ class ApiProvider {
       return tasks;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception('Failed to load tasks');
+      throw Exception(result["Message"]);
     }
   }
 
   //Add Task
   Future addUserTask(
-      String apiKey, String taskName, String groupName, int index) async {
+      String apiKey, String taskName, String groupKey, int index) async {
     final response = await client.post(taskURL,
         headers: {"Authorization": apiKey},
         body: jsonEncode({
           "title": taskName,
-          "note": "",
-          "completed": false,
-          "repeats": "",
-          "group": groupName,
-          "reminders": "",
+          "group_key": groupKey,
           "index": index
         }));
     if (response.statusCode == 201) {
       print("Task " + taskName + " added");
     } else {
       // If that call was not successful, throw an error.
-      print(json.decode(response.body));
-      throw Exception('Failed to post tasks');
+      final Map result = json.decode(response.body);
+      throw Exception(result["Message"]);
     }
   }
 
@@ -158,7 +181,6 @@ class ApiProvider {
           "note": task.note,
           "repeats": task.repeats,
           "completed": task.completed,
-          "group": task.group,
           "reminders": task.reminders,
           "index": task.index
         }));
@@ -182,11 +204,11 @@ class ApiProvider {
       print("Task deleted");
     } else {
       // If that call was not successful, throw an error.
-      print(json.decode(response.body));
-      throw Exception('Failed to delete task');
+      final Map result = json.decode(response.body);
+      throw Exception(result["Message"]);
     }
   }
-
+//Subtask CRUD Functions
   //Get Subtasks
   Future<List<SubTask>> getSubTasks(String taskKey) async {
     final response = await client.get(
@@ -207,7 +229,7 @@ class ApiProvider {
       return subtasks;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception('Failed to load tasks');
+      throw Exception(result["Message"]);
     }
   }
 
@@ -229,8 +251,8 @@ class ApiProvider {
       print("SubTask " + subtaskName + " added");
     } else {
       // If that call was not successful, throw an error.
-      print(json.decode(response.body));
-      throw Exception('Failed to load tasks');
+      final Map result = json.decode(response.body);
+      throw Exception(result["Message"]);
     }
   }
 
@@ -251,8 +273,8 @@ class ApiProvider {
       print("SubTask " + subtask.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
-      print(json.decode(response.body));
-      throw Exception('Failed to update tasks');
+      final Map result = json.decode(response.body);
+      throw Exception(result["Message"]);
     }
   }
 
@@ -267,8 +289,8 @@ class ApiProvider {
       print("SubTask deleted");
     } else {
       // If that call was not successful, throw an error.
-      print(json.decode(response.body));
-      throw Exception('Failed to delete subtask');
+      final Map result = json.decode(response.body);
+      throw Exception(result["Message"]);
     }
   }
 

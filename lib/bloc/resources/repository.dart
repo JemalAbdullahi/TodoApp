@@ -35,6 +35,8 @@ class Repository {
           String apiKey) =>
       apiProvider.updateUserProfile(currentPassword, newPassword, email,
           username, firstname, lastname, phonenumber, avatar, apiKey);
+    
+  Future getUserGroups(String apiKey) => apiProvider.getUserGroups(apiKey);
 
   Future getUserTasks(String apiKey) => apiProvider.getUserTasks(apiKey);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+//import 'package:todolist/models/group.dart';
 
 class User {
   final int id;
@@ -10,29 +11,31 @@ class User {
   final String password;
   final String apiKey;
   final ImageProvider avatar;
-  //List<String> groups;
+  //List<Group> groups;
 
-  User(
-      {this.firstname,
-      this.lastname,
-      this.phonenumber,
-      this.emailAddress,
-      this.id,
-      this.apiKey,
-      this.password,
-      this.username,
-      this.avatar});
+  User({
+    this.apiKey,
+    this.id,
+    this.username,
+    this.password,
+    this.emailAddress,
+    this.firstname,
+    this.lastname,
+    this.phonenumber,
+    this.avatar,
+  });
 
   factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
-        firstname: parsedJson['firstname'],
-        lastname: parsedJson['lastname'],
-        phonenumber: parsedJson['phonenumber'],
-        avatar: parsedJson['avatar'],
-        username: parsedJson['username'],
-        emailAddress: parsedJson['emailaddress'],
-        password: parsedJson['password'],
-        id: parsedJson['id'],
-        apiKey: parsedJson['api_key']);
+      apiKey: parsedJson['api_key'],
+      id: parsedJson['id'],
+      username: parsedJson['username'],
+      password: parsedJson['password'],
+      emailAddress: parsedJson['emailaddress'],
+      firstname: parsedJson['firstname'],
+      lastname: parsedJson['lastname'],
+      phonenumber: parsedJson['phonenumber'],
+      avatar: parsedJson['avatar'],
+    );
   }
 }

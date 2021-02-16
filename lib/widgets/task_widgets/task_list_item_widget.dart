@@ -83,9 +83,9 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   textDirection: TextDirection.ltr,
                   children: <Widget>[
-                    widget.task.group.isNotEmpty
+                    widget.task.groupName.isNotEmpty
                         ? Text(
-                            widget.task.group,
+                            widget.task.groupName,
                             style: toDoListSubtitleStyle,
                             textAlign: TextAlign.right,
                             overflow: TextOverflow.ellipsis,

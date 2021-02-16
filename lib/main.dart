@@ -38,6 +38,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   TaskBloc tasksBloc;
+  GroupBloc groupBloc;
   String apiKey = "";
   Repository repository = Repository();
 
@@ -55,6 +56,13 @@ class _SignInState extends State<SignIn> {
           apiKey = snapshot.data;
           if (apiKey.isNotEmpty) {
             tasksBloc = TaskBloc(apiKey);
+            /* // Testing GroupBloc 
+            groupBloc = GroupBloc(apiKey);
+            groupBloc.testGroupList().then((groups){
+              for (Group g in groups) {
+                print(g.name);                
+              }
+            });*/
           }
         }
         /* else {
@@ -79,7 +87,9 @@ class _SignInState extends State<SignIn> {
     apiKey = await getApiKey();
     if (apiKey.isNotEmpty) {
       if (apiKey.length > 0) {
-        try {userBloc.signinUser("", "", apiKey);}catch(e){
+        try {
+          userBloc.signinUser("", "", apiKey);
+        } catch (e) {
           print(e);
         }
       } else {}
@@ -101,15 +111,15 @@ class _SignInState extends State<SignIn> {
     return prefs.getString("API_Token");
   }
 
-  void addTask(String taskName, String groupName, int index) async {
-    await repository.addUserTask(this.apiKey, taskName, groupName, index);
+  void addTask(String taskName, String groupKey, int index) async {
+    await repository.addUserTask(this.apiKey, taskName, groupKey, index);
     setState(() {
       build(context);
     });
   }
 
   void reAddTask(Task task) {
-    addTask(task.title, task.group, task.index);
+    addTask(task.title, task.groupKey, task.index);
   }
 
   logout() async {
