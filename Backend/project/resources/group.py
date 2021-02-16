@@ -24,7 +24,7 @@ class Groups(Resource):
                     group_key = self.generate_key()
                     group = Group.query.filter_by(group_key=group_key).first()
 
-                group = Group(name=json_data['name'], group_key=group_key)
+                group = Group(name=json_data['name'], group_key=group_key, is_public=json_data['is_public'])
                 user.groups.append(
                     group
                 )  # can alter to group.members.append(user,user,user) depending on UI implementaion
@@ -64,6 +64,8 @@ class Groups(Resource):
             if group:
                 if (group.name != json_data['name']):
                     group.name = json_data['name']
+                if(group.is_public != json_data['is_public']):
+                    group.is_public = json_data['is_public']
                 #add members field
 
                 db.session.commit()

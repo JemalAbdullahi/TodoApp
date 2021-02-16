@@ -1,9 +1,10 @@
-from flask import Flask
-from marshmallow import Schema, fields, pre_load, validate
-from flask_marshmallow import Marshmallow
+#from operator import truediv
+#from flask import Flask
+#from marshmallow import Schema, fields, pre_load, validate
+#from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 
-ma = Marshmallow()
+#ma = Marshmallow()
 db = SQLAlchemy()
 
 group_member_table = db.Table(
@@ -56,6 +57,16 @@ class User(db.Model):
             'phonenumber': self.phonenumber,
             'avatar': self.avatar,
         }
+    
+    def serialize_public(self):
+        return {
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'username': self.username,
+            'emailaddress': self.emailaddress,
+            'phonenumber': self.phonenumber,
+            'avatar': self.avatar,
+        }
 
 
 class Task(db.Model):
@@ -70,17 +81,17 @@ class Task(db.Model):
     completed = db.Column(db.Boolean(), default=False, nullable=False)
     repeats = db.Column(db.String())
     reminders = db.Column(db.String())
-    group = db.Column(db.String())
+    group_id = db.Column(db.Integer(), db.ForeignKey('groups.id', ondelete="CASCADE"))
     task_key = db.Column(db.String())
 
-    def __init__(self, title, user_id, note, completed, repeats, group,
+    def __init__(self, title, user_id, note, completed, repeats, group_id,
                  reminders, task_key, index):
         self.title = title
         self.user_id = user_id
         self.reminders = reminders
         self.completed = completed
         self.note = note
-        self.group = group
+        self.group_id = group_id
         self.repeats = repeats
         self.task_key = task_key
         self.index = index
@@ -94,7 +105,7 @@ class Task(db.Model):
             'title': self.title,
             'user_id': self.user_id,
             'index': self.index,
-            'group': self.group,
+            'group_id': self.group_id,
             'repeats': self.repeats,
             'reminders': self.reminders,
             'completed': self.completed,
@@ -156,10 +167,12 @@ class Group(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String())
     group_key = db.Column(db.String())
+    is_public = db.Column(db.Boolean(), default=False)
 
-    def __init__(self, name, group_key):
+    def __init__(self, name, group_key, is_public):
         self.name = name
         self.group_key = group_key
+        self.is_public = is_public
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -168,13 +181,18 @@ class Group(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'members': self.getmembers(),
+            'members': self.get_members(),
             'group_key': self.group_key,
+            'is_public': self.is_public,
         }
 
-    def getmembers(self):
+    def get_members(self):
         members = []
         for member in self.members:
-            members.append(User.serialize(member))
-
+            members.append(User.serialize_public(member))
         return members
+
+    def is_empty(self):
+        if len(self.get_members()) == 0:
+            return True
+        return False

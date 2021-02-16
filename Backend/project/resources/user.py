@@ -10,10 +10,10 @@ class Users(Resource):
     def get(self):
         users = User.query.all()
         user_list = []
-        for i in range(0, len(users)):
-            user_list.append(users[i].serialize())
+        for user in users:
+            user_list.append(user.serialize())
         return {"status": user_list}, 200
-    
+
     #Create New User (Sign Up/register User)
     def post(self):
         json_data = request.get_json(force=True)
@@ -52,7 +52,7 @@ class Users(Resource):
         result = User.serialize(user)
 
         return {"status": 'success', 'data': result}, 201
-    
+
     #Update User Profile
     def put(self):
         header = request.headers["Authorization"]
@@ -87,7 +87,7 @@ class Users(Resource):
 
             else:
                 return {'Messege': "No User found with that api key"}, 404
-    
+
     #Generate new api key
     def generate_key(self):
         return ''.join(

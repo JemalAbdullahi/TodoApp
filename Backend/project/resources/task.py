@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask import request
-from Models import db, User, Task, SubTask
+from Models import Group, db, User, Task, SubTask
 import random
 import string
 
@@ -18,30 +18,38 @@ class Tasks(Resource):
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
-                task_key = self.generate_key()
-                task = Task.query.filter_by(task_key=task_key).first()
-                while task:
+                group = Group.query.filter_by(
+                    group_key=json_data['group_key']).first()
+                if group:
                     task_key = self.generate_key()
                     task = Task.query.filter_by(task_key=task_key).first()
+                    while task:
+                        task_key = self.generate_key()
+                        task = Task.query.filter_by(task_key=task_key).first()
 
-                task = Task(
-                    title=json_data['title'],
-                    user_id=user.id,
-                    note=json_data['note'],
-                    completed=json_data['completed'],
-                    repeats=json_data['repeats'],
-                    group=json_data['group'],
-                    reminders=json_data['reminders'],
-                    task_key=task_key,
-                    index=json_data['index'],
-                )
-                db.session.add(task)
-                db.session.commit()
+                    task = Task(
+                        title=json_data['title'],
+                        user_id=user.id,
+                        note=json_data['note'],
+                        completed=json_data['completed'],
+                        repeats=json_data['repeats'],
+                        group_id=group.id,
+                        reminders=json_data['reminders'],
+                        task_key=task_key,
+                        index=json_data['index'],
+                    )
+                    db.session.add(task)
+                    db.session.commit()
 
-                result = Task.serialize(task)
-                return {"status": 'success', 'data': result}, 201
+                    result = Task.serialize(task)
+                    return {"status": 'success', 'data': result}, 201
+                else:
+                    return {
+                        "Messege": "No Group found with that group key"
+                    }, 404
             else:
                 return {"Messege": "No user with that api key"}, 404
+
     # List Task
     def get(self):
         result = []
@@ -57,6 +65,7 @@ class Tasks(Resource):
                     result.append(Task.serialize(task))
 
             return {"status": 'success', 'data': result}, 200
+
     #Update Task
     def put(self):
         header = request.headers["Authorization"]
@@ -75,7 +84,7 @@ class Tasks(Resource):
                     task.completed = json_data['completed']
                 if (task.repeats != json_data['repeats']):
                     task.repeats = json_data['repeats'],
-                if (task.group != json_data['group']):
+                if (task.group_id != json_data['group_id']):
                     task.group = json_data['group']
                 if (task.reminders != json_data['reminders']):
                     task.reminders = json_data['reminders']
@@ -88,6 +97,7 @@ class Tasks(Resource):
                 return {"status": 'success', 'data': result}, 200
             else:
                 return {"Messege": "No Task with that task key"}, 404
+
     #Delete Task
     def delete(self):
         header = request.headers["Authorization"]
