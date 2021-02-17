@@ -167,11 +167,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _displayInvalidFormError() => _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        content: Text('Fill the Form Completely'),
-        backgroundColor: Colors.red,
-      ),
-    );
+        SnackBar(
+          content: Text('Fill the Form Completely'),
+          backgroundColor: Colors.red,
+        ),
+      );
 
   Widget get _getSigninScreen {
     return Container(

@@ -82,7 +82,7 @@ class _SignInState extends State<SignIn> {
       } catch (e) {
         print(e);
       }
-    } 
+    }
     apiKey = "";
     return apiKey;
   }
