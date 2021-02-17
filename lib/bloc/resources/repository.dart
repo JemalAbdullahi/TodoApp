@@ -35,8 +35,12 @@ class Repository {
           String apiKey) =>
       apiProvider.updateUserProfile(currentPassword, newPassword, email,
           username, firstname, lastname, phonenumber, avatar, apiKey);
+
+  Future<String> getApiKey() => apiProvider.getApiKey();
     
   Future getUserGroups(String apiKey) => apiProvider.getUserGroups(apiKey);
+
+  Future getGroupMembers(String groupKey) => apiProvider.getGroupMembers(groupKey);
 
   Future getUserTasks(String apiKey) => apiProvider.getUserTasks(apiKey);
 
@@ -68,3 +72,5 @@ class Repository {
     apiProvider.deleteSubTask(subtaskKey);
   }
 }
+
+final repository = Repository();

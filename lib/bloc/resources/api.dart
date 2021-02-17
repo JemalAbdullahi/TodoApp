@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/models/group.dart';
+import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
 import 'dart:convert';
@@ -103,6 +104,7 @@ class ApiProvider {
       throw Exception(result["Message"]);
     }
   }
+
 //Group CRUD Functions
   // Get User's Group's
   Future<List<Group>> getUserGroups(String apiKey) async {
@@ -116,12 +118,40 @@ class ApiProvider {
       List<Group> groups = [];
       for (Map json_ in result["data"]) {
         try {
-          groups.add(Group.fromJson(json_));
+          Group group = Group.fromJson(json_);
+          group.members = await getGroupMembers(group.groupKey);
+          groups.add(group);
         } catch (Exception) {
           print(Exception);
         }
       }
       return groups;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception(result["Message"]);
+    }
+  }
+
+  //GroupMember CRUD Functions
+  // Get Group's Members
+  Future<List<GroupMember>> getGroupMembers(String groupKey) async {
+    final response = await client.get(
+      groupmemberURL,
+      headers: {"Authorization": groupKey},
+    );
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      List<GroupMember> groupMembers = [];
+      for (Map json_ in result["data"]) {
+        try {
+          groupMembers.add(GroupMember.fromJson(json_));
+        } catch (Exception) {
+          print(Exception);
+          throw Exception;
+        }
+      }
+      return groupMembers;
     } else {
       // If that call was not successful, throw an error.
       throw Exception(result["Message"]);
@@ -158,11 +188,8 @@ class ApiProvider {
       String apiKey, String taskName, String groupKey, int index) async {
     final response = await client.post(taskURL,
         headers: {"Authorization": apiKey},
-        body: jsonEncode({
-          "title": taskName,
-          "group_key": groupKey,
-          "index": index
-        }));
+        body: jsonEncode(
+            {"title": taskName, "group_key": groupKey, "index": index}));
     if (response.statusCode == 201) {
       print("Task " + taskName + " added");
     } else {
@@ -208,6 +235,7 @@ class ApiProvider {
       throw Exception(result["Message"]);
     }
   }
+
 //Subtask CRUD Functions
   //Get Subtasks
   Future<List<SubTask>> getSubTasks(String taskKey) async {
@@ -298,5 +326,10 @@ class ApiProvider {
   saveApiKey(String apiKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('API_Token', apiKey);
+  }
+
+  Future<String> getApiKey() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('API_Token');
   }
 }

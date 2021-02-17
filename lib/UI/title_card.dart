@@ -12,15 +12,47 @@ class TitleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        _TitleCardBackground(),
-        _TitleCardTitle(title),
+        _titleCardBackground(),
+        //_titleCardTitle(),
         //_TitleCardButton(addTask),
       ],
     );
   }
+
+  Container _titleCardBackground() {
+    return Container(
+      height: 120,
+      width: double.infinity,
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(40),
+          bottomRight: Radius.circular(40),
+        ),
+        boxShadow: [
+          new BoxShadow(
+            color: Colors.black.withOpacity(0.7),
+            blurRadius: 25.0,
+          ),
+        ],
+      ),
+      child: _titleCardTitle(),
+      padding: EdgeInsets.only(bottom: 20, left: 15.0),
+    );
+  }
+
+  Align _titleCardTitle() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Text(
+        title,
+        style: cardTitleStyle,
+      ),
+    );
+  }
 }
 
-class _TitleCardTitle extends StatelessWidget {
+/* class _TitleCardTitle extends StatelessWidget {
   final String title;
   _TitleCardTitle(this.title);
   @override
@@ -35,9 +67,9 @@ class _TitleCardTitle extends StatelessWidget {
       ),
     );
   }
-}
+} */
 
-class _TitleCardBackground extends StatelessWidget {
+/* class _TitleCardBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,9 +83,9 @@ class _TitleCardBackground extends StatelessWidget {
       ),
     );
   }
-}
+} */
 
-class _TitleCardButton extends StatefulWidget {
+/* class _TitleCardButton extends StatefulWidget {
   final VoidCallback addTaskDialog;
   
 
@@ -90,4 +122,4 @@ class __TitleCardButtonState extends State<_TitleCardButton> {
       ),
     );
   }
-}
+} */

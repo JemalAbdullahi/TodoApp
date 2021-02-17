@@ -9,9 +9,8 @@ import 'package:todolist/models/tasks.dart';
 class TaskListItemWidget extends StatefulWidget {
   final Task task;
   final String keyValue;
-  final Repository repository;
 
-  TaskListItemWidget({this.task, this.repository, this.keyValue});
+  TaskListItemWidget({this.task, this.keyValue});
 
   @override
   _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
@@ -35,8 +34,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
         MaterialPageRoute(builder: (BuildContext context) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return SubtaskListTab(
-                widget.repository, widget.task.taskKey, subTaskBloc);
+            return SubtaskListTab(widget.task.taskKey, subTaskBloc);
           });
         }),
       ),
@@ -63,7 +61,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                   onChanged: (bool newValue) {
                     setState(() {
                       widget.task.completed = newValue;
-                      widget.repository.updateUserTask(widget.task);
+                      repository.updateUserTask(widget.task);
                     });
                   }),
               Flexible(

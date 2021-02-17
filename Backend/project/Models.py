@@ -66,10 +66,6 @@ class User(db.Model):
             'emailaddress': self.emailaddress,
             'phonenumber': self.phonenumber,
             'avatar': self.avatar,
-            'id': -1,
-            'api_key': "HIDDEN",
-            'password': "HIDDEN",
-            'groups': [],
         }
 
     def get_groups(self):

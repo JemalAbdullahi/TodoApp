@@ -1,11 +1,11 @@
-//import 'package:todolist/models/user.dart';
+import 'package:todolist/models/groupmember.dart';
 
 class Group {
   int id;
   String name;
   String groupKey;
   bool isPublic;
-  //List<User> members;
+  List<GroupMember> members;
   
   
 

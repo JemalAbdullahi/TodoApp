@@ -13,11 +13,10 @@ import 'package:todolist/widgets/task_widgets/task_list_item_widget.dart';
 
 class ToDoTab extends StatefulWidget {
   final TaskBloc tasksBloc;
-  final Repository repository;
   final VoidCallback addTaskDialog;
   final void Function(Task) reAddTask;
 
-  ToDoTab(this.addTaskDialog, this.tasksBloc, this.repository, this.reAddTask);
+  ToDoTab(this.addTaskDialog, this.tasksBloc, this.reAddTask);
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
@@ -109,7 +108,7 @@ class _ToDoTabState extends State<ToDoTab> {
               tasks.remove(item);
               tasks.insert(newIndex, item);
               item.index = newIndex;
-              widget.repository.updateUserTask(item);
+              repository.updateUserTask(item);
             },
           );
         },
@@ -121,7 +120,7 @@ class _ToDoTabState extends State<ToDoTab> {
     for (int i = 0; i < tasks.length; i++) {
       if (tasks[i].index != i) {
         tasks[i].index = i;
-        widget.repository.updateUserTask(tasks[i]);
+        repository.updateUserTask(tasks[i]);
       }
     }
   }
@@ -134,7 +133,6 @@ class _ToDoTabState extends State<ToDoTab> {
         key: Key(item.title),
         title: TaskListItemWidget(
           task: item,
-          repository: widget.repository,
         ),
       ),
       background: Container(
@@ -179,6 +177,6 @@ class _ToDoTabState extends State<ToDoTab> {
 
   Future<Null> deleteTask(Task task) async {
     removeTask(task);
-    await widget.repository.deleteUserTask(task.taskKey);
+    await repository.deleteUserTask(task.taskKey);
   }
 }

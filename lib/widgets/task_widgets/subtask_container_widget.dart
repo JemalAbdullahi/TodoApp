@@ -9,11 +9,10 @@ import 'package:todolist/widgets/task_widgets/subtask_list_tile.dart';
 
 class SubtaskContainerWidget extends StatefulWidget {
   SubtaskContainerWidget(
-      {Key key, @required this.taskKey, @required this.repository})
+      {Key key, @required this.taskKey})
       : super(key: key);
 
   final String taskKey;
-  final Repository repository;
 
   @override
   _SubtaskContainerWidgetState createState() => _SubtaskContainerWidgetState();
@@ -120,7 +119,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
                 subtasks.add(item);
               }
               item.index = newIndex;
-              widget.repository.updateSubTask(item);
+              repository.updateSubTask(item);
               updateIndex();
             },
           );
@@ -221,7 +220,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
 
   void addSubTask(String taskKey, String subtaskName, String notes, int index,
       bool completed) async {
-    await widget.repository
+    await repository
         .addSubTask(taskKey, subtaskName, notes, index, completed)
         .then((_) => setState(() {
               build(this.context);
@@ -241,7 +240,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
         if (item.index >= subtasks.length || item.index == -1) {
           subtasks.add(item);
           item.index = subtasks.length - 1;
-          widget.repository.updateSubTask(item);
+          repository.updateSubTask(item);
         } else {
           subtasks.insert(item.index, item);
         }
@@ -257,7 +256,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
     for (int i = 0; i < subtasks.length; i++) {
       if (subtasks[i].index != i) {
         subtasks[i].index = i;
-        widget.repository.updateSubTask(subtasks[i]);
+        repository.updateSubTask(subtasks[i]);
         print("Updated Subtask: " +
             subtasks[i].title +
             " | " +
@@ -276,7 +275,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
   }
 
   Future<Null> deleteSubTask(SubTask subtask) async {
-    await widget.repository.deleteSubTask(subtask.subtaskKey);
+    await repository.deleteSubTask(subtask.subtaskKey);
     removeSubTask(subtask);
   }
 }

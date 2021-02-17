@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/group.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
 class GroupPage extends StatefulWidget {
+
+  const GroupPage({Key key}) : super(key: key);
+
   @override
   _GroupPageState createState() => _GroupPageState();
 }
 
 class _GroupPageState extends State<GroupPage> {
-  final List<String> groups = <String>[
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I'
-  ];
+  List<Group> groups = [];
   Size mediaQuery;
   double groupListItemWidth;
   double groupListItemHeight;
@@ -47,7 +42,39 @@ class _GroupPageState extends State<GroupPage> {
           ],
         ),
         backgroundColor: Colors.transparent,
-        body: buildGroupListView(),
+        body: StreamBuilder(
+          key: UniqueKey(),
+          stream: groupBloc.getGroups,
+          initialData: groups,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                print("No Connection: " + snapshot.toString());
+                break;
+              case ConnectionState.waiting:
+                print("Waiting Data: " + snapshot.toString());
+                if (!snapshot.hasData)
+                  return Center(child: CircularProgressIndicator());
+                groups = snapshot.data;
+                return buildGroupListView();
+                break;
+              case ConnectionState.active:
+                print("Active Data: " + snapshot.toString());
+                if (snapshot.hasData) {
+                  groups = snapshot.data;
+                  return buildGroupListView();
+                }
+                break;
+              case ConnectionState.done:
+                print("Done Data: " + snapshot.toString());
+                if (snapshot.hasData) {
+                  groups = snapshot.data;
+                  return buildGroupListView();
+                }
+            }
+            return SizedBox();
+          },
+        ), //buildGroupListView(),
       ),
     );
   }
@@ -82,7 +109,7 @@ class _GroupPageState extends State<GroupPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Group ${groups[index]}",
+                  groups[index].name,
                   style: TextStyle(
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold,

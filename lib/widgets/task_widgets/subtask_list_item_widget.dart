@@ -5,9 +5,8 @@ import 'package:todolist/models/subtasks.dart';
 
 class SubTaskListItemWidget extends StatefulWidget {
   final SubTask subTask;
-  final Repository repository;
 
-  SubTaskListItemWidget({this.subTask, this.repository});
+  SubTaskListItemWidget({this.subTask});
   @override
   _SubTaskListItemWidgetState createState() => _SubTaskListItemWidgetState();
 }
@@ -37,7 +36,7 @@ class _SubTaskListItemWidgetState extends State<SubTaskListItemWidget> {
                 onChanged: (bool newValue) {
                   setState(() {
                     widget.subTask.completed = newValue;
-                    widget.repository.updateSubTask(widget.subTask);
+                    repository.updateSubTask(widget.subTask);
                   });
                 }),
             Text(widget.subTask.title, style: toDoListTileStyle),

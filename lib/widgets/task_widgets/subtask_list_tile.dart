@@ -40,7 +40,7 @@ class _SubtaskListTileState extends State<SubtaskListTile> {
       child: ListTile(
         key: Key(widget.item.title),
         title: SubTaskListItemWidget(
-            subTask: widget.item, repository: widget.widget.repository),
+            subTask: widget.item),
       ),
       background: Container(
         alignment: AlignmentDirectional.centerEnd,

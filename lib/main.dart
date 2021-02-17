@@ -38,9 +38,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   TaskBloc tasksBloc;
-  GroupBloc groupBloc;
   String apiKey = "";
-  Repository repository = Repository();
 
   @override
   void initState() {
@@ -55,15 +53,13 @@ class _SignInState extends State<SignIn> {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
           tasksBloc = TaskBloc(apiKey);
-          groupBloc = GroupBloc(apiKey);
+          groupBloc.setApiKey();
         }
         return apiKey.isNotEmpty
             ? HomePage(
-                repository: repository,
                 logout: logout,
                 addTaskDialog: addTaskDialog,
                 tasksBloc: tasksBloc,
-                groupBloc: groupBloc,
                 reAddTask: reAddTask)
             : LoginPage(
                 login: login,
@@ -74,7 +70,7 @@ class _SignInState extends State<SignIn> {
   }
 
   Future signInUser() async {
-    apiKey = await getApiKey();
+    apiKey = await repository.getApiKey();
     if (apiKey.isNotEmpty && apiKey.length > 0) {
       try {
         userBloc.signinUser("", "", apiKey);
@@ -93,10 +89,10 @@ class _SignInState extends State<SignIn> {
     });
   }
 
-  Future getApiKey() async {
+  /* Future getApiKey() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("API_Token");
-  }
+  } */
 
   void addTask(String taskName, String groupKey, int index) async {
     await repository.addUserTask(this.apiKey, taskName, groupKey, index);
