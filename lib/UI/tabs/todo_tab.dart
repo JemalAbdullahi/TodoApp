@@ -27,7 +27,6 @@ class _ToDoTabState extends State<ToDoTab> {
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).viewInsets.bottom);
     return Stack(
       children: <Widget>[
         BackgroundColorContainer(
@@ -86,7 +85,7 @@ class _ToDoTabState extends State<ToDoTab> {
             return CircularProgressIndicator();
           },
         ),
-        TitleCard('To Do', widget.addTaskDialog),
+        TitleCard('To Do'),
         AddTask(),
       ],
     );

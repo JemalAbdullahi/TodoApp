@@ -4,18 +4,18 @@ import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/widgets/task_widgets/subtask_container_widget.dart';
 
-class TaskListTab extends StatefulWidget {
+class SubtaskListTab extends StatefulWidget {
   final SubTaskBloc subTaskBloc;
   final Repository repository;
   final taskKey;
 
-  TaskListTab(this.repository, this.taskKey, this.subTaskBloc);
+  SubtaskListTab(this.repository, this.taskKey, this.subTaskBloc);
 
   @override
-  _TaskListTabState createState() => _TaskListTabState();
+  _SubtaskListTabState createState() => _SubtaskListTabState();
 }
 
-class _TaskListTabState extends State<TaskListTab> {
+class _SubtaskListTabState extends State<SubtaskListTab> {
   List<SubTask> subtasks = [];
 
   @override
@@ -37,7 +37,8 @@ class _TaskListTabState extends State<TaskListTab> {
         ],
       ),
       body: Container(
-        child: SubtaskContainerWidget(taskKey: widget.taskKey, repository: widget.repository),
+        child: SubtaskContainerWidget(
+            taskKey: widget.taskKey, repository: widget.repository),
       ),
     );
   }

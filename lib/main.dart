@@ -56,8 +56,8 @@ class _SignInState extends State<SignIn> {
           apiKey = snapshot.data;
           if (apiKey.isNotEmpty) {
             tasksBloc = TaskBloc(apiKey);
-            /* // Testing GroupBloc 
             groupBloc = GroupBloc(apiKey);
+            /* // Testing GroupBloc 
             groupBloc.testGroupList().then((groups){
               for (Group g in groups) {
                 print(g.name);                
@@ -65,15 +65,13 @@ class _SignInState extends State<SignIn> {
             });*/
           }
         }
-        /* else {
-          print("No data");
-        } */
         return apiKey.isNotEmpty
             ? HomePage(
                 repository: repository,
                 logout: logout,
                 addTaskDialog: addTaskDialog,
                 tasksBloc: tasksBloc,
+                groupBloc: groupBloc,
                 reAddTask: reAddTask)
             : LoginPage(
                 login: login,

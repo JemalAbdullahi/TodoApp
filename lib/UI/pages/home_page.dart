@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/tabs/list_groups_tab.dart';
 
-import 'package:todolist/UI/tabs/todo_tab.dart';
+//import 'package:todolist/UI/tabs/todo_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/tasks.dart';
@@ -17,12 +18,15 @@ class HomePage extends StatefulWidget {
   final String title;
   final Repository repository;
 
+  final GroupBloc groupBloc;
+
   HomePage(
       {this.repository,
       this.title,
       this.logout,
       this.addTaskDialog,
       this.tasksBloc,
+      this.groupBloc,
       this.reAddTask});
 
   @override
@@ -55,8 +59,9 @@ class _HomePageState extends State<HomePage> {
           body: Container(
             child: Stack(
               children: <Widget>[
-                ToDoTab(widget.addTaskDialog, widget.tasksBloc,
-                    widget.repository, widget.reAddTask),
+                ListGroupsTab(
+                    groupBloc: widget.groupBloc, repository: widget.repository),
+                //ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.repository, widget.reAddTask),
                 SideBarMenu(
                   isMenuOpen: isMenuOpen,
                   logout: widget.logout,

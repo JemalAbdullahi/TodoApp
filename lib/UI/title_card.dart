@@ -5,9 +5,9 @@ import 'package:todolist/models/global.dart';
 
 class TitleCard extends StatelessWidget {
   final String title;
-  final VoidCallback addTask;
+  //final VoidCallback addTask;
 
-  TitleCard(this.title, this.addTask);
+  TitleCard(this.title);
   @override
   Widget build(BuildContext context) {
     return Stack(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:todolist/UI/tabs/tasklist_tab.dart';
+import 'package:todolist/UI/tabs/subtask_list_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
@@ -35,7 +35,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
         MaterialPageRoute(builder: (BuildContext context) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return TaskListTab(
+            return SubtaskListTab(
                 widget.repository, widget.task.taskKey, subTaskBloc);
           });
         }),

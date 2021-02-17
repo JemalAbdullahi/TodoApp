@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/UI/title_card.dart';
+//import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
@@ -83,7 +83,7 @@ class _SubtaskContainerWidgetState extends State<SubtaskContainerWidget> {
             return CircularProgressIndicator();
           },
         ),
-        TitleCard('SubTask List', addSubTaskDialog),
+        //TitleCard('SubTask List', addSubTaskDialog),
       ],
     );
   }
