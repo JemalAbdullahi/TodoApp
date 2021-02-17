@@ -52,18 +52,10 @@ class _SignInState extends State<SignIn> {
     return FutureBuilder(
       future: signInUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
-          if (apiKey.isNotEmpty) {
-            tasksBloc = TaskBloc(apiKey);
-            groupBloc = GroupBloc(apiKey);
-            /* // Testing GroupBloc 
-            groupBloc.testGroupList().then((groups){
-              for (Group g in groups) {
-                print(g.name);                
-              }
-            });*/
-          }
+          tasksBloc = TaskBloc(apiKey);
+          groupBloc = GroupBloc(apiKey);
         }
         return apiKey.isNotEmpty
             ? HomePage(
@@ -83,22 +75,19 @@ class _SignInState extends State<SignIn> {
 
   Future signInUser() async {
     apiKey = await getApiKey();
-    if (apiKey.isNotEmpty) {
-      if (apiKey.length > 0) {
-        try {
-          userBloc.signinUser("", "", apiKey);
-        } catch (e) {
-          print(e);
-        }
-      } else {}
-    } else {
-      apiKey = "";
-    }
+    if (apiKey.isNotEmpty && apiKey.length > 0) {
+      try {
+        userBloc.signinUser("", "", apiKey);
+        return apiKey;
+      } catch (e) {
+        print(e);
+      }
+    } 
+    apiKey = "";
     return apiKey;
   }
 
   void login() {
-    print("logging in");
     setState(() {
       build(context);
     });
