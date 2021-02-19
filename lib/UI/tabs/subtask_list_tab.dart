@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
@@ -6,6 +7,7 @@ import 'package:todolist/models/global.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
+import 'package:todolist/widgets/task_widgets/add_subtask_widget.dart';
 import 'package:todolist/widgets/task_widgets/subtask_list_item_widget.dart';
 //import 'package:todolist/widgets/task_widgets/subtask_container_widget.dart';
 //import 'package:todolist/widgets/task_widgets/subtask_list_tile.dart';
@@ -31,30 +33,36 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     print("Building SubtaskList Context");
     subtaskBloc = SubtaskBloc(widget.task.taskKey);
     subtasks = widget.task.subtasks;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: appTitle,
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            color: Colors.blueGrey,
-          ),
-        ),
-        body: Stack(
-          children: <Widget>[
-            BackgroundColorContainer(
-              startColor: darkBlueGradient,
-              endColor: darkBlue,
-              widget: TitleCard(title: 'Subtask', child: _buildStreamBuilder()),
+    return KeyboardSizeProvider(
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: appTitle,
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              color: Colors.blueGrey,
             ),
-            //TitleCard('Subtask List', addSubtaskDialog),
-          ],
+          ),
+          body: Stack(
+            children: <Widget>[
+              BackgroundColorContainer(
+                startColor: darkBlueGradient,
+                endColor: darkBlue,
+                widget:
+                    TitleCard(title: 'Subtask', child: _buildStreamBuilder()),
+              ),
+              AddSubtask(
+                length: subtasks.length,
+                subtaskBloc: subtaskBloc,
+              ),
+            ],
+          ),
         ),
       ),
     );

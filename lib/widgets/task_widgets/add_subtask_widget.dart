@@ -2,50 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
-class AddTask extends StatefulWidget {
-  const AddTask({
+//import 'package:todolist/models/global.dart';
+
+class AddSubtask extends StatefulWidget {
+  const AddSubtask({
     Key key,
     @required this.length,
-    @required this.taskbloc,
+    @required this.subtaskBloc,
   }) : super(key: key);
 
   final int length;
-  final TaskBloc taskbloc;
+  final SubtaskBloc subtaskBloc;
 
   @override
-  _AddTaskState createState() => _AddTaskState();
+  _AddSubtaskState createState() => _AddSubtaskState();
 }
 
-class _AddTaskState extends State<AddTask> {
-  //GlobalKey<_CustomDropdownState> _keyCustomDropdown = GlobalKey();
+class _AddSubtaskState extends State<AddSubtask> {
   TextEditingController controller = new TextEditingController();
-  FocusNode textfieldFocus = new FocusNode();
 
   double height = 60.0;
   double width = 250.0;
   double bottom = 0;
   double focusWidth, marginH;
   Size size;
-  //bool isFocused = false;
-  //bool _isDropdownOpen = false;
 
-  /* _selectGroupTapFormat(bool dropdownBool) {
-    setState(() {
-      _isDropdownOpen = dropdownBool;
-    });
-  } */
+  FocusNode textfieldFocus = new FocusNode();
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     focusWidth = size.width * 0.9;
     width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : 250;
-    //bottom = (!isFocused && _isDropdownOpen) ? 230 : 0;
+    //bottom = (isFocused) ? 0 : 230;
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
       //bottom = (isFocused && !_res.isOpen) ? 100 : 0;
-      return Positioned(
-        bottom: bottom,
+      return Align(
+        alignment: Alignment.bottomCenter,
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: marginH, vertical: 25),
           decoration: BoxDecoration(
@@ -81,7 +75,7 @@ class _AddTaskState extends State<AddTask> {
                   },
                   onSubmitted: (_) {
                     setState(() {
-                      addTask();
+                      addSubtask();
                     });
                   },
                   decoration: InputDecoration(
@@ -90,18 +84,17 @@ class _AddTaskState extends State<AddTask> {
                             icon: Icon(Icons.add),
                             onPressed: () {
                               setState(() {
-                                addTask();
+                                addSubtask();
+                                textfieldFocus.unfocus();
                               });
                             })
                         : SizedBox.shrink(),
-                    //contentPadding: EdgeInsets.only(left: 12.0,),
                     border: InputBorder.none,
-                    hintText: "Write a Task",
+                    hintText: "Write a Subtask",
                     hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
               ),
-              //DropDownViewController()
             ],
           ),
         ),
@@ -109,9 +102,10 @@ class _AddTaskState extends State<AddTask> {
     });
   }
 
-  void addTask() async {
+  void addSubtask() async {
     if (controller.text.isNotEmpty) {
-      await widget.taskbloc.addTask(controller.text, widget.length, false);
+      await widget.subtaskBloc
+          .addSubtask(controller.text, widget.length, false);
       controller.clear();
     }
   }

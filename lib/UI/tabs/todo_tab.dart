@@ -60,7 +60,6 @@ class _ToDoTabState extends State<ToDoTab> {
               AddTask(
                 length: tasks.length,
                 taskbloc: taskBloc,
-                groupKey: widget.group.groupKey,
               ),
             ],
           ),
