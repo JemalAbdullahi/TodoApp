@@ -52,11 +52,10 @@ class UserBloc {
       String firstname,
       String lastname,
       String phonenumber,
-      ImageProvider avatar,
-      String apiKey) async {
+      ImageProvider avatar) async {
     try {
       _user = await repository.updateUserProfile(currentPassword, newPassword,
-          email, username, firstname, lastname, phonenumber, avatar, apiKey);
+          email, username, firstname, lastname, phonenumber, avatar);
     } catch (e) {
       throw Exception(e.message);
     }
@@ -69,24 +68,11 @@ class UserBloc {
 
 class GroupBloc {
   final _groupSubject = BehaviorSubject<List<Group>>();
-  String _apiKey;
-  List<Group> _groups = <Group>[];
-  
-  void setApiKey() async {
-    _apiKey = await repository.getApiKey();
-    _updateGroups().then((_) {
-      _groupSubject.add(_groups);
-    });
-  }
+  List<Group> _groups = [];
 
   GroupBloc._privateConstructor() {
-    repository.getApiKey().then((apikey) {
-      if (apikey.isNotEmpty) {
-        this._apiKey = apikey;
-        _updateGroups().then((_) {
-          _groupSubject.add(_groups);
-        });
-      }
+    updateGroups().then((_) {
+      _groupSubject.add(_groups);
     });
   }
 
@@ -102,8 +88,8 @@ class GroupBloc {
   */
 
   Stream<List<Group>> get getGroups => _groupSubject.stream;
-  Future<Null> _updateGroups() async {
-    _groups = await repository.getUserGroups(_apiKey);
+  Future<Null> updateGroups() async {
+    _groups = await repository.getUserGroups();
   }
 }
 
@@ -111,7 +97,6 @@ class GroupMemberBloc {
   final _groupMemberSubject = BehaviorSubject<List<GroupMember>>();
   String groupKey;
   var _groupMembers = <GroupMember>[];
-
 
   GroupMemberBloc(String groupKey) {
     this.groupKey = groupKey;
@@ -128,39 +113,57 @@ class GroupMemberBloc {
 
 class TaskBloc {
   final _taskSubject = BehaviorSubject<List<Task>>();
-  String _apiKey;
+  String _groupKey;
 
-  var _tasks = <Task>[];
-
-  TaskBloc(String apiKey) {
-    this._apiKey = apiKey;
-    _updateTasks().then((_) {
-      _taskSubject.add(_tasks);
+  TaskBloc(String groupKey) {
+    this._groupKey = groupKey;
+    _updateTasks().then((tasks) {
+      _taskSubject.add(tasks);
     });
   }
 
   Stream<List<Task>> get getTasks => _taskSubject.stream;
-  Future<Null> _updateTasks() async {
-    _tasks = await repository.getUserTasks(_apiKey);
+
+  Future<Null> addTask(String taskName, int index, bool completed) async {
+    await repository.addTask(taskName, this._groupKey, index, completed);
+    _updateTasks().then((tasks) => _taskSubject.add(tasks));
+  }
+
+  Future<Null> deleteTask(String taskKey) async {
+    await repository.deleteTask(taskKey);
+    await _updateTasks().then((tasks) => _taskSubject.add(tasks));
+  }
+
+  Future<List<Task>> _updateTasks() async {
+    return await repository.getTasks(_groupKey);
   }
 }
 
-class SubTaskBloc {
-  final _subTaskSubject = BehaviorSubject<List<SubTask>>();
-  String taskKey;
+class SubtaskBloc {
+  final _subtaskSubject = BehaviorSubject<List<Subtask>>();
+  String _taskKey;
 
-  var _subTasks = <SubTask>[];
-
-  SubTaskBloc(String taskKey) {
-    this.taskKey = taskKey;
-    _updateSubTasks(taskKey).then((_) {
-      _subTaskSubject.add(_subTasks);
+  SubtaskBloc(String taskKey) {
+    this._taskKey = taskKey;
+    _updateSubtasks().then((subtasks) {
+      _subtaskSubject.add(subtasks);
     });
   }
 
-  Stream<List<SubTask>> get getSubTasks => _subTaskSubject.stream;
-  Future<Null> _updateSubTasks(String taskKey) async {
-    _subTasks = await repository.getSubTasks(taskKey);
+  Stream<List<Subtask>> get getSubtasks => _subtaskSubject.stream;
+
+  Future<Null> addSubtask(String subtaskName, int index, bool completed) async {
+    await repository.addSubtask(_taskKey, subtaskName, index, completed);
+    await _updateSubtasks().then((subtasks) => _subtaskSubject.add(subtasks));
+  }
+
+  Future<Null> deleteSubtask(String subtaskKey) async {
+    await repository.deleteSubtask(subtaskKey);
+    await _updateSubtasks().then((subtasks) => _subtaskSubject.add(subtasks));
+  }
+
+  Future<List<Subtask>> _updateSubtasks() async {
+    return await repository.getSubtasks(_taskKey);
   }
 }
 

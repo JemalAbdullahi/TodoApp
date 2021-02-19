@@ -32,6 +32,7 @@ class Tasks(Resource):
                         user_id=user.id,
                         group_id=group.id,
                         task_key=task_key,
+                        completed=json_data['completed'],
                         index=json_data['index'],
                     )
                     db.session.add(task)
@@ -52,17 +53,16 @@ class Tasks(Resource):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No api key!"}, 401
+            return {"Messege": "No group key!"}, 401
         else:
-            user = User.query.filter_by(api_key=header).first()
-            if user.has_groups():
-                groups = user.get_groups()
-                for group in groups:
-                    tasks = Task.query.filter_by(group_id=group['id']).all()
-                    for task in tasks:
-                        result.append(Task.serialize(task))
-
-            return {"status": 'success', 'data': result}, 200
+            group = Group.query.filter_by(group_key=header).first()
+            if group:
+                tasks = Task.query.filter_by(group_id=group.id).all()
+                for task in tasks:
+                    result.append(Task.serialize(task))
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {"Message": "Group Not Found"}, 404
 
     #Update Task
     def put(self):

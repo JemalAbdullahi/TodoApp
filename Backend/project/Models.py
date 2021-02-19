@@ -96,11 +96,12 @@ class Task(db.Model):
                          db.ForeignKey('groups.id', ondelete="CASCADE"))
     task_key = db.Column(db.String(), unique=True)
 
-    def __init__(self, title, user_id, group_id, task_key, index):
+    def __init__(self, title, user_id, group_id, task_key, index, completed):
         self.title = title
         self.user_id = user_id
         self.group_id = group_id
         self.task_key = task_key
+        self.completed = completed
         self.index = index
 
     def __repr__(self):

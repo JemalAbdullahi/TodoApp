@@ -8,8 +8,6 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
-import 'models/tasks.dart';
-
 main() => runApp(
       MyApp(),
     );
@@ -52,15 +50,10 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
-          tasksBloc = TaskBloc(apiKey);
-          groupBloc.setApiKey();
+          groupBloc.updateGroups();
         }
         return apiKey.isNotEmpty
-            ? HomePage(
-                logout: logout,
-                addTaskDialog: addTaskDialog,
-                tasksBloc: tasksBloc,
-                reAddTask: reAddTask)
+            ? HomePage(logout: logout)
             : LoginPage(
                 login: login,
                 newUser: false,
@@ -94,8 +87,8 @@ class _SignInState extends State<SignIn> {
     return prefs.getString("API_Token");
   } */
 
-  void addTask(String taskName, String groupKey, int index) async {
-    await repository.addUserTask(this.apiKey, taskName, groupKey, index);
+  /* void addTask(String taskName, String groupKey, int index) async {
+    await repository.addTask(this.apiKey, taskName, groupKey, index);
     setState(() {
       build(context);
     });
@@ -103,7 +96,7 @@ class _SignInState extends State<SignIn> {
 
   void reAddTask(Task task) {
     addTask(task.title, task.groupKey, task.index);
-  }
+  } */
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -113,7 +106,7 @@ class _SignInState extends State<SignIn> {
     });
   }
 
-  void addTaskDialog() {
+  /* void addTaskDialog() {
     TextEditingController _taskNameController = new TextEditingController();
     TextEditingController _groupNameController = new TextEditingController();
     showDialog(
@@ -198,5 +191,5 @@ class _SignInState extends State<SignIn> {
         );
       },
     );
-  }
+  } */
 }

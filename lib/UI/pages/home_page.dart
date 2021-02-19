@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/tabs/list_groups_tab.dart';
 
-//import 'package:todolist/UI/tabs/todo_tab.dart';
-import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
-import 'package:todolist/models/tasks.dart';
-//import 'package:todolist/models/user.dart';
+import 'package:todolist/models/global.dart';
 import 'package:todolist/widgets/global_widgets/avatar.dart';
 import 'package:todolist/widgets/sidebar_widgets/sidebar_menu.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback logout;
-  final VoidCallback addTaskDialog;
-  final void Function(Task) reAddTask;
-  final TaskBloc tasksBloc;
   final String title;
 
   HomePage(
-      {
-      this.title,
-      this.logout,
-      this.addTaskDialog,
-      this.tasksBloc,
-      this.reAddTask});
+      {this.title,
+      this.logout});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -36,32 +25,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     print("Home Page State");
     return SafeArea(
-      child: KeyboardSizeProvider(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            iconTheme: IconThemeData(color: Colors.black),
-            leading: IconButton(
-              icon: isMenuOpen ? Icon(Icons.arrow_back) : Avatar(),
-              onPressed: () {
-                setState(() {
-                  isMenuOpen = !isMenuOpen;
-                });
-              },
-            ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: appTitle,
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black),
+          leading: IconButton(
+            icon: isMenuOpen ? Icon(Icons.arrow_back) : Avatar(),
+            onPressed: () {
+              setState(() {
+                isMenuOpen = !isMenuOpen;
+              });
+            },
           ),
-          body: Container(
-            child: Stack(
-              children: <Widget>[
-                ListGroupsTab(),
-                //ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.reAddTask),
-                SideBarMenu(
-                  isMenuOpen: isMenuOpen,
-                  logout: widget.logout,
-                )
-              ],
-            ),
+        ),
+        body: Container(
+          child: Stack(
+            children: <Widget>[
+              ListGroupsTab(),
+              //ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.reAddTask),
+              SideBarMenu(
+                isMenuOpen: isMenuOpen,
+                logout: widget.logout,
+              )
+            ],
           ),
         ),
       ),

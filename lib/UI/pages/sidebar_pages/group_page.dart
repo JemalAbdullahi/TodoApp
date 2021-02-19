@@ -6,7 +6,6 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
 class GroupPage extends StatefulWidget {
-
   const GroupPage({Key key}) : super(key: key);
 
   @override
@@ -24,57 +23,59 @@ class _GroupPageState extends State<GroupPage> {
     mediaQuery = MediaQuery.of(context).size;
     groupListItemWidth = mediaQuery.width * 0.8;
     groupListItemHeight = mediaQuery.height * 0.2;
-    return BackgroundColorContainer(
-      startColor: lightBlue,
-      endColor: lightBlueGradient,
-      widget: Scaffold(
-        appBar: CustomAppBar(
-          "Groups",
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.group_add,
-                color: Colors.black,
-                size: 32.0,
-              ),
-              onPressed: null, //will go to Create a group Page
-            )
-          ],
+    return SafeArea(
+      child: BackgroundColorContainer(
+        startColor: lightBlue,
+        endColor: lightBlueGradient,
+        widget: Scaffold(
+          appBar: CustomAppBar(
+            "Groups",
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.group_add,
+                  color: Colors.black,
+                  size: 32.0,
+                ),
+                onPressed: null, //will go to Create a group Page
+              )
+            ],
+          ),
+          backgroundColor: Colors.transparent,
+          body: StreamBuilder(
+            key: UniqueKey(),
+            stream: groupBloc.getGroups,
+            initialData: groups,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  print("No Connection: " + snapshot.toString());
+                  break;
+                case ConnectionState.waiting:
+                  print("Waiting Data: " + snapshot.toString());
+                  if (!snapshot.hasData)
+                    return Center(child: CircularProgressIndicator());
+                  groups = snapshot.data;
+                  return buildGroupListView();
+                  break;
+                case ConnectionState.active:
+                  print("Active Data: " + snapshot.toString());
+                  if (snapshot.hasData) {
+                    groups = snapshot.data;
+                    return buildGroupListView();
+                  }
+                  break;
+                case ConnectionState.done:
+                  print("Done Data: " + snapshot.toString());
+                  if (snapshot.hasData) {
+                    groups = snapshot.data;
+                    return buildGroupListView();
+                  }
+              }
+              return SizedBox();
+            },
+          ), //buildGroupListView(),
         ),
-        backgroundColor: Colors.transparent,
-        body: StreamBuilder(
-          key: UniqueKey(),
-          stream: groupBloc.getGroups,
-          initialData: groups,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                print("No Connection: " + snapshot.toString());
-                break;
-              case ConnectionState.waiting:
-                print("Waiting Data: " + snapshot.toString());
-                if (!snapshot.hasData)
-                  return Center(child: CircularProgressIndicator());
-                groups = snapshot.data;
-                return buildGroupListView();
-                break;
-              case ConnectionState.active:
-                print("Active Data: " + snapshot.toString());
-                if (snapshot.hasData) {
-                  groups = snapshot.data;
-                  return buildGroupListView();
-                }
-                break;
-              case ConnectionState.done:
-                print("Done Data: " + snapshot.toString());
-                if (snapshot.hasData) {
-                  groups = snapshot.data;
-                  return buildGroupListView();
-                }
-            }
-            return SizedBox();
-          },
-        ), //buildGroupListView(),
       ),
     );
   }

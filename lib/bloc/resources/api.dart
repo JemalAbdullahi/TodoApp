@@ -18,7 +18,8 @@ class ApiProvider {
   String subtaskURL = baseURL + "/subtasks";
   String groupURL = baseURL + "/group";
   String groupmemberURL = baseURL + "/groupmember";
-  // final _apiKey = 'your_api_key';
+
+  String apiKey;
 
 //User CRUD Functions
   //Sign Up
@@ -80,8 +81,7 @@ class ApiProvider {
       String firstname,
       String lastname,
       String phonenumber,
-      ImageProvider avatar,
-      String apiKey) async {
+      ImageProvider avatar) async {
     final response = await client.put(userURL,
         headers: {"Authorization": apiKey},
         body: jsonEncode({
@@ -107,10 +107,11 @@ class ApiProvider {
 
 //Group CRUD Functions
   // Get User's Group's
-  Future<List<Group>> getUserGroups(String apiKey) async {
+  Future<List<Group>> getUserGroups() async {
+    final _apiKey = await getApiKey();
     final response = await client.get(
       groupURL,
-      headers: {"Authorization": apiKey},
+      headers: {"Authorization": _apiKey},
     );
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -120,6 +121,7 @@ class ApiProvider {
         try {
           Group group = Group.fromJson(json_);
           group.members = await getGroupMembers(group.groupKey);
+          group.tasks = await getTasks(group.groupKey);
           groups.add(group);
         } catch (Exception) {
           print(Exception);
@@ -160,10 +162,10 @@ class ApiProvider {
 
 //Task CRUD Functions
   // Get Tasks
-  Future<List<Task>> getUserTasks(String apiKey) async {
+  Future<List<Task>> getTasks(String groupKey) async {
     final response = await client.get(
       taskURL,
-      headers: {"Authorization": apiKey},
+      headers: {"Authorization": groupKey},
     );
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -171,7 +173,9 @@ class ApiProvider {
       List<Task> tasks = [];
       for (Map json_ in result["data"]) {
         try {
-          tasks.add(Task.fromJson(json_));
+          Task task = Task.fromJson(json_);
+          task.subtasks = await getSubtasks(task.taskKey);
+          tasks.add(task);
         } catch (Exception) {
           print(Exception);
         }
@@ -184,23 +188,28 @@ class ApiProvider {
   }
 
   //Add Task
-  Future addUserTask(
-      String apiKey, String taskName, String groupKey, int index) async {
+  Future addTask(
+      String taskName, String groupKey, int index, bool completed) async {
     final response = await client.post(taskURL,
         headers: {"Authorization": apiKey},
-        body: jsonEncode(
-            {"title": taskName, "group_key": groupKey, "index": index}));
+        body: jsonEncode({
+          "title": taskName,
+          "group_key": groupKey,
+          "index": index,
+          "completed": completed
+        }));
     if (response.statusCode == 201) {
       print("Task " + taskName + " added");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
+      print(result["Message"]);
       throw Exception(result["Message"]);
     }
   }
 
   //Update Task
-  Future updateUserTask(Task task) async {
+  Future updateTask(Task task) async {
     final response = await client.put(taskURL,
         headers: {"Authorization": task.taskKey},
         body: jsonEncode({
@@ -221,7 +230,7 @@ class ApiProvider {
   }
 
   //Delete Task
-  Future deleteUserTask(String taskKey) async {
+  Future deleteTask(String taskKey) async {
     final response = await client.delete(
       taskURL,
       headers: {"Authorization": taskKey},
@@ -238,7 +247,7 @@ class ApiProvider {
 
 //Subtask CRUD Functions
   //Get Subtasks
-  Future<List<SubTask>> getSubTasks(String taskKey) async {
+  Future<List<Subtask>> getSubtasks(String taskKey) async {
     final response = await client.get(
       subtaskURL,
       headers: {"Authorization": taskKey},
@@ -246,10 +255,10 @@ class ApiProvider {
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
-      List<SubTask> subtasks = [];
+      List<Subtask> subtasks = [];
       for (Map json_ in result["data"]) {
         try {
-          subtasks.add(SubTask.fromJson(json_));
+          subtasks.add(Subtask.fromJson(json_));
         } catch (Exception) {
           print(Exception);
         }
@@ -262,13 +271,13 @@ class ApiProvider {
   }
 
   //Add Subtask
-  Future addSubTask(String taskKey, String subtaskName, String notes, int index,
-      bool completed) async {
+  Future addSubtask(
+      String taskKey, String subtaskName, int index, bool completed) async {
     final response = await client.post(subtaskURL,
         headers: {"Authorization": taskKey},
         body: jsonEncode({
           "title": subtaskName,
-          "note": notes,
+          "note": "",
           "completed": completed,
           "repeats": "",
           "group": "",
@@ -276,7 +285,7 @@ class ApiProvider {
           "index": index
         }));
     if (response.statusCode == 201) {
-      print("SubTask " + subtaskName + " added");
+      print("Subtask " + subtaskName + " added");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -285,7 +294,7 @@ class ApiProvider {
   }
 
   //Update Subtask
-  Future updateSubTask(SubTask subtask) async {
+  Future updateSubtask(Subtask subtask) async {
     final response = await client.put(subtaskURL,
         headers: {"Authorization": subtask.subtaskKey},
         body: jsonEncode({
@@ -298,7 +307,7 @@ class ApiProvider {
           "index": subtask.index
         }));
     if (response.statusCode == 200) {
-      print("SubTask " + subtask.title + " Updated");
+      print("Subtask " + subtask.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -307,14 +316,14 @@ class ApiProvider {
   }
 
   //Delete Subtask
-  Future deleteSubTask(String subtaskKey) async {
+  Future deleteSubtask(String subtaskKey) async {
     final response = await client.delete(
       subtaskURL,
       headers: {"Authorization": subtaskKey},
     );
     if (response.statusCode == 200) {
       // If the call to the server was successful
-      print("SubTask deleted");
+      print("Subtask deleted");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -326,9 +335,11 @@ class ApiProvider {
   saveApiKey(String apiKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('API_Token', apiKey);
+    this.apiKey = apiKey;
   }
 
   Future<String> getApiKey() async {
+    //if(apiKey.isNotEmpty) return apiKey;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('API_Token');
   }

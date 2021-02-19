@@ -17,11 +17,11 @@ class TaskListItemWidget extends StatefulWidget {
 }
 
 class _TaskListItemWidgetState extends State<TaskListItemWidget> {
-  SubTaskBloc subTaskBloc;
+  SubtaskBloc subtaskBloc;
 
   @override
   void initState() {
-    subTaskBloc = SubTaskBloc(widget.task.taskKey);
+    subtaskBloc = SubtaskBloc(widget.task.taskKey);
     super.initState();
   }
 
@@ -34,7 +34,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
         MaterialPageRoute(builder: (BuildContext context) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return SubtaskListTab(widget.task.taskKey, subTaskBloc);
+            return SubtaskListTab(task: widget.task);
           });
         }),
       ),
@@ -61,7 +61,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                   onChanged: (bool newValue) {
                     setState(() {
                       widget.task.completed = newValue;
-                      repository.updateUserTask(widget.task);
+                      repository.updateTask(widget.task);
                     });
                   }),
               Flexible(

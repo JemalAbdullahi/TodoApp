@@ -3,15 +3,15 @@ import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/subtasks.dart';
 
-class SubTaskListItemWidget extends StatefulWidget {
-  final SubTask subTask;
+class SubtaskListItemWidget extends StatefulWidget {
+  final Subtask subtask;
 
-  SubTaskListItemWidget({this.subTask});
+  SubtaskListItemWidget({this.subtask});
   @override
-  _SubTaskListItemWidgetState createState() => _SubTaskListItemWidgetState();
+  _SubtaskListItemWidgetState createState() => _SubtaskListItemWidgetState();
 }
 
-class _SubTaskListItemWidgetState extends State<SubTaskListItemWidget> {
+class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,20 +32,20 @@ class _SubTaskListItemWidgetState extends State<SubTaskListItemWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Checkbox(
-                value: widget.subTask.completed,
+                value: widget.subtask.completed,
                 onChanged: (bool newValue) {
                   setState(() {
-                    widget.subTask.completed = newValue;
-                    repository.updateSubTask(widget.subTask);
+                    widget.subtask.completed = newValue;
+                    repository.updateSubtask(widget.subtask);
                   });
                 }),
-            Text(widget.subTask.title, style: toDoListTileStyle),
+            Text(widget.subtask.title, style: toDoListTileStyle),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                widget.subTask.note.isNotEmpty
+                widget.subtask.note.isNotEmpty
                     ? Text(
-                        widget.subTask.note,
+                        widget.subtask.note,
                         style: toDoListSubtitleStyle,
                         textAlign: TextAlign.right,
                       )

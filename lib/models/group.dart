@@ -1,4 +1,5 @@
 import 'package:todolist/models/groupmember.dart';
+import 'package:todolist/models/tasks.dart';
 
 class Group {
   int id;
@@ -6,6 +7,7 @@ class Group {
   String groupKey;
   bool isPublic;
   List<GroupMember> members;
+  List<Task> tasks;
   
   
 

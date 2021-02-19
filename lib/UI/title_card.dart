@@ -5,13 +5,15 @@ import 'package:todolist/models/global.dart';
 
 class TitleCard extends StatelessWidget {
   final String title;
+  final Widget child;
   //final VoidCallback addTask;
 
-  TitleCard(this.title);
+  TitleCard({this.title, this.child});
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
+        child,
         _titleCardBackground(),
         //_titleCardTitle(),
         //_TitleCardButton(addTask),
