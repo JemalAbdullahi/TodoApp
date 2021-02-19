@@ -37,7 +37,10 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: appTitle,
+            title: Text(
+              widget.task.title,
+              style: appTitleStyle,
+            ),
             centerTitle: true,
             backgroundColor: Colors.white,
             elevation: 0,
@@ -55,7 +58,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
                 startColor: darkBlueGradient,
                 endColor: darkBlue,
                 widget:
-                    TitleCard(title: 'Subtask', child: _buildStreamBuilder()),
+                    TitleCard(title: 'Subtasks', child: _buildStreamBuilder()),
               ),
               AddSubtask(
                 length: subtasks.length,

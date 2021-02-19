@@ -35,7 +35,10 @@ class _ToDoTabState extends State<ToDoTab> {
         child: Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
-            title: appTitle,
+            title: Text(
+              widget.group.name,
+              style: appTitleStyle,
+            ),
             centerTitle: true,
             backgroundColor: Colors.white,
             elevation: 0,

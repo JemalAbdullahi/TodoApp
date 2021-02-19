@@ -29,8 +29,6 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
         endColor: lightBlueGradient,
         widget: TitleCard(title: "Groups", child: _buildStreamBuilder()),
       ),
-
-      //TitleCard("To Do: Groups")
     ]);
   }
 

@@ -9,14 +9,11 @@ Color red = new Color(0xfff20f38);
 Color darkRed = new Color(0xffbf0426);
 Color brownRed = new Color(0xff590209);
 
-final appTitle = Text(
-  "To Do List",
-  style: TextStyle(
-    color: darkBlueGradient,
-    fontWeight: FontWeight.bold,
-    fontFamily: "Segoe UI",
-    fontSize: 28.0,
-  ),
+final appTitleStyle = TextStyle(
+  color: darkBlueGradient,
+  fontWeight: FontWeight.bold,
+  fontFamily: "Segoe UI",
+  fontSize: 28.0,
 );
 
 final hintTextStyle = TextStyle(

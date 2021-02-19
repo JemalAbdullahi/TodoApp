@@ -9,9 +9,7 @@ class HomePage extends StatefulWidget {
   final VoidCallback logout;
   final String title;
 
-  HomePage(
-      {this.title,
-      this.logout});
+  HomePage({this.title, this.logout});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -27,7 +25,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: appTitle,
+          title: Text("TODO List", style: appTitleStyle),
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,
