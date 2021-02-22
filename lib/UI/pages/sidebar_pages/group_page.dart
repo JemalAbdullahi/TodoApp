@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
@@ -37,7 +38,15 @@ class _GroupPageState extends State<GroupPage> {
                   color: Colors.black,
                   size: 32.0,
                 ),
-                onPressed: null, //will go to Create a group Page
+                onPressed: () {
+                  print("Create Group Page Push");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateGroupPage(),
+                    ),
+                  );
+                }, //will go to Create a group Page
               )
             ],
           ),

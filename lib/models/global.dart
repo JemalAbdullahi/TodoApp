@@ -52,42 +52,42 @@ final profileBoxDecorationStyle = BoxDecoration(
 );
 
 TextStyle cardTitleStyle = new TextStyle(
-    fontFamily: 'Avenir',
+    fontFamily: 'Segoe UI',
     fontWeight: FontWeight.bold,
     color: darkRed,
     fontSize: 50);
 
 TextStyle toDoListTileStyle = new TextStyle(
-    fontFamily: 'Avenir',
+    fontFamily: 'Segoe UI',
     fontWeight: FontWeight.w500,
     color: Colors.white,
     fontSize: 30);
 
 TextStyle toDoListSubtitleStyle = new TextStyle(
-    fontFamily: 'Avenir',
+    fontFamily: 'Segoe UI',
     fontWeight: FontWeight.w300,
     color: Colors.white,
     fontSize: 18);
 
 TextStyle taskListTitleStyle = new TextStyle(
-    fontFamily: 'Avenir',
+    fontFamily: 'Segoe UI',
     fontWeight: FontWeight.bold,
     color: darkBlue,
     fontSize: 50);
 
 TextStyle loginTitleStyle = new TextStyle(
-    fontFamily: 'Avenir',
+    fontFamily: 'Segoe UI',
     fontWeight: FontWeight.bold,
     color: darkBlueGradient,
     fontSize: 36);
 TextStyle loginButtonStyle = new TextStyle(
-    fontFamily: 'Avenir',
+    fontFamily: 'Segoe UI',
     fontWeight: FontWeight.w700,
     color: lightBlue,
     fontSize: 24);
 
 TextStyle registerButtonStyle = new TextStyle(
-    fontFamily: 'Avenir',
+    fontFamily: 'Segoe UI',
     fontWeight: FontWeight.bold,
     color: red,
     fontSize: 24);
