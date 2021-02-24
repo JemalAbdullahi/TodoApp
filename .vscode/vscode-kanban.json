@@ -56,7 +56,9 @@
       "prio": 0,
       "references": [],
       "title": "Update to Include Added Personal Info"
-    },
+    }
+  ],
+  "in-progress": [
     {
       "assignedTo": {
         "name": "Jemal"
@@ -68,14 +70,16 @@
         "mime": "text/markdown"
       },
       "details": {
-        "content": "- [] First Name\n- [] Last Name\n- [] Phone Number\n- [] Avatar",
+        "content": "- [x] First Name\n- [x] Last Name\n- [x] Phone Number\n- [x] Avatar",
         "mime": "text/markdown"
       },
       "id": "3",
       "prio": 0,
       "references": [],
       "title": "Update User CRUD"
-    },
+    }
+  ],
+  "testing": [
     {
       "assignedTo": {
         "name": "Jemal"
@@ -96,8 +100,6 @@
       "title": "Group Table"
     }
   ],
-  "in-progress": [],
-  "testing": [],
   "done": [
     {
       "assignedTo": {

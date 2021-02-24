@@ -379,8 +379,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   _firstname,
                   _lastname,
                   _phonenumber,
-                  null,
-                  _user.apiKey);
+                  null);
               _scaffoldKey.currentState.showSnackBar(
                 SnackBar(
                   content: Text('Success: Profile Updated!'),

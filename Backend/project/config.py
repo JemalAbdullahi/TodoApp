@@ -1,6 +1,7 @@
 import os
 
 # You need to replace the next values with the appropriate values for your configuration
+#Secret Key variable needs to be set to encrypt passwords
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_ECHO = False

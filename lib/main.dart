@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/pages/home_page.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
-
-import 'models/tasks.dart';
 
 main() => runApp(
       MyApp(),
@@ -17,9 +15,8 @@ main() => runApp(
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
       title: 'To Do List',
       debugShowCheckedModeBanner: false,
@@ -40,7 +37,6 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   TaskBloc tasksBloc;
   String apiKey = "";
-  Repository repository = Repository();
 
   @override
   void initState() {
@@ -52,22 +48,12 @@ class _SignInState extends State<SignIn> {
     return FutureBuilder(
       future: signInUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
-          if (apiKey.isNotEmpty) {
-            tasksBloc = TaskBloc(apiKey);
-          }
+          groupBloc.updateGroups();
         }
-        /* else {
-          print("No data");
-        } */
         return apiKey.isNotEmpty
-            ? HomePage(
-                repository: repository,
-                logout: logout,
-                addTaskDialog: addTaskDialog,
-                tasksBloc: tasksBloc,
-                reAddTask: reAddTask)
+            ? HomePage(logout: logout)
             : LoginPage(
                 login: login,
                 newUser: false,
@@ -77,39 +63,40 @@ class _SignInState extends State<SignIn> {
   }
 
   Future signInUser() async {
-    apiKey = await getApiKey();
-    if (apiKey.isNotEmpty) {
-      if (apiKey.length > 0) {
+    apiKey = await repository.getApiKey();
+    if (apiKey.isNotEmpty && apiKey.length > 0) {
+      try {
         userBloc.signinUser("", "", apiKey);
-      } else {}
-    } else {
-      apiKey = "";
+        return apiKey;
+      } catch (e) {
+        print(e);
+      }
     }
+    apiKey = "";
     return apiKey;
   }
 
   void login() {
-    print("logging in");
     setState(() {
       build(context);
     });
   }
 
-  Future getApiKey() async {
+  /* Future getApiKey() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("API_Token");
-  }
+  } */
 
-  void addTask(String taskName, String groupName, int index) async {
-    await repository.addUserTask(this.apiKey, taskName, groupName, index);
+  /* void addTask(String taskName, String groupKey, int index) async {
+    await repository.addTask(this.apiKey, taskName, groupKey, index);
     setState(() {
       build(context);
     });
   }
 
   void reAddTask(Task task) {
-    addTask(task.title, task.group, task.index);
-  }
+    addTask(task.title, task.groupKey, task.index);
+  } */
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -119,7 +106,7 @@ class _SignInState extends State<SignIn> {
     });
   }
 
-  void addTaskDialog() {
+  /* void addTaskDialog() {
     TextEditingController _taskNameController = new TextEditingController();
     TextEditingController _groupNameController = new TextEditingController();
     showDialog(
@@ -204,5 +191,5 @@ class _SignInState extends State<SignIn> {
         );
       },
     );
-  }
+  } */
 }

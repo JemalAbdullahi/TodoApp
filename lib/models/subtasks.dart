@@ -1,4 +1,4 @@
-class SubTask {
+class Subtask {
   String title; //project title
   int subtaskId; //project Id
   int index;
@@ -10,11 +10,11 @@ class SubTask {
   List<DateTime> reminders;
   //DateTime deadline;
 
-  SubTask(this.title, this.group, this.completed, this.subtaskId, this.note,
+  Subtask(this.title, this.group, this.completed, this.subtaskId, this.note,
       this.subtaskKey, this.index);
 
-  factory SubTask.fromJson(Map<String, dynamic> parsedJson) {
-    return SubTask(
+  factory Subtask.fromJson(Map<String, dynamic> parsedJson) {
+    return Subtask(
       parsedJson['title'],
       parsedJson['group'],
       parsedJson['completed'],

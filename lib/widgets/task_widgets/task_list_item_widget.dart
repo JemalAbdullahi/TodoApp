@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:todolist/UI/tabs/tasklist_tab.dart';
+import 'package:todolist/UI/tabs/subtask_list_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
@@ -9,20 +9,19 @@ import 'package:todolist/models/tasks.dart';
 class TaskListItemWidget extends StatefulWidget {
   final Task task;
   final String keyValue;
-  final Repository repository;
 
-  TaskListItemWidget({this.task, this.repository, this.keyValue});
+  TaskListItemWidget({this.task, this.keyValue});
 
   @override
   _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
 }
 
 class _TaskListItemWidgetState extends State<TaskListItemWidget> {
-  SubTaskBloc subTaskBloc;
+  SubtaskBloc subtaskBloc;
 
   @override
   void initState() {
-    subTaskBloc = SubTaskBloc(widget.task.taskKey);
+    subtaskBloc = SubtaskBloc(widget.task.taskKey);
     super.initState();
   }
 
@@ -35,8 +34,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
         MaterialPageRoute(builder: (BuildContext context) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return TaskListTab(
-                widget.repository, widget.task.taskKey, subTaskBloc);
+            return SubtaskListTab(task: widget.task);
           });
         }),
       ),
@@ -63,7 +61,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                   onChanged: (bool newValue) {
                     setState(() {
                       widget.task.completed = newValue;
-                      widget.repository.updateUserTask(widget.task);
+                      repository.updateTask(widget.task);
                     });
                   }),
               Flexible(
@@ -83,9 +81,9 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   textDirection: TextDirection.ltr,
                   children: <Widget>[
-                    widget.task.group.isNotEmpty
+                    widget.task.groupName.isNotEmpty
                         ? Text(
-                            widget.task.group,
+                            widget.task.groupName,
                             style: toDoListSubtitleStyle,
                             textAlign: TextAlign.right,
                             overflow: TextOverflow.ellipsis,

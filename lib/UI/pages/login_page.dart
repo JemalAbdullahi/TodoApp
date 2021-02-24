@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
-
-
 class LoginPage extends StatefulWidget {
   final VoidCallback login;
   final bool newUser;
@@ -16,6 +14,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _newUser = false;
+  final _signInFormKey = GlobalKey<FormState>();
+  final _signUpFormKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController usernameText = new TextEditingController();
   TextEditingController passwordText = new TextEditingController();
   TextEditingController emailText = new TextEditingController();
@@ -29,32 +30,17 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-/*   Widget _buildUsernameTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Username', style: labelStyle),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxDecorationStyle,
-          height: 60,
-          child: TextField(
-            controller: usernameText,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.account_circle, color: Colors.white),
-              hintText: 'Enter your Username',
-              hintStyle: hintTextStyle,
-            ),
-          ),
-        ),
-      ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: _newUser ? _getSignUpScreen : _getSigninScreen,
+      ),
     );
-  } */
+  }
+
   Widget _buildTF(
       String label,
       TextEditingController controller,
@@ -65,59 +51,61 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: labelStyle),
+        _label(label),
         SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxDecorationStyle,
-          height: 60,
-          child: TextField(
-            controller: controller,
-            keyboardType: keyboardType,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(iconData, color: Colors.white),
-              hintText: hintText,
-              hintStyle: hintTextStyle,
-            ),
-            obscureText: obscureText,
-          ),
-        ),
+        _buildContainer(
+            controller, keyboardType, iconData, hintText, obscureText),
       ],
     );
   }
 
-/*   Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Password', style: labelStyle),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxDecorationStyle,
-          height: 60,
-          child: TextField(
-            controller: passwordText,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.lock, color: Colors.white),
-              hintText: 'Enter your Password',
-              hintStyle: hintTextStyle,
-            ),
-            obscureText: true,
-          ),
-        ),
-      ],
+  Text _label(String label) => Text(label, style: labelStyle);
+
+  Container _buildContainer(
+      TextEditingController controller,
+      TextInputType keyboardType,
+      IconData iconData,
+      String hintText,
+      bool obscureText) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      decoration: boxDecorationStyle,
+      height: 60,
+      child: _buildTextFormField(
+          controller, keyboardType, iconData, hintText, obscureText),
     );
   }
- */
-  Widget _buildForgotPasswordBtn() {
+
+  TextFormField _buildTextFormField(
+      TextEditingController controller,
+      TextInputType keyboardType,
+      IconData iconData,
+      String hintText,
+      bool obscureText) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      textInputAction: TextInputAction.next,
+      style: TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.only(top: 14.0),
+        prefixIcon: Icon(iconData, color: Colors.white),
+        hintText: hintText,
+        hintStyle: hintTextStyle,
+        errorStyle: TextStyle(fontSize: 14.0),
+      ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return '\t\tPlease Enter some text';
+        }
+        return null;
+      },
+      obscureText: obscureText,
+    );
+  }
+
+  Widget get _buildForgotPasswordBtn {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
@@ -135,7 +123,9 @@ class _LoginPageState extends State<LoginPage> {
       child: RaisedButton(
         elevation: 5.0,
         autofocus: false,
-        onPressed: loginFunc,
+        onPressed: () async {
+          await _handleLoginInput;
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         color: Colors.white,
@@ -153,37 +143,84 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildSigningUpBtn(String btnText) {
+  Future get _handleLoginInput async {
+    if (_signInFormKey.currentState.validate()) {
+      await _attemptLogin;
+    } else {
+      _displayInvalidFormError();
+    }
+  }
+
+  Future get _attemptLogin async {
+    try {
+      await userBloc.signinUser(
+          usernameText.text.trim(), passwordText.text.trim(), "");
+      widget.login();
+    } catch (e) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _displayInvalidFormError() => _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Fill the Form Completely'),
+          backgroundColor: Colors.red,
+        ),
+      );
+
+  Widget get _getSigninScreen {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
+      height: double.infinity,
       width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: signupFunc,
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.white,
-        disabledColor: Colors.white,
-        child: Text(
-          btnText,
-          style: TextStyle(
-              color: Color(0xff527daa),
-              letterSpacing: 1.5,
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 18.0),
-        ),
-      ),
+      decoration: _boxDecorationGradient,
+      child: _buildSignInSingleChildScrollView,
     );
   }
 
-  Widget _buildSignupBtn() {
+  SingleChildScrollView get _buildSignInSingleChildScrollView {
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+      child: _buildSignInForm,
+    );
+  }
+
+  Form get _buildSignInForm {
+    return Form(
+      key: _signInFormKey,
+      child: _buildSignInFormColumn,
+    );
+  }
+
+  Column get _buildSignInFormColumn {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        _signText("Sign In"),
+        SizedBox(height: 30.0),
+        _buildTF('Username', usernameText, TextInputType.text,
+            Icons.account_circle, 'Enter Username', false),
+        SizedBox(height: 30),
+        _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
+            'Enter a Password', true),
+        _buildForgotPasswordBtn,
+        _buildLoginBtn('LOGIN'),
+        _buildSignupBtn,
+      ],
+    );
+  }
+
+  Widget get _buildSignupBtn {
     return GestureDetector(
       onTap: () {
         setState(() {
           _newUser = true;
         });
-        print("Sign UP");
       },
       child: RichText(
         text: TextSpan(
@@ -210,24 +247,124 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  loginFunc() {
-    setState(() {
-      if (usernameText.text.isNotEmpty && passwordText.text.isNotEmpty) {
-        userBloc
-            .signinUser(usernameText.text.trim(), passwordText.text.trim(), "")
-            .then((_) {
-          widget.login();
-        });
-      } else
-        print("enter name and password");
-    });
+  Text _signText(String title) {
+    return Text(
+      title,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 30.0,
+        color: Colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
 
-  signupFunc() {
-    if (usernameText.text.isNotEmpty &&
-        passwordText.text.isNotEmpty &&
-        emailText.text.isNotEmpty) {
-      print(usernameText.text + passwordText.text + emailText.text);
+  BoxDecoration get _boxDecorationGradient {
+    return BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xff5CD6FF),
+          Color(0xff57CBF2),
+          Color(0xff4EB6D9),
+          Color(0xff2F80ED),
+        ],
+      ),
+    );
+  }
+
+  //---------------------------------------
+  Widget get _getSignUpScreen {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: _boxDecorationGradient,
+      child: _buildSignUpSingleChildScrollView,
+    );
+  }
+
+  SingleChildScrollView get _buildSignUpSingleChildScrollView {
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+      child: _buildSignUpForm,
+    );
+  }
+
+  Form get _buildSignUpForm {
+    return Form(
+      key: _signUpFormKey,
+      child: _buildSignUpFormColumn,
+    );
+  }
+
+  Column get _buildSignUpFormColumn {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        _signText("Sign Up"),
+        SizedBox(height: 30.0),
+        _buildTF('Firstname', firstnameText, TextInputType.name, Icons.person,
+            'Enter a Firstname', false),
+        SizedBox(height: 30.0),
+        _buildTF('Lastname', lastnameText, TextInputType.name, Icons.person,
+            'Enter a Lastname', false),
+        SizedBox(height: 30.0),
+        _buildTF('Username', usernameText, TextInputType.text,
+            Icons.account_circle, 'Enter a Username', false),
+        SizedBox(height: 30),
+        _buildTF('Phone Number', phonenumberText, TextInputType.phone,
+            Icons.phone, 'Enter a Phone Number', false),
+        SizedBox(height: 30),
+        _buildTF('Email', emailText, TextInputType.emailAddress, Icons.email,
+            'Enter an Email', false),
+        SizedBox(height: 30),
+        _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
+            'Enter a Password', true),
+        _buildSigningUpBtn('SIGN UP'),
+        _buildBackToSignIn
+      ],
+    );
+  }
+
+  Widget _buildSigningUpBtn(String btnText) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () async {
+          await _handleSignUpInput;
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        color: Colors.white,
+        disabledColor: Colors.white,
+        child: Text(
+          btnText,
+          style: TextStyle(
+              color: Color(0xff527daa),
+              letterSpacing: 1.5,
+              fontFamily: 'OpenSans',
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0),
+        ),
+      ),
+    );
+  }
+
+  get _handleSignUpInput async {
+    if (_signUpFormKey.currentState.validate()) {
+      await _attemptSignUp;
+    } else {
+      _displayInvalidFormError();
+    }
+  }
+
+  Future get _attemptSignUp async {
+    try {
       userBloc
           .registerUser(
               usernameText.text.trim(),
@@ -240,153 +377,17 @@ class _LoginPageState extends State<LoginPage> {
           .then((_) {
         widget.login();
       });
+    } catch (e) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: _newUser ? _getSignUpScreen() : _getSigninScreen(),
-      ),
-    );
-  }
-
-  Widget _getSigninScreen() {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xff5CD6FF),
-            Color(0xff57CBF2),
-            Color(0xff4EB6D9),
-            Color(0xff2F80ED),
-          ],
-        ),
-      ),
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Sign In',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.white,
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 30.0),
-            _buildTF('Username', usernameText, TextInputType.text,
-                Icons.account_circle, 'Enter Username', false),
-            SizedBox(height: 30),
-            _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
-                'Enter a Password', true),
-            _buildForgotPasswordBtn(),
-            _buildLoginBtn('LOGIN'),
-            _buildSignupBtn(),
-          ],
-        ),
-      ),
-    );
-  }
-
-//---------------------------------------
-  Widget _getSignUpScreen() {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xff5CD6FF),
-            Color(0xff57CBF2),
-            Color(0xff4EB6D9),
-            Color(0xff2F80ED),
-          ],
-        ),
-      ),
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Sign Up',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.white,
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 30.0),
-            _buildTF('Firstname', firstnameText, TextInputType.name,
-                Icons.person, 'Enter a Firstname', false),
-            SizedBox(height: 30.0),
-            _buildTF('Lastname', lastnameText, TextInputType.name, Icons.person,
-                'Enter a Lastname', false),
-            SizedBox(height: 30.0),
-            _buildTF('Username', usernameText, TextInputType.text,
-                Icons.account_circle, 'Enter a Username', false),
-            SizedBox(height: 30),
-            _buildTF('Phone Number', phonenumberText, TextInputType.phone,
-                Icons.phone, 'Enter a Phone Number', false),
-            SizedBox(height: 30),
-            _buildTF('Email', emailText, TextInputType.emailAddress,
-                Icons.email, 'Enter an Email', false),
-            SizedBox(height: 30),
-            _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
-                'Enter a Password', true),
-            _buildSigningUpBtn('SIGN UP'),
-            _buildBackToSignIn()
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget _buildEmailTF(TextEditingController emailText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Email', style: labelStyle),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxDecorationStyle,
-          height: 60,
-          child: TextField(
-            controller: emailText,
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(Icons.email, color: Colors.white),
-              hintText: 'Enter your Email',
-              hintStyle: hintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  } */
-
-  Widget _buildBackToSignIn() {
+  Widget get _buildBackToSignIn {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(

@@ -1,11 +1,12 @@
 from flask_restful import Resource
 from flask import request
-from models import db, SubTask, Task, User
+from Models import db, SubTask, Task, User
 import random
 import string
 
 
 class SubTasks(Resource):
+    #Create Subtask
     def post(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
@@ -39,15 +40,15 @@ class SubTasks(Resource):
                 result = SubTask.serialize(subtask)
                 return {"status": 'success', 'data': result}, 201
             else:
-                return {"Messege": "No task with that id"}, 402
+                return {"Messege": "No task found with that id"}, 404
 
+    #List Subtasks
     def get(self):
         result = []
-        # json_data = request.get_json(force=True)
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No Task Key!"}, 400
+            return {"Messege": "No Task Key!"}, 401
         else:
             task = Task.query.filter_by(task_key=header).first()
             if task:
@@ -55,13 +56,13 @@ class SubTasks(Resource):
                 for subtask in subtasks:
                     result.append(SubTask.serialize(subtask))
 
-            return {"status": 'success', 'data': result}, 201
+            return {"status": 'success', 'data': result}, 200
 
     def put(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
         if not header:
-            return {"Messege": "No subtask key!"}, 400
+            return {"Messege": "No subtask key!"}, 401
         else:
             subtask = SubTask.query.filter_by(subtask_key=header).first()
             if subtask:
@@ -81,21 +82,29 @@ class SubTasks(Resource):
                     subtask.index = json_data['index']
                 db.session.commit()
                 result = SubTask.serialize(subtask)
-                return {"status": 'success', 'data': result}, 201
+                return {"status": 'success', 'data': result}, 200
             else:
-                return {"Messege": "No SubTask with that subtask key"}, 402
-                
+                return {
+                    "Messege": "No SubTask Found with that subtask key"
+                }, 404
+
+    #Delete Subtask
     def delete(self):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No subtask key!"}, 400
+            return {"Messege": "No subtask key!"}, 401
         else:
             subtask = SubTask.query.filter_by(subtask_key=header).first()
-            result = SubTask.serialize(subtask)
-            db.session.delete(subtask)
-            db.session.commit()
-            return {"status": 'success', 'data': result}, 201
+            if subtask:
+                result = SubTask.serialize(subtask)
+                db.session.delete(subtask)
+                db.session.commit()
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {
+                    "Message": 'No Subtask found with that subtask key'
+                }, 404
 
     def generate_key(self):
         return ''.join(

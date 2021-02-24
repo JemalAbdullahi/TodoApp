@@ -12,7 +12,6 @@ class Avatar extends StatelessWidget {
       backgroundColor: Colors.blue,
       radius: radius,
       backgroundImage: imageProvider,
-      
     );
   }
 }

@@ -1,42 +1,44 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
-
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
-import 'package:todolist/models/group.dart';
+import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
-import 'package:todolist/widgets/task_widgets/add_task_widget.dart';
-import 'package:todolist/widgets/task_widgets/task_list_item_widget.dart';
+import 'package:todolist/widgets/task_widgets/add_subtask_widget.dart';
+import 'package:todolist/widgets/task_widgets/subtask_list_item_widget.dart';
+//import 'package:todolist/widgets/task_widgets/subtask_container_widget.dart';
+//import 'package:todolist/widgets/task_widgets/subtask_list_tile.dart';
 
-class ToDoTab extends StatefulWidget {
-  final Group group;
+class SubtaskListTab extends StatefulWidget {
+  //final SubtaskBloc subtaskBloc;
+  //final taskKey;
+  final Task task;
 
-  ToDoTab({@required this.group});
+  SubtaskListTab({@required this.task});
+
   @override
-  _ToDoTabState createState() => _ToDoTabState();
+  _SubtaskListTabState createState() => _SubtaskListTabState();
 }
 
-class _ToDoTabState extends State<ToDoTab> {
-  List<Task> tasks;
-  TaskBloc taskBloc;
+class _SubtaskListTabState extends State<SubtaskListTab> {
+  List<Subtask> subtasks = [];
+  SubtaskBloc subtaskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    taskBloc = TaskBloc(widget.group.groupKey);
-    tasks = widget.group.tasks;
+    print("Building SubtaskList Context");
+    subtaskBloc = SubtaskBloc(widget.task.taskKey);
+    subtasks = widget.task.subtasks;
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
-          key: _scaffoldKey,
           appBar: AppBar(
             title: Text(
-              widget.group.name,
+              widget.task.title,
               style: appTitleStyle,
             ),
             centerTitle: true,
@@ -53,16 +55,14 @@ class _ToDoTabState extends State<ToDoTab> {
           body: Stack(
             children: <Widget>[
               BackgroundColorContainer(
-                startColor: lightBlue,
-                endColor: lightBlueGradient,
-                widget: TitleCard(
-                  title: 'Projects/Tasks',
-                  child: _buildStreamBuilder(),
-                ),
+                startColor: darkBlueGradient,
+                endColor: darkBlue,
+                widget:
+                    TitleCard(title: 'Subtasks', child: _buildStreamBuilder()),
               ),
-              AddTask(
-                length: tasks.length,
-                taskbloc: taskBloc,
+              AddSubtask(
+                length: subtasks.length,
+                subtaskBloc: subtaskBloc,
               ),
             ],
           ),
@@ -71,12 +71,11 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  StreamBuilder<List<Task>> _buildStreamBuilder() {
+  StreamBuilder<List<Subtask>> _buildStreamBuilder() {
     return StreamBuilder(
-      key: UniqueKey(),
       // Wrap our widget with a StreamBuilder
-      stream: taskBloc.getTasks, // pass our Stream getter here
-      initialData: tasks, // provide an initial data
+      stream: subtaskBloc.getSubtasks, // pass our Stream getter here
+      initialData: subtasks, // provide an initial data
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -89,7 +88,7 @@ class _ToDoTabState extends State<ToDoTab> {
           case ConnectionState.active:
             //print("Active Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
-              tasks = snapshot.data;
+              subtasks = snapshot.data;
               _setIndex();
               return _buildReorderableList();
             }
@@ -97,14 +96,14 @@ class _ToDoTabState extends State<ToDoTab> {
             break;
           case ConnectionState.waiting:
             //print("Waiting Data: " + snapshot.toString());
-            if (tasks.length == 0) {
+            if (subtasks.length == 0) {
               return SizedBox.shrink();
             }
             break;
           case ConnectionState.done:
             //print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
-              tasks = snapshot.data;
+              subtasks = snapshot.data;
               _setIndex();
               return _buildReorderableList();
             }
@@ -116,24 +115,24 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildReorderableList() {
-    //print("Reorderable List" + tasks.toString());
+    //print("Reorderable List" + subtasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
       child: ReorderableListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 175),
-        children: tasks.map<Dismissible>((Task item) {
+        children: subtasks.map<Dismissible>((Subtask item) {
           return _buildListTile(item);
         }).toList(),
         onReorder: (oldIndex, newIndex) {
           setState(
             () {
-              Task item = tasks[oldIndex];
-              tasks.remove(item);
-              tasks.insert(newIndex, item);
+              Subtask item = subtasks[oldIndex];
+              subtasks.remove(item);
+              subtasks.insert(newIndex, item);
               item.index = newIndex;
-              repository.updateTask(item);
+              repository.updateSubtask(item);
             },
           );
         },
@@ -142,22 +141,22 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   void _setIndex() {
-    for (int i = 0; i < tasks.length; i++) {
-      if (tasks[i].index != i) {
-        tasks[i].index = i;
-        repository.updateTask(tasks[i]);
+    for (int i = 0; i < subtasks.length; i++) {
+      if (subtasks[i].index != i) {
+        subtasks[i].index = i;
+        repository.updateSubtask(subtasks[i]);
       }
     }
   }
 
-  Widget _buildListTile(Task item) {
+  Widget _buildListTile(Subtask subtask) {
     //print("Build List Tile: " + item.title);
     return Dismissible(
-      key: Key(item.taskKey),
+      key: Key(subtask.subtaskKey),
       child: ListTile(
-        key: Key(item.title),
-        title: TaskListItemWidget(
-          task: item,
+        key: Key(subtask.title),
+        title: SubtaskListItemWidget(
+          subtask: subtask,
         ),
       ),
       background: Container(
@@ -169,18 +168,15 @@ class _ToDoTabState extends State<ToDoTab> {
         ),
       ),
       onDismissed: (direction) {
-        //removeTask(item);
-        //deleteTask(item);
-        taskBloc.deleteTask(item.taskKey);
+        //removeSubtask(item);
+        subtaskBloc.deleteSubtask(subtask.subtaskKey);
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("Task " + item.title + " dismissed"),
+          content: Text("Subtask " + subtask.title + " dismissed"),
           action: SnackBarAction(
             label: 'Undo',
             onPressed: () {
-              //reAddTask(item);
-              //tasks.insert(item.index, item);
-              //_setIndex();
-              taskBloc.addTask(item.title, item.index, item.completed);
+              subtaskBloc.addSubtask(
+                  subtask.title, subtask.index, subtask.completed);
             },
           ),
         ));
@@ -189,10 +185,10 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  void removeTask(Task task) {
-    if (tasks.contains(task)) {
+  void removeSubtask(Subtask subtask) {
+    if (subtasks.contains(subtask)) {
       setState(() {
-        tasks.remove(task);
+        subtasks.remove(subtask);
         _setIndex();
       });
     }
@@ -202,16 +198,15 @@ class _ToDoTabState extends State<ToDoTab> {
     tasks.insert(task.index, task);
   } */
 
-  void reAddTask(Task task) async {
-    await repository.addTask(
-        task.title, task.groupKey, task.index, task.completed);
+  void reAddSubtask(Subtask subtask) async {
+    await subtaskBloc.addSubtask(
+        subtask.title, subtask.index, subtask.completed);
     setState(() {
       build(context);
     });
   }
 
-  Future<Null> deleteTask(Task task) async {
-    removeTask(task);
-    await repository.deleteTask(task.taskKey);
+  Future<Null> deleteTask(Subtask subtask) async {
+    await subtaskBloc.deleteSubtask(subtask.subtaskKey);
   }
 }

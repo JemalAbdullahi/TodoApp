@@ -31,38 +31,46 @@ class Repository {
           String firstname,
           String lastname,
           String phonenumber,
-          ImageProvider avatar,
-          String apiKey) =>
+          ImageProvider avatar) =>
       apiProvider.updateUserProfile(currentPassword, newPassword, email,
-          username, firstname, lastname, phonenumber, avatar, apiKey);
+          username, firstname, lastname, phonenumber, avatar);
 
-  Future getUserTasks(String apiKey) => apiProvider.getUserTasks(apiKey);
+  Future<String> getApiKey() => apiProvider.getApiKey();
 
-  Future<Null> addUserTask(
-      String apiKey, String taskName, String groupName, int index) async {
-    apiProvider.addUserTask(apiKey, taskName, groupName, index);
+  Future getUserGroups() => apiProvider.getUserGroups();
+
+  Future getGroupMembers(String groupKey) =>
+      apiProvider.getGroupMembers(groupKey);
+
+  Future getTasks(String groupKey) => apiProvider.getTasks(groupKey);
+
+  Future<Null> addTask(
+      String taskName, String groupKey, int index, bool completed) async {
+    apiProvider.addTask(taskName, groupKey, index, completed);
   }
 
-  Future<Null> updateUserTask(Task task) async {
-    apiProvider.updateUserTask(task);
+  Future<Null> updateTask(Task task) async {
+    apiProvider.updateTask(task);
   }
 
-  FutureOr<dynamic> deleteUserTask(String taskKey) async {
-    apiProvider.deleteUserTask(taskKey);
+  FutureOr<dynamic> deleteTask(String taskKey) async {
+    apiProvider.deleteTask(taskKey);
   }
 
-  Future getSubTasks(String taskKey) => apiProvider.getSubTasks(taskKey);
+  Future getSubtasks(String taskKey) => apiProvider.getSubtasks(taskKey);
 
-  Future<Null> addSubTask(String taskKey, String subtaskName, String notes,
-      int index, bool completed) async {
-    apiProvider.addSubTask(taskKey, subtaskName, notes, index, completed);
+  Future<Null> addSubtask(
+      String taskKey, String subtaskName, int index, bool completed) async {
+    apiProvider.addSubtask(taskKey, subtaskName, index, completed);
   }
 
-  Future<Null> updateSubTask(SubTask subtask) async {
-    apiProvider.updateSubTask(subtask);
+  Future<Null> updateSubtask(Subtask subtask) async {
+    apiProvider.updateSubtask(subtask);
   }
 
-  FutureOr<dynamic> deleteSubTask(String subtaskKey) async {
-    apiProvider.deleteSubTask(subtaskKey);
+  FutureOr<dynamic> deleteSubtask(String subtaskKey) async {
+    apiProvider.deleteSubtask(subtaskKey);
   }
 }
+
+final repository = Repository();

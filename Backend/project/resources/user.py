@@ -1,38 +1,40 @@
 from flask_restful import Resource
 from flask import request
-from models import db, User
+from Models import db, User
 import random
 import string
 
 
 class Users(Resource):
+    #Get User List
     def get(self):
         users = User.query.all()
         user_list = []
-        for i in range(0, len(users)):
-            user_list.append(users[i].serialize())
-        return {"status": str(user_list)}, 200
+        for user in users:
+            user_list.append(user.serialize_public())
+        return {"status": user_list}, 200
 
+    #Create New User (Sign Up/register User)
     def post(self):
         json_data = request.get_json(force=True)
 
         if not json_data:
-            return {'message': 'No input data provided'}, 400
+            return {'Message': 'No input data provided'}, 400
 
         user = User.query.filter_by(username=json_data['username']).first()
         if user:
-            return {'message': 'Username not available'}, 400
+            return {'Message': 'Username is already taken'}, 409
 
         user = User.query.filter_by(
             emailaddress=json_data['emailaddress']).first()
         if user:
-            return {'message': 'Email address already exists'}, 400
+            return {'Message': 'Email address already exists'}, 409
 
         api_key = self.generate_key()
 
         user = User.query.filter_by(api_key=api_key).first()
         if user:
-            return {'message': 'API key already exists'}, 400
+            return {'Message': 'API key already exists'}, 409
 
         user = User(
             api_key=api_key,
@@ -51,11 +53,12 @@ class Users(Resource):
 
         return {"status": 'success', 'data': result}, 201
 
+    #Update User Profile
     def put(self):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
         if not header:
-            return {'Messege': "No API key!"}, 400
+            return {'Messege': "No API key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -80,11 +83,12 @@ class Users(Resource):
                 db.session.commit()
 
                 result = User.serialize(user)
-                return {"status": 'success', 'data': result}, 201
+                return {"status": 'success', 'data': result}, 200
 
             else:
-                return {'Messege': "No User with that api key"}, 402
+                return {'Messege': "No User found with that api key"}, 404
 
+    #Generate new api key
     def generate_key(self):
         return ''.join(
             random.choice(string.ascii_letters + string.digits)
