@@ -39,7 +39,6 @@ class _GroupPageState extends State<GroupPage> {
                   size: 32.0,
                 ),
                 onPressed: () {
-                  print("Create Group Page Push");
                   Navigator.push(
                     context,
                     MaterialPageRoute(

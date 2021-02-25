@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:todolist/UI/pages/sidebar_pages/add_members.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/user.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
-class CreateGroupPage extends StatelessWidget {
+class CreateGroupPage extends StatefulWidget {
+  @override
+  _CreateGroupPageState createState() => _CreateGroupPageState();
+}
+
+class _CreateGroupPageState extends State<CreateGroupPage> {
+  List<User> members = [userBloc.getUserObject()];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,7 +69,7 @@ class CreateGroupPage extends StatelessWidget {
 
   Container _buildGroupNameContainer() {
     return Container(
-      margin: const EdgeInsets.only(left: 60.0, right: 60.0, bottom: 20.0),
+      margin: const EdgeInsets.only(left: 100.0, right: 45.0, bottom: 20.0),
       alignment: Alignment.topCenter,
       child: _buildGroupNameTF(),
     );
@@ -70,7 +80,7 @@ class CreateGroupPage extends StatelessWidget {
       textAlign: TextAlign.center,
       keyboardType: TextInputType.name,
       decoration: InputDecoration(
-        border: UnderlineInputBorder(),
+        border: InputBorder.none,
         hintText: "Group Name",
         hintStyle: TextStyle(
           fontFamily: 'Segoe UI',
@@ -78,6 +88,7 @@ class CreateGroupPage extends StatelessWidget {
           color: darkBlue,
           fontSize: 30,
         ),
+        suffixIcon: Icon(Icons.edit),
       ),
       style: TextStyle(
         fontFamily: 'Segoe UI',
@@ -105,7 +116,7 @@ class CreateGroupPage extends StatelessWidget {
         ),
       ),
       child: Stack(
-        children: [_buildMembersLabelRow(), _addMembers()],
+        children: [_buildMembersLabelRow(), _buildMembersList(), _addMembers()],
       ),
     );
   }
@@ -125,7 +136,7 @@ class CreateGroupPage extends StatelessWidget {
         radius: 16,
         backgroundColor: darkBlue,
         child: Text(
-          "8",
+          "${members.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -136,12 +147,51 @@ class CreateGroupPage extends StatelessWidget {
     ]);
   }
 
+  Padding _buildMembersList() {
+    return Padding(
+      padding: EdgeInsets.only(top: 44.0, right: 24.0),
+      child: GridView.count(
+        crossAxisCount: 4,
+        //crossAxisSpacing: 30.0,
+        mainAxisSpacing: 12.0,
+        children: List.generate(
+          6,
+          (index) {
+            return Column(
+              children: [
+                CircleAvatar(
+                  //backgroundImage: members[0].avatar,
+                  radius: 32.0,
+                ),
+                Text(
+                  members[0].firstname,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Segoe UI',
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   Align _addMembers() {
     return Align(
       alignment: Alignment(0.9, 0.9),
       child: FloatingActionButton(
         tooltip: "Search to Add Members",
-        onPressed: null,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddMembersPage(),
+            ),
+          );
+        },
         child: Icon(Icons.arrow_forward, size: 36),
       ),
     );
