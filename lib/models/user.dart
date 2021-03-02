@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 //import 'package:todolist/models/group.dart';
 
-class User {
+class User extends Equatable{
   final int id;
   final String firstname;
   final String lastname;
@@ -38,4 +39,7 @@ class User {
       avatar: parsedJson['avatar'],
     );
   }
+  @override
+  List<Object> get props => [username];
+
 }

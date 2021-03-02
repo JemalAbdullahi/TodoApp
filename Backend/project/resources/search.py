@@ -12,9 +12,9 @@ class Search(Resource):
         #header = request.headers["Authorization"]
 
         filtered_list = User.query.filter(
-            User.username.startswith(json_data['search'])).all()
-        if len(filtered_list) > 0:
-            for user in filtered_list:
-                result.append(User.serialize_public(user))
+            User.username.startswith(json_data['search_term'])).all()
+        
+        for user in filtered_list:
+           result.append(User.serialize_public(user))
 
         return {"status": 'success', 'data': result}, 200

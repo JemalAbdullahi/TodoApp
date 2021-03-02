@@ -1,15 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/models/tasks.dart';
 
-class Group {
+class Group extends ChangeNotifier{
   int id;
   String name;
   String groupKey;
   bool isPublic;
-  List<GroupMember> members;
+  List<GroupMember> members = [];
   List<Task> tasks;
-  
-  
+
+  Group.blank();
 
   Group(this.id, this.name, this.groupKey, this.isPublic);
 
@@ -21,5 +22,9 @@ class Group {
       parsedJson['group_key'],
       parsedJson['is_public'],
     );
+  }
+
+  void onChange(){
+    notifyListeners();
   }
 }

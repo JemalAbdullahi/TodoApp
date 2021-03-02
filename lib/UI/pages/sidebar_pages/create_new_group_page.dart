@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:todolist/UI/pages/sidebar_pages/add_members.dart';
-import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
-import 'package:todolist/models/user.dart';
+import 'package:todolist/models/group.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
@@ -13,7 +12,7 @@ class CreateGroupPage extends StatefulWidget {
 }
 
 class _CreateGroupPageState extends State<CreateGroupPage> {
-  List<User> members = [userBloc.getUserObject()];
+  Group newGroup = new Group.blank();
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +95,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         color: darkBlue,
         fontSize: 30,
       ),
+      onChanged: (groupName) => newGroup.name = groupName,
     );
   }
 
@@ -136,7 +136,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         radius: 16,
         backgroundColor: darkBlue,
         child: Text(
-          "${members.length}",
+          "${newGroup.members.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -150,7 +150,28 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   Padding _buildMembersList() {
     return Padding(
       padding: EdgeInsets.only(top: 44.0, right: 24.0),
-      child: GridView.count(
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 4, crossAxisSpacing: 20, mainAxisSpacing: 12.0),
+        itemBuilder: (context, index) => Column(
+          children: [
+            CircleAvatar(
+              backgroundImage: newGroup.members[index].avatar,
+              radius: 32.0,
+            ),
+            Text(
+              newGroup.members[index].firstname,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Segoe UI',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        itemCount: newGroup.members.length,
+      ),
+      /* GridView.count(
         crossAxisCount: 4,
         //crossAxisSpacing: 30.0,
         mainAxisSpacing: 12.0,
@@ -175,7 +196,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             );
           },
         ),
-      ),
+      ), */
     );
   }
 
@@ -188,7 +209,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddMembersPage(),
+              builder: (context) => AddMembersPage(
+                group: newGroup,
+              ),
             ),
           );
         },

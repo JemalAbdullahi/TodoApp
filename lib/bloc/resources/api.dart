@@ -18,6 +18,7 @@ class ApiProvider {
   String subtaskURL = baseURL + "/subtasks";
   String groupURL = baseURL + "/group";
   String groupmemberURL = baseURL + "/groupmember";
+  String searchURL = baseURL + "/search";
 
   String apiKey;
 
@@ -328,6 +329,32 @@ class ApiProvider {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
       throw Exception(result["Message"]);
+    }
+  }
+
+  //Search API Calls
+  Future<List<GroupMember>> searchUser(String searchTerm) async {
+    final response = await client.post(searchURL,
+        headers: {"Authorization": apiKey},
+        body: jsonEncode({
+          "search_term": searchTerm,
+        }));
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      List<GroupMember> searchResults = [];
+      for (Map json_ in result["data"]) {
+        try {
+          searchResults.add(GroupMember.fromJson(json_));
+        } catch (Exception) {
+          print(Exception);
+          throw Exception;
+        }
+      }
+      return searchResults;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception(result["message"]);
     }
   }
 

@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class GroupMember{
+// ignore: must_be_immutable
+class GroupMember extends Equatable{
   String firstname;
   String lastname;
   String username;
@@ -21,4 +23,7 @@ class GroupMember{
     );
   }
   
+
+  @override
+  List<Object> get props => [username];
 }

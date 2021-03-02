@@ -71,6 +71,8 @@ class Repository {
   FutureOr<dynamic> deleteSubtask(String subtaskKey) async {
     apiProvider.deleteSubtask(subtaskKey);
   }
+
+  Future searchUser(String searchTerm) => apiProvider.searchUser(searchTerm);
 }
 
 final repository = Repository();
