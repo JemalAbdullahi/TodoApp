@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:todolist/UI/pages/sidebar_pages/add_members.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
+import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
+import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
@@ -13,6 +16,17 @@ class CreateGroupPage extends StatefulWidget {
 
 class _CreateGroupPageState extends State<CreateGroupPage> {
   Group newGroup = new Group.blank();
+  int membersLength = 0;
+  bool isPublic = false;
+
+  @override
+  void initState() {
+    if (newGroup.members.length == 0) {
+      newGroup.addGroupMember(userBloc.getUserObject());
+      membersLength = newGroup.members.length;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +36,21 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         endColor: lightBlueGradient,
         widget: Scaffold(
           appBar: CustomAppBar(
-            "New Group",
-            actions: [],
+            "New Group/Project",
+            actions: <Widget>[
+              FlatButton(
+                textColor: Colors.lightBlue,
+                onPressed: saveGroup,
+                child: Text("Save",
+                    style: TextStyle(
+                        fontFamily: "Segoe UI",
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                shape:
+                    CircleBorder(side: BorderSide(color: Colors.transparent)),
+              ),
+            ],
+            fontSize: 24,
           ),
           backgroundColor: Colors.transparent,
           body: Padding(
@@ -33,6 +60,17 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         ),
       ),
     );
+  }
+
+  void saveGroup() async {
+    String groupKey = await repository.addGroup(newGroup.name, isPublic);
+    for (GroupMember member in newGroup.members) {
+      try {
+        await repository.addGroupMember(groupKey, member.username);
+      } catch (e) {
+        print(e.message);
+      }
+    }
   }
 
   Stack _buildStack() {
@@ -95,7 +133,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         color: darkBlue,
         fontSize: 30,
       ),
-      onChanged: (groupName) => newGroup.name = groupName,
+      onSubmitted: (groupName) => newGroup.name = groupName,
     );
   }
 
@@ -144,20 +182,44 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               fontSize: 16),
         ),
       ),
+      Spacer(),
+      Text(
+        "Personal",
+        style: TextStyle(
+            fontFamily: 'Segoe UI',
+            fontWeight: FontWeight.bold,
+            color: Colors.black54,
+            fontSize: 20),
+      ),
+      Switch(
+          value: isPublic,
+          onChanged: (newValue) {
+            setState(() {
+              isPublic = newValue;
+            });
+          }),
     ]);
   }
 
   Padding _buildMembersList() {
+    newGroup.addListener(() {
+      setState(() {
+        membersLength = newGroup.members.length;
+      });
+    });
     return Padding(
       padding: EdgeInsets.only(top: 44.0, right: 24.0),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 4, crossAxisSpacing: 20, mainAxisSpacing: 12.0),
+            maxCrossAxisExtent: 110,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10.0),
         itemBuilder: (context, index) => Column(
           children: [
             CircleAvatar(
               backgroundImage: newGroup.members[index].avatar,
-              radius: 32.0,
+              radius: 34.0,
             ),
             Text(
               newGroup.members[index].firstname,
@@ -169,54 +231,30 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             ),
           ],
         ),
-        itemCount: newGroup.members.length,
+        itemCount: membersLength,
       ),
-      /* GridView.count(
-        crossAxisCount: 4,
-        //crossAxisSpacing: 30.0,
-        mainAxisSpacing: 12.0,
-        children: List.generate(
-          6,
-          (index) {
-            return Column(
-              children: [
-                CircleAvatar(
-                  //backgroundImage: members[0].avatar,
-                  radius: 32.0,
-                ),
-                Text(
-                  members[0].firstname,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: 'Segoe UI',
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            );
-          },
-        ),
-      ), */
     );
   }
 
-  Align _addMembers() {
-    return Align(
-      alignment: Alignment(0.9, 0.9),
-      child: FloatingActionButton(
-        tooltip: "Search to Add Members",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddMembersPage(
-                group: newGroup,
-              ),
+  Widget _addMembers() {
+    return this.isPublic
+        ? Align(
+            alignment: Alignment(0.9, 0.9),
+            child: FloatingActionButton(
+              tooltip: "Search to Add Members",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddMembersPage(
+                      group: newGroup,
+                    ),
+                  ),
+                );
+              },
+              child: Icon(Icons.arrow_forward, size: 36),
             ),
-          );
-        },
-        child: Icon(Icons.arrow_forward, size: 36),
-      ),
-    );
+          )
+        : SizedBox.shrink();
   }
 }

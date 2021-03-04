@@ -7,7 +7,6 @@ import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 
 class AddMembersPage extends StatefulWidget {
-  
   final Group group;
 
   const AddMembersPage({Key key, this.group}) : super(key: key);
@@ -43,7 +42,12 @@ class _AddMembersPageState extends State<AddMembersPage> {
             actions: _buildActions(),
             iconTheme:
                 IconThemeData(color: Colors.black, size: 32.0, opacity: 1.0),
-            leading: _isSearching ? const BackButton() : BackButton(),
+            leading: _isSearching
+                ? IconButton(
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    onPressed: () => FocusScope.of(context).unfocus(),
+                  )
+                : BackButton(),
             automaticallyImplyLeading: true,
           ),
           backgroundColor: Colors.transparent,
@@ -95,7 +99,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
     if (_isSearching) {
       return <Widget>[
         IconButton(
-          icon: const Icon(Icons.clear),
+          icon: const Icon(Icons.clear, color: Colors.red),
           onPressed: () {
             if (_searchQueryController == null ||
                 _searchQueryController.text.isEmpty) {
@@ -229,7 +233,8 @@ class _AddMembersPageState extends State<AddMembersPage> {
         leading: CircleAvatar(
           backgroundImage: searchResults[index].avatar,
         ),
-        title: Text("${searchResults[index].firstname} ${searchResults[index].lastname}"),
+        title: Text(
+            "${searchResults[index].firstname} ${searchResults[index].lastname}"),
         subtitle: Text(searchResults[index].username),
         trailing: CircularCheckBox(
           value: widget.group.members.contains(searchResults[index]),
@@ -239,9 +244,9 @@ class _AddMembersPageState extends State<AddMembersPage> {
           disabledColor: Colors.grey,
           onChanged: (val) => this.setState(() {
             if (widget.group.members.contains(searchResults[index])) {
-              widget.group.members.remove(searchResults[index]);
+              widget.group.removeGroupMember(searchResults[index]);
             } else
-              widget.group.members.add(searchResults[index]);
+              widget.group.addGroupMember(searchResults[index]);
           }),
         ),
       ),

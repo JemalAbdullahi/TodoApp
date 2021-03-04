@@ -266,7 +266,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _emailAddressField() {
-    _emailAddressController.text = _user.emailAddress;
+    _emailAddressController.text = _user.emailaddress;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

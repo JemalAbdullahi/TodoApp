@@ -41,7 +41,7 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
     for (double x = start; x <= contLimit; x = x + step) {
       limits.add(x);
     }
-    print(limits.length);
+    //print(limits.length);
     setState(() {
       limits = limits;
     });

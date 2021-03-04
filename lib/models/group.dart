@@ -4,7 +4,7 @@ import 'package:todolist/models/tasks.dart';
 
 class Group extends ChangeNotifier{
   int id;
-  String name;
+  String _name;
   String groupKey;
   bool isPublic;
   List<GroupMember> members = [];
@@ -12,7 +12,7 @@ class Group extends ChangeNotifier{
 
   Group.blank();
 
-  Group(this.id, this.name, this.groupKey, this.isPublic);
+  Group(this.id, this._name, this.groupKey, this.isPublic);
 
   factory Group.fromJson(Map<String, dynamic> parsedJson) {
     return Group(
@@ -24,7 +24,20 @@ class Group extends ChangeNotifier{
     );
   }
 
-  void onChange(){
+  String get name => _name;
+
+  set name(String name) {
+    _name = name;
+    notifyListeners();
+  }
+
+  void addGroupMember(GroupMember member){
+    members.add(member);
+    notifyListeners();
+  }
+
+  void removeGroupMember(GroupMember member){
+    members.remove(member);
     notifyListeners();
   }
 }

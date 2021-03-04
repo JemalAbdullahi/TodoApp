@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
 import 'package:todolist/UI/tabs/list_groups_tab.dart';
 
 import 'package:todolist/models/global.dart';
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("Home Page State");
+    //print("Home Page State");
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -38,6 +39,23 @@ class _HomePageState extends State<HomePage> {
               });
             },
           ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.group_add,
+                color: Colors.black,
+                size: 32.0,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateGroupPage(),
+                  ),
+                );
+              }, //will go to Create a group Page
+            )
+          ],
         ),
         body: Container(
           child: Stack(
