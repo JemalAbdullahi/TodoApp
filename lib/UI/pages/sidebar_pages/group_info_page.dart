@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:todolist/UI/pages/sidebar_pages/add_members.dart';
-import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
@@ -9,22 +7,22 @@ import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
-class CreateGroupPage extends StatefulWidget {
+class GroupInfoPage extends StatefulWidget {
+  final Group group;
+
+  const GroupInfoPage({Key key, @required this.group}) : super(key: key);
+
   @override
-  _CreateGroupPageState createState() => _CreateGroupPageState();
+  _GroupInfoPageState createState() => _GroupInfoPageState();
 }
 
-class _CreateGroupPageState extends State<CreateGroupPage> {
-  Group newGroup = new Group.blank();
+class _GroupInfoPageState extends State<GroupInfoPage> {
   int membersLength = 0;
-  bool isPublic = true;
+  List<GroupMember> initialMembers;
 
   @override
   void initState() {
-    if (newGroup.members.length == 0) {
-      newGroup.addGroupMember(userBloc.getUserObject());
-      membersLength = newGroup.members.length;
-    }
+    initialMembers = widget.group.members;
     super.initState();
   }
 
@@ -36,16 +34,18 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         endColor: lightBlueGradient,
         widget: Scaffold(
           appBar: CustomAppBar(
-            "New Group/Project",
+            widget.group.name,
             actions: <Widget>[
               FlatButton(
                 textColor: Colors.lightBlue,
-                onPressed: saveGroup,
-                child: Text("Save",
-                    style: TextStyle(
-                        fontFamily: "Segoe UI",
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
+                onPressed: updateGroup,
+                child: Text(
+                  "Update",
+                  style: TextStyle(
+                      fontFamily: "Segoe UI",
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
                 shape:
                     CircleBorder(side: BorderSide(color: Colors.transparent)),
               ),
@@ -62,13 +62,27 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     );
   }
 
-  void saveGroup() async {
-    String groupKey = await repository.addGroup(newGroup.name, isPublic);
-    for (GroupMember member in newGroup.members) {
-      try {
-        await repository.addGroupMember(groupKey, member.username);
-      } catch (e) {
-        print(e.message);
+  void updateGroup() async {
+    String groupKey = widget.group.groupKey;
+    //delete from members
+    for (GroupMember member in initialMembers) {
+      if (!widget.group.members.contains(member)) {
+        //delete memeber from group dbtable
+        try {
+          await repository.deleteGroupMember(groupKey, member.username);
+        } catch (e) {
+          print(e.message);
+        }
+      }
+    }
+    //add to members
+    for (GroupMember member in widget.group.members) {
+      if (!initialMembers.contains(member)) {
+        try {
+          await repository.addGroupMember(groupKey, member.username);
+        } catch (e) {
+          print(e.message);
+        }
       }
     }
   }
@@ -108,17 +122,22 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
   Container _buildGroupNameContainer() {
     return Container(
-      //margin: const EdgeInsets.only(left: 100.0, right: 45.0, bottom: 20.0),
-      width: 250,
-      padding: EdgeInsets.only(left: 20),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: darkBlue, borderRadius: BorderRadius.circular(25)),
-      child: _buildGroupNameTF(),
+      width: double.infinity,
+      alignment: Alignment.topCenter,
+      child: Text(
+        widget.group.name,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: darkBlue,
+          fontSize: 30,
+        ),
+      ),
     );
   }
 
-  TextField _buildGroupNameTF() {
+  /* TextField _buildGroupNameTF() {
     return TextField(
       textAlign: TextAlign.center,
       keyboardType: TextInputType.name,
@@ -128,21 +147,20 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         hintStyle: TextStyle(
           fontFamily: 'Segoe UI',
           fontWeight: FontWeight.bold,
-          color: lightBlue,
+          color: darkBlue,
           fontSize: 30,
         ),
         suffixIcon: Icon(Icons.edit),
-        isDense: true,
       ),
       style: TextStyle(
         fontFamily: 'Segoe UI',
         fontWeight: FontWeight.bold,
-        color: lightBlue,
+        color: darkBlue,
         fontSize: 30,
       ),
       onSubmitted: (groupName) => newGroup.name = groupName,
     );
-  }
+  } */
 
   Expanded _buildExpandedCard() {
     return Expanded(
@@ -181,7 +199,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         radius: 16,
         backgroundColor: darkBlue,
         child: Text(
-          "${newGroup.members.length}",
+          "${widget.group.members.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -199,20 +217,21 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             fontSize: 20),
       ),
       Switch(
-          value: isPublic,
+          value: !widget.group.isPublic,
           onChanged: (newValue) {
-            setState(() {
-              isPublic = newValue;
-            });
+            if (!widget.group.isPublic || widget.group.members.length == 1) {
+              setState(() {
+                print("Switch to newValue");
+                widget.group.isPublic = newValue;
+              });
+            }
           }),
     ]);
   }
 
   Padding _buildMembersList() {
-    newGroup.addListener(() {
-      setState(() {
-        membersLength = newGroup.members.length;
-      });
+    widget.group.addListener(() {
+      setState(() {});
     });
     return Padding(
       padding: EdgeInsets.only(top: 44.0, right: 24.0),
@@ -224,9 +243,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             mainAxisSpacing: 10.0),
         itemBuilder: (context, index) => Column(
           children: [
-            newGroup.members[index].cAvatar(radius: 34),
+            widget.group.members[index].cAvatar(radius: 34),
             Text(
-              newGroup.members[index].firstname,
+              widget.group.members[index].firstname,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: 'Segoe UI',
@@ -235,13 +254,13 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             ),
           ],
         ),
-        itemCount: membersLength,
+        itemCount: widget.group.members.length,
       ),
     );
   }
 
   Widget _addMembers() {
-    return !this.isPublic
+    return this.widget.group.isPublic
         ? Align(
             alignment: Alignment(0.9, 0.9),
             child: FloatingActionButton(
@@ -251,7 +270,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AddMembersPage(
-                      group: newGroup,
+                      group: widget.group,
                     ),
                   ),
                 );

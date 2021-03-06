@@ -172,10 +172,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
         child: Column(
           children: [
-            CircleAvatar(
-              backgroundImage: widget.group.members[index].avatar,
-              radius: 25.0,
-            ),
+            widget.group.members[index].cAvatar(radius: 25),
             Text(
               widget.group.members[index].firstname,
               overflow: TextOverflow.ellipsis,

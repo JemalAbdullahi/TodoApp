@@ -168,11 +168,7 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
       for (GroupMember member in members)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: CircleAvatar(
-            backgroundImage: member.avatar,
-            backgroundColor: Colors.grey,
-            radius: 12.0,
-          ),
+          child: member.cAvatar(),
         ),
     ]);
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
+import 'package:todolist/UI/pages/sidebar_pages/group_info_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
+import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
@@ -88,59 +90,6 @@ class _GroupPageState extends State<GroupPage> {
     );
   }
 
-  Container buildGroupListTile(int index) {
-    return Container(
-      height: groupListItemHeight,
-      width: groupListItemWidth,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(28),
-        ),
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 15.0,
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 40.0,
-          right: 14,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  groups[index].name,
-                  style: TextStyle(
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.bold,
-                      color: darkBlueGradient),
-                ),
-                Text(
-                  "People",
-                  style: TextStyle(fontSize: 20.0, color: Colors.blueGrey),
-                ),
-                CircleAvatar(backgroundColor: Colors.grey, radius: 10.0)
-              ],
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget buildGroupListView() {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
@@ -153,5 +102,102 @@ class _GroupPageState extends State<GroupPage> {
         color: Colors.transparent,
       ),
     );
+  }
+
+  GestureDetector buildGroupListTile(int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) {
+            return GroupInfoPage(group: groups[index]);
+          }),
+        );
+      },
+      child: Container(
+        height: groupListItemHeight,
+        width: groupListItemWidth,
+        decoration: _tileDecoration(),
+        child: _buildTilePadding(index),
+      ),
+    );
+  }
+
+  BoxDecoration _tileDecoration() {
+    return BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(28),
+        ),
+        boxShadow: [
+          new BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 15.0,
+          ),
+        ]);
+  }
+
+  //Tile Padding
+  Padding _buildTilePadding(int index) {
+    return Padding(
+      padding: EdgeInsets.only(left: 40.0, right: 14),
+      child: _tileRow(index),
+    );
+  }
+
+  //Tile Row
+  Row _tileRow(int index) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      _groupInfoColumn(index),
+      Icon(
+        Icons.arrow_forward_ios,
+        color: Colors.grey,
+      )
+    ]);
+  }
+
+  //Group Info
+  Column _groupInfoColumn(int index) {
+    int groupSize =
+        groups[index].members != null ? groups[index].members.length : 0;
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildGroupName(index),
+          _buildGroupSize(groupSize),
+          groupSize > 0
+              ? _buildMemberAvatars(groups[index].members)
+              : SizedBox.shrink(),
+        ]);
+  }
+
+  //Build Group's Size
+  Text _buildGroupSize(int groupSize) {
+    return Text(
+      groupSize == 1 ? "$groupSize Person" : "$groupSize People",
+      style: TextStyle(fontSize: 20.0, color: Colors.blueGrey),
+    );
+  }
+
+  //Build Group's Name
+  Text _buildGroupName(int index) {
+    return Text(
+      groups[index].name,
+      style: TextStyle(
+          fontSize: 25.0, fontWeight: FontWeight.bold, color: darkBlueGradient),
+    );
+  }
+
+  //Build Member Avatar
+  Row _buildMemberAvatars(List<GroupMember> members) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      for (GroupMember member in members)
+        Padding(
+          padding: EdgeInsets.only(top: 8.0, right: 2.0),
+          child: member.cAvatar(),
+        ),
+    ]);
   }
 }
