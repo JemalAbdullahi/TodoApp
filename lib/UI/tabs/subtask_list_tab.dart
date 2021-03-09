@@ -22,7 +22,6 @@ class SubtaskListTab extends StatefulWidget {
 class _SubtaskListTabState extends State<SubtaskListTab> {
   List<Subtask> subtasks = [];
   SubtaskBloc subtaskBloc;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +153,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       ),
       onDismissed: (direction) {
         subtaskBloc.deleteSubtask(subtask.subtaskKey);
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Subtask " + subtask.title + " dismissed"),
           action: SnackBarAction(
             label: 'Undo',

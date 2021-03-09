@@ -69,7 +69,7 @@ class ApiProvider {
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["message"]);
+      throw Exception(result["Message"]);
     }
   }
 
@@ -197,6 +197,7 @@ class ApiProvider {
       throw Exception(result["Message"]);
     }
   }
+
   // Add Group Members
   Future addGroupMember(String groupKey, String username) async {
     final response = await client.post(groupmemberURL,
@@ -422,7 +423,7 @@ class ApiProvider {
       return searchResults;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["message"]);
+      throw Exception(result["Message"]);
     }
   }
 

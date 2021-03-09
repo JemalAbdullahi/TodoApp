@@ -38,16 +38,15 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
           appBar: CustomAppBar(
             "New Group/Project",
             actions: <Widget>[
-              FlatButton(
-                textColor: Colors.lightBlue,
+              TextButton(
                 onPressed: saveGroup,
                 child: Text("Save",
                     style: TextStyle(
+                      color: Colors.lightBlue,
                         fontFamily: "Segoe UI",
                         fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-                shape:
-                    CircleBorder(side: BorderSide(color: Colors.transparent)),
+                        fontWeight: FontWeight.bold),),
+                
               ),
             ],
             fontSize: 24,

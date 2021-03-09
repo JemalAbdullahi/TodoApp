@@ -179,7 +179,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
             setState(() {
               widget.group.removeGroupMember(member);
             });
-            Scaffold.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content:
                     Text("Removed ${member.username}"),

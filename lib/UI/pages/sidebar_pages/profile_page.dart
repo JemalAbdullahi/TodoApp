@@ -363,8 +363,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 5.0,
+          padding: EdgeInsets.all(15),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          primary: Colors.white,
+        ),
         autofocus: false,
         onPressed: () async {
           if (_formKey.currentState.validate()) {
@@ -379,14 +385,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   _lastname,
                   _phonenumber,
                   null);
-              _scaffoldKey.currentState.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Success: Profile Updated!'),
                   backgroundColor: Colors.green,
                 ),
               );
             } catch (e) {
-              _scaffoldKey.currentState.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(e.message),
                   backgroundColor: Colors.red,
@@ -395,7 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
             }
             return;
           } else {
-            _scaffoldKey.currentState.showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Failure: Profile Did Not Update!'),
                 backgroundColor: Colors.red,
@@ -403,10 +409,6 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           }
         },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.white,
-        disabledColor: Colors.white,
         child: Text(
           'Update Profile',
           style: TextStyle(

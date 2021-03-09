@@ -38,18 +38,16 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           appBar: CustomAppBar(
             widget.group.name,
             actions: <Widget>[
-              FlatButton(
-                textColor: Colors.lightBlue,
+              TextButton(
                 onPressed: updateGroup,
                 child: Text(
                   "Update",
                   style: TextStyle(
+                      color: Colors.lightBlue,
                       fontFamily: "Segoe UI",
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
-                shape:
-                    CircleBorder(side: BorderSide(color: Colors.transparent)),
               ),
             ],
             fontSize: 24,
@@ -228,7 +226,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
               });
             }
             if (widget.group.members.length > 1) {
-              _scaffoldKey.currentState.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Personal Groups are Limited to 1 Member Only"),
                 ),
