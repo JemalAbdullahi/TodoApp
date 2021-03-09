@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/group_page.dart';
-import 'package:todolist/UI/pages/sidebar_pages/how_to_use_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
 import 'package:todolist/widgets/sidebar_widgets/my_button.dart';
 
@@ -50,8 +49,8 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
   double getSize(int x) {
     double size = (widget.offset.dy >= limits[x] &&
             (x == limits.length - 1 || widget.offset.dy < limits[x + 1]))
-        ? 25
-        : 20;
+        ? 30
+        : 25;
     return size;
   }
 
@@ -61,13 +60,14 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
       key: globalKey,
       width: double.infinity,
       height: widget.menuContainerHeight,
+      padding: EdgeInsets.only(top: widget.menuContainerHeight * 0.1),
       child: Column(
         children: <Widget>[
           MyButton(
             text: "Profile",
             iconData: Icons.person,
             textSize: getSize(0),
-            height: (widget.menuContainerHeight) / 5,
+            height: (widget.menuContainerHeight) / 4,
             buttonFunction: () {
               Navigator.push(
                 context,
@@ -75,7 +75,7 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
               ).then((value) => setState(() {}));
             },
           ),
-          MyButton(
+          /* MyButton(
             text: "Friends",
             iconData: Icons.person,
             textSize: getSize(1),
@@ -86,12 +86,12 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
                 MaterialPageRoute(builder: (context) => HowToPage()),
               );
             },
-          ),
+          ), */
           MyButton(
             text: "Groups",
             iconData: Icons.group,
-            textSize: getSize(2),
-            height: (widget.menuContainerHeight) / 5,
+            textSize: getSize(1),
+            height: (widget.menuContainerHeight) / 4,
             buttonFunction: () {
               Navigator.push(
                 context,
@@ -99,16 +99,16 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
               );
             },
           ),
-          MyButton(
+          /* MyButton(
               text: "Settings",
               iconData: Icons.settings,
               textSize: getSize(3),
-              height: (widget.menuContainerHeight) / 5),
+              height: (widget.menuContainerHeight) / 5), */
           MyButton(
             text: "Logout",
             iconData: Icons.exit_to_app,
-            textSize: getSize(4),
-            height: (widget.menuContainerHeight) / 5,
+            textSize: getSize(2),
+            height: (widget.menuContainerHeight) / 4,
             buttonFunction: widget.logout,
           ),
         ],

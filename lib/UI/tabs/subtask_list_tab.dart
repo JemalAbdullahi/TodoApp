@@ -9,12 +9,8 @@ import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/task_widgets/add_subtask_widget.dart';
 import 'package:todolist/widgets/task_widgets/subtask_list_item_widget.dart';
-//import 'package:todolist/widgets/task_widgets/subtask_container_widget.dart';
-//import 'package:todolist/widgets/task_widgets/subtask_list_tile.dart';
 
 class SubtaskListTab extends StatefulWidget {
-  //final SubtaskBloc subtaskBloc;
-  //final taskKey;
   final Task task;
 
   SubtaskListTab({@required this.task});
@@ -90,7 +86,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             if (snapshot.data.isNotEmpty) {
               subtasks = snapshot.data;
               _setIndex();
-              return _buildReorderableList();
+              return _buildList();
             }
             return SizedBox.shrink();
             break;
@@ -105,7 +101,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             if (snapshot.data.isNotEmpty) {
               subtasks = snapshot.data;
               _setIndex();
-              return _buildReorderableList();
+              return _buildList();
             }
             return SizedBox.shrink();
         }
@@ -114,28 +110,17 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     );
   }
 
-  Widget _buildReorderableList() {
+  Widget _buildList() {
     //print("Reorderable List" + subtasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
-      child: ReorderableListView(
+      child: ListView(
         key: UniqueKey(),
-        padding: EdgeInsets.only(top: 175),
+        padding: EdgeInsets.only(top: 175, bottom: 90),
         children: subtasks.map<Dismissible>((Subtask item) {
           return _buildListTile(item);
         }).toList(),
-        onReorder: (oldIndex, newIndex) {
-          setState(
-            () {
-              Subtask item = subtasks[oldIndex];
-              subtasks.remove(item);
-              subtasks.insert(newIndex, item);
-              item.index = newIndex;
-              repository.updateSubtask(item);
-            },
-          );
-        },
       ),
     );
   }
@@ -168,7 +153,6 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         ),
       ),
       onDismissed: (direction) {
-        //removeSubtask(item);
         subtaskBloc.deleteSubtask(subtask.subtaskKey);
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text("Subtask " + subtask.title + " dismissed"),
@@ -193,10 +177,6 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       });
     }
   }
-
-  /* void addTask(Task task) {
-    tasks.insert(task.index, task);
-  } */
 
   void reAddSubtask(Subtask subtask) async {
     await subtaskBloc.addSubtask(

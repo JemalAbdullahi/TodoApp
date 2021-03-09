@@ -22,18 +22,19 @@ class _SideBarMenuState extends State<SideBarMenu> {
   @override
   Widget build(BuildContext context) {
     Size mediaQuery = MediaQuery.of(context).size;
-    double sideBarSize = mediaQuery.width * 0.65;
-    double menuContainerHeight = mediaQuery.height / 2;
+    double sideBarWidth = mediaQuery.width * 0.4;
+    double sideBarHeight = mediaQuery.height * 0.7;
+    double menuContainerHeight = sideBarHeight / 2;
     return AnimatedPositioned(
       duration: Duration(milliseconds: 2000),
-      left: widget.isMenuOpen ? 0 : -sideBarSize,
+      left: widget.isMenuOpen ? 0 : -sideBarWidth,
       top: 0,
       curve: Curves.elasticOut,
       child: SizedBox(
-        width: sideBarSize,
+        width: sideBarWidth,
         child: GestureDetector(
           onPanUpdate: (details) {
-            if (details.localPosition.dx <= sideBarSize) {
+            if (details.localPosition.dx <= sideBarWidth) {
               setState(() {
                 _offset = details.localPosition;
               });
@@ -47,23 +48,23 @@ class _SideBarMenuState extends State<SideBarMenu> {
           child: Stack(
             children: <Widget>[
               CustomPaint(
-                size: Size(sideBarSize, mediaQuery.height),
+                size: Size(sideBarWidth, sideBarHeight),
                 painter: DrawerPainter(offset: _offset),
               ),
               Container(
-                height: mediaQuery.height,
-                width: sideBarSize,
+                height: sideBarHeight,
+                width: sideBarWidth,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    SideBarUsername(mediaQuery: mediaQuery),
+                    SideBarUsername(height: menuContainerHeight),
                     Divider(thickness: 1),
                     SideBarButtonList(
-                        offset: _offset,
-                        menuContainerHeight: menuContainerHeight,
-                        logout: widget.logout,
-                        ),
+                      offset: _offset,
+                      menuContainerHeight: menuContainerHeight,
+                      logout: widget.logout,
+                    ),
                   ],
                 ),
               ),

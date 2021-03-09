@@ -17,6 +17,7 @@ class GroupInfoPage extends StatefulWidget {
 }
 
 class _GroupInfoPageState extends State<GroupInfoPage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   int membersLength = 0;
   List<GroupMember> initialMembers;
 
@@ -33,6 +34,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         startColor: lightBlue,
         endColor: lightBlueGradient,
         widget: Scaffold(
+          key: _scaffoldKey,
           appBar: CustomAppBar(
             widget.group.name,
             actions: <Widget>[
@@ -221,9 +223,16 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           onChanged: (newValue) {
             if (!widget.group.isPublic || widget.group.members.length == 1) {
               setState(() {
-                print("Switch to newValue");
-                widget.group.isPublic = newValue;
+                print("Switch to ${!newValue}");
+                widget.group.isPublic = !newValue;
               });
+            }
+            if (widget.group.members.length > 1) {
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text("Personal Groups are Limited to 1 Member Only"),
+                ),
+              );
             }
           }),
     ]);

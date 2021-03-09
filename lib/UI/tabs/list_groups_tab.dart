@@ -150,7 +150,7 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
 
   Text _buildGroupSize(int groupSize) {
     return Text(
-      groupSize == 1 ? "$groupSize Person" : "$groupSize People",
+      groupSize == 1 ? "Personal" : "$groupSize People",
       style: TextStyle(fontSize: 20.0, color: Colors.blueGrey),
     );
   }

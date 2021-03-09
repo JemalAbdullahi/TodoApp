@@ -105,6 +105,9 @@ class _GroupPageState extends State<GroupPage> {
   }
 
   GestureDetector buildGroupListTile(int index) {
+    groups[index].addListener(() {
+      setState(() {});
+    });
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -176,7 +179,7 @@ class _GroupPageState extends State<GroupPage> {
   //Build Group's Size
   Text _buildGroupSize(int groupSize) {
     return Text(
-      groupSize == 1 ? "$groupSize Person" : "$groupSize People",
+      groupSize == 1 ? "Personal" : "$groupSize People",
       style: TextStyle(fontSize: 20.0, color: Colors.blueGrey),
     );
   }

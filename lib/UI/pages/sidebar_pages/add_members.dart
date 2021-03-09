@@ -168,18 +168,36 @@ class _AddMembersPageState extends State<AddMembersPage> {
   ListView _addedMembersListView() {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemBuilder: (context, index) => Padding(
+      itemBuilder: (context, index) {
+        final member = widget.group.members[index];
+        return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
-        child: Column(
-          children: [
-            widget.group.members[index].cAvatar(radius: 25),
-            Text(
-              widget.group.members[index].firstname,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+        child: Dismissible(
+          key: Key(member.username),
+          direction: DismissDirection.down,
+          onDismissed: (direction) {
+            setState(() {
+              widget.group.removeGroupMember(member);
+            });
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content:
+                    Text("Removed ${member.username}"),
+              ),
+            );
+          },
+          child: Column(
+            children: [
+              widget.group.members[index].cAvatar(radius: 25),
+              Text(
+                widget.group.members[index].firstname,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
-      ),
+      );
+      },
       itemCount: widget.group.members.length,
     );
   }

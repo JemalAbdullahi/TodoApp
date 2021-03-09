@@ -131,7 +131,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
           color: lightBlue,
           fontSize: 30,
         ),
-        suffixIcon: Icon(Icons.edit),
+        suffixIcon: Icon(
+          Icons.edit,
+          color: lightBlue,
+        ),
         isDense: true,
       ),
       style: TextStyle(
