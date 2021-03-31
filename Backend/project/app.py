@@ -1,4 +1,5 @@
 from flask import Blueprint
+import flask
 from flask_restful import Api
 from resources.group import Groups
 from resources.groupmembers import GroupMembers
@@ -10,6 +11,21 @@ from resources.search import Search
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
+
+def create_app(config_filename):
+    app = flask(__name__)
+    app.config.from_object(config_filename)
+
+    app.register_blueprint(api_bp, url_prefix='/api')
+
+    from Models import db
+    db.init_app(app)
+
+    return app
+
+# app
+
+app = create_app("config")
 
 # Route
 api.add_resource(Users, '/user')
