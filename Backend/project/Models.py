@@ -92,7 +92,7 @@ class Task(db.Model):
     completed = db.Column(db.Boolean(), default=False, nullable=False)
     repeats = db.Column(db.String(), default="")
     reminders = db.Column(db.String(), default="")
-    group_id = db.Column(db.String(),
+    group_id = db.Column(db.Integer(),
                          db.ForeignKey('groups.id', ondelete="CASCADE"))
     task_key = db.Column(db.String(), unique=True)
 

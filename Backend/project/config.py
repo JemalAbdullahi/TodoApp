@@ -6,7 +6,7 @@ import psycopg2
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 os.environ[
-    'DATABASE_URL'] = "postgres://yzvvxujlwufluy:db0650d276c488bc408f04bd20252253202ab28121777007fdd4015d43fcd4a0@ec2-35-171-57-132.compute-1.amazonaws.com:5432/d188udg9kjd6u7"
+    'DATABASE_URL'] = "postgres://hziyzkfjyqbkgt:ee4fb2d3bf48676497aeacc52b5cc3287ea28d31f82a61b02546a569b7342f0d@ec2-54-205-61-191.compute-1.amazonaws.com:5432/d3r4od0e955sl1"
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 #SQLALCHEMY_DATABASE_URI = "postgresql://postgres:br1810ji@localhost/todo_appdb"
