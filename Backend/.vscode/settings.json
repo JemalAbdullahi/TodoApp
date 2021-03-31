@@ -5,5 +5,9 @@
   ],
   "python.envFile": ".env",
   "python.jediEnabled": true,
-  "python.linting.enabled": false
+"python.linting.enabled": false,
+"python.languageServer": "Jedi",
+"python.analysis.extraPaths": [
+  "C:\\Users\\Jemal\\projects\\flutter-app-test\\todolist\\Backend"
+]
 }
