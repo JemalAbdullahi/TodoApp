@@ -77,18 +77,18 @@ class GroupMembers(Resource):
     #Delete Members: Also, delete Member's tasks related to the specified Group
     def delete(self):
         header = request.headers["Authorization"]
-        json_data = request.get_json(force=True)
+        username = request.args.get('username')
 
         if not header:
             return {"Messege": "No group key!"}, 401
-        if not json_data:
-            return {'Message': 'No input data provided'}, 400
+        if not username:
+            return {'Message': 'No username provided'}, 400
         else:
             group = Group.query.filter_by(group_key=header).first()
             if group:
 
                 for m in group.members:
-                    if m.username == json_data["username"]:
+                    if m.username == username:
                         result = User.serialize(m)
                         group_tasks = Task.query.filter_by(group_id=group.id)
                         for task in group_tasks:

@@ -18,6 +18,7 @@ class ApiProvider {
   String subtaskURL = baseURL + "/subtasks";
   String groupURL = baseURL + "/group";
   String groupmemberURL = baseURL + "/groupmember";
+  String searchURL = baseURL + "/search";
 
   String apiKey;
 
@@ -68,7 +69,7 @@ class ApiProvider {
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["message"]);
+      throw Exception(result["Message"]);
     }
   }
 
@@ -134,7 +135,44 @@ class ApiProvider {
     }
   }
 
-  //GroupMember CRUD Functions
+  // Add Group
+  Future addGroup(String groupName, bool isPublic) async {
+    final response = await client.post(groupURL,
+        headers: {"Authorization": apiKey},
+        body: jsonEncode({
+          "name": groupName,
+          "is_public": isPublic,
+        }));
+    if (response.statusCode == 201) {
+      print("Group " + groupName + " added");
+      final Map result = json.decode(response.body);
+      Group addedGroup = Group.fromJson(result["data"]);
+      return addedGroup.groupKey;
+    } else {
+      // If that call was not successful, throw an error.
+      final Map result = json.decode(response.body);
+      print(result["Message"]);
+      throw Exception(result["Message"]);
+    }
+  }
+
+  //Delete Group
+  Future deleteGroup(String groupKey) async {
+    final response = await client.delete(
+      groupURL,
+      headers: {"Authorization": groupKey},
+    );
+    if (response.statusCode == 200) {
+      // If the call to the server was successful
+      print("Group deleted");
+    } else {
+      // If that call was not successful, throw an error.
+      final Map result = json.decode(response.body);
+      throw Exception(result["Message"]);
+    }
+  }
+
+  // GroupMember CRUD Functions
   // Get Group's Members
   Future<List<GroupMember>> getGroupMembers(String groupKey) async {
     final response = await client.get(
@@ -156,6 +194,38 @@ class ApiProvider {
       return groupMembers;
     } else {
       // If that call was not successful, throw an error.
+      throw Exception(result["Message"]);
+    }
+  }
+
+  // Add Group Members
+  Future addGroupMember(String groupKey, String username) async {
+    final response = await client.post(groupmemberURL,
+        headers: {"Authorization": groupKey},
+        body: jsonEncode({
+          "username": username,
+        }));
+    if (response.statusCode == 201) {
+      print("User $username added to Group");
+    } else {
+      // If that call was not successful, throw an error.
+      final Map result = json.decode(response.body);
+      print(result["Message"]);
+      throw Exception(result["Message"]);
+    }
+  }
+
+  Future deleteGroupMember(String groupKey, String username) async {
+    final response = await client.delete(
+      "$groupmemberURL?username=$username",
+      headers: {"Authorization": groupKey},
+    );
+    if (response.statusCode == 200) {
+      // If the call to the server was successful
+      print("Group Member $username deleted");
+    } else {
+      // If that call was not successful, throw an error.
+      final Map result = json.decode(response.body);
       throw Exception(result["Message"]);
     }
   }
@@ -221,7 +291,7 @@ class ApiProvider {
           "index": task.index
         }));
     if (response.statusCode == 200) {
-      print("Task " + task.title + " Updated");
+      print("Task ${task.title} Updated");
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
@@ -327,6 +397,32 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
+      throw Exception(result["Message"]);
+    }
+  }
+
+  //Search API Calls
+  Future<List<GroupMember>> searchUser(String searchTerm) async {
+    final response = await client.post(searchURL,
+        headers: {"Authorization": apiKey},
+        body: jsonEncode({
+          "search_term": searchTerm,
+        }));
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      List<GroupMember> searchResults = [];
+      for (Map json_ in result["data"]) {
+        try {
+          searchResults.add(GroupMember.fromJson(json_));
+        } catch (Exception) {
+          print(Exception);
+          throw Exception;
+        }
+      }
+      return searchResults;
+    } else {
+      // If that call was not successful, throw an error.
       throw Exception(result["Message"]);
     }
   }

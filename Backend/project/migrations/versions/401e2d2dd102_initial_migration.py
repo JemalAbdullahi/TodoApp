@@ -1,8 +1,8 @@
-"""empty message
+"""Initial Migration
 
-Revision ID: 2568c1256eff
+Revision ID: 401e2d2dd102
 Revises: 
-Create Date: 2021-02-05 16:07:11.455372
+Create Date: 2021-03-31 12:09:48.151131
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2568c1256eff'
+revision = '401e2d2dd102'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('group_key', sa.String(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('is_public', sa.Boolean(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('group_key')
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -41,8 +43,8 @@ def upgrade():
     op.create_table('group_member',
     sa.Column('group_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
+    sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE')
     )
     op.create_table('tasks',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -53,10 +55,12 @@ def upgrade():
     sa.Column('completed', sa.Boolean(), nullable=False),
     sa.Column('repeats', sa.String(), nullable=True),
     sa.Column('reminders', sa.String(), nullable=True),
-    sa.Column('group', sa.String(), nullable=True),
+    sa.Column('group_id', sa.Integer(), nullable=True),
     sa.Column('task_key', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('task_key')
     )
     op.create_table('subtasks',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -70,7 +74,8 @@ def upgrade():
     sa.Column('index', sa.Integer(), nullable=True),
     sa.Column('subtask_key', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['task_id'], ['tasks.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('subtask_key')
     )
     # ### end Alembic commands ###
 

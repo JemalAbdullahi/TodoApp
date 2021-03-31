@@ -41,24 +41,24 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              print("No Connection: " + snapshot.toString());
+              //print("No Connection: " + snapshot.toString());
               break;
             case ConnectionState.waiting:
-              print("Waiting Data: " + snapshot.toString());
+              //print("Waiting Data: " + snapshot.toString());
               if (!snapshot.hasData)
                 return Center(child: CircularProgressIndicator());
               groups = snapshot.data;
               return buildGroupListView();
               break;
             case ConnectionState.active:
-              print("Active Data: " + snapshot.toString());
+              //print("Active Data: " + snapshot.toString());
               if (snapshot.hasData) {
                 groups = snapshot.data;
                 return buildGroupListView();
               }
               break;
             case ConnectionState.done:
-              print("Done Data: " + snapshot.toString());
+              //print("Done Data: " + snapshot.toString());
               if (snapshot.hasData) {
                 groups = snapshot.data;
                 return buildGroupListView();
@@ -150,7 +150,7 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
 
   Text _buildGroupSize(int groupSize) {
     return Text(
-      groupSize == 1 ? "$groupSize Person" : "$groupSize People",
+      groupSize == 1 ? "Personal" : "$groupSize People",
       style: TextStyle(fontSize: 20.0, color: Colors.blueGrey),
     );
   }
@@ -168,11 +168,7 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
       for (GroupMember member in members)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: CircleAvatar(
-            backgroundImage: member.avatar,
-            backgroundColor: Colors.grey,
-            radius: 12.0,
-          ),
+          child: member.cAvatar(),
         ),
     ]);
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
 import 'package:todolist/UI/tabs/list_groups_tab.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
 import 'package:todolist/models/global.dart';
 import 'package:todolist/widgets/global_widgets/avatar.dart';
@@ -17,11 +19,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isMenuOpen = false;
-  //User _user = userBloc.getUserObject();
+  @override
+  void initState() {
+    groupBloc.updateGroups();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print("Home Page State");
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -38,6 +43,23 @@ class _HomePageState extends State<HomePage> {
               });
             },
           ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.group_add,
+                color: Colors.black,
+                size: 32.0,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateGroupPage(),
+                  ),
+                );
+              }, //will go to Create a group Page
+            )
+          ],
         ),
         body: Container(
           child: Stack(

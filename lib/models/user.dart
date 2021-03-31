@@ -1,29 +1,29 @@
-import 'package:flutter/cupertino.dart';
+import 'package:todolist/models/groupmember.dart';
 //import 'package:todolist/models/group.dart';
 
-class User {
+class User extends GroupMember {
   final int id;
-  final String firstname;
-  final String lastname;
-  final String phonenumber;
-  final String emailAddress;
-  final String username;
   final String password;
   final String apiKey;
-  final ImageProvider avatar;
   //List<Group> groups;
 
-  User({
-    this.apiKey,
-    this.id,
-    this.username,
-    this.password,
-    this.emailAddress,
-    this.firstname,
-    this.lastname,
-    this.phonenumber,
-    this.avatar,
-  });
+  User(
+      {this.id,
+      this.password,
+      this.apiKey,
+      username,
+      firstname,
+      lastname,
+      emailaddress,
+      phonenumber,
+      avatar})
+      : super(
+            firstname: firstname,
+            lastname: lastname,
+            username: username,
+            emailaddress: emailaddress,
+            phonenumber: phonenumber,
+            avatar: avatar);
 
   factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
@@ -31,11 +31,13 @@ class User {
       id: parsedJson['id'],
       username: parsedJson['username'],
       password: parsedJson['password'],
-      emailAddress: parsedJson['emailaddress'],
+      emailaddress: parsedJson['emailaddress'],
       firstname: parsedJson['firstname'],
       lastname: parsedJson['lastname'],
       phonenumber: parsedJson['phonenumber'],
       avatar: parsedJson['avatar'],
     );
   }
+  @override
+  List<Object> get props => [username];
 }

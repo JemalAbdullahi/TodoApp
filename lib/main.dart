@@ -50,7 +50,6 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
-          groupBloc.updateGroups();
         }
         return apiKey.isNotEmpty
             ? HomePage(logout: logout)
@@ -72,7 +71,6 @@ class _SignInState extends State<SignIn> {
         print(e);
       }
     }
-    apiKey = "";
     return apiKey;
   }
 
@@ -82,114 +80,9 @@ class _SignInState extends State<SignIn> {
     });
   }
 
-  /* Future getApiKey() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("API_Token");
-  } */
-
-  /* void addTask(String taskName, String groupKey, int index) async {
-    await repository.addTask(this.apiKey, taskName, groupKey, index);
-    setState(() {
-      build(context);
-    });
-  }
-
-  void reAddTask(Task task) {
-    addTask(task.title, task.groupKey, task.index);
-  } */
-
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("API_Token", "");
-    setState(() {
-      build(context);
-    });
+    setState(() {});
   }
-
-  /* void addTaskDialog() {
-    TextEditingController _taskNameController = new TextEditingController();
-    TextEditingController _groupNameController = new TextEditingController();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: lightBlue,
-          content: Container(
-            height: 250,
-            width: 90,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Text("Add New Task", style: loginTitleStyle),
-                TextField(
-                  controller: _taskNameController,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(
-                        left: 14.0, bottom: 8.0, top: 8.0),
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Project/Task Name',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                  ),
-                ),
-                TextField(
-                  controller: _groupNameController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(
-                        left: 14.0, bottom: 8.0, top: 8.0),
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Group Name',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text(
-                        "Save",
-                        style: loginButtonStyle,
-                      ),
-                      disabledColor: darkBlueGradient,
-                      color: lightBlueGradient,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.transparent),
-                      ),
-                      onPressed: () {
-                        if (_taskNameController.text.isNotEmpty) {
-                          addTask(_taskNameController.text,
-                              _groupNameController.text, -1);
-                          Navigator.pop(context);
-                        } else {
-                          Navigator.pop(context);
-                        }
-                      },
-                    ),
-                    SizedBox(width: 8.0),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  } */
 }

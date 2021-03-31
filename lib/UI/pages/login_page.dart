@@ -108,9 +108,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget get _buildForgotPasswordBtn {
     return Container(
       alignment: Alignment.centerRight,
-      child: FlatButton(
+      padding: EdgeInsets.only(right: 0.0),
+      child: TextButton(
         onPressed: null,
-        padding: EdgeInsets.only(right: 0.0),
         child: Text('Forgot Password?', style: labelStyle),
       ),
     );
@@ -120,16 +120,18 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 5.0,
+          padding: EdgeInsets.all(15),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          primary: Colors.white,
+        ),
         autofocus: false,
         onPressed: () async {
           await _handleLoginInput;
         },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.white,
-        disabledColor: Colors.white,
         child: Text(
           btnText,
           style: TextStyle(
@@ -157,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
           usernameText.text.trim(), passwordText.text.trim(), "");
       widget.login();
     } catch (e) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.message),
           backgroundColor: Colors.red,
@@ -166,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _displayInvalidFormError() => _scaffoldKey.currentState.showSnackBar(
+  void _displayInvalidFormError() => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Fill the Form Completely'),
           backgroundColor: Colors.red,
@@ -333,15 +335,17 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 5.0,
+          padding: EdgeInsets.all(15),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          primary: Colors.white,
+        ),
         onPressed: () async {
           await _handleSignUpInput;
         },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.white,
-        disabledColor: Colors.white,
         child: Text(
           btnText,
           style: TextStyle(
@@ -378,7 +382,7 @@ class _LoginPageState extends State<LoginPage> {
         widget.login();
       });
     } catch (e) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.message),
           backgroundColor: Colors.red,
@@ -390,13 +394,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget get _buildBackToSignIn {
     return Container(
       alignment: Alignment.centerRight,
-      child: FlatButton(
+      padding: EdgeInsets.only(right: 0.0),
+      child: TextButton(
         onPressed: () {
           setState(() {
             _newUser = false;
           });
         },
-        padding: EdgeInsets.only(right: 0.0),
         child: Text('Back to Sign In', style: labelStyle),
       ),
     );

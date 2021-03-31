@@ -91,7 +91,7 @@ class _ToDoTabState extends State<ToDoTab> {
             if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
               _setIndex();
-              return _buildReorderableList();
+              return _buildList();
             }
             return SizedBox.shrink();
             break;
@@ -106,7 +106,7 @@ class _ToDoTabState extends State<ToDoTab> {
             if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
               _setIndex();
-              return _buildReorderableList();
+              return _buildList();
             }
             return SizedBox.shrink();
         }
@@ -115,28 +115,17 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  Widget _buildReorderableList() {
+  Widget _buildList() {
     //print("Reorderable List" + tasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
-      child: ReorderableListView(
+      child: ListView(
         key: UniqueKey(),
-        padding: EdgeInsets.only(top: 175),
+        padding: EdgeInsets.only(top: 175, bottom: 90),
         children: tasks.map<Dismissible>((Task item) {
           return _buildListTile(item);
         }).toList(),
-        onReorder: (oldIndex, newIndex) {
-          setState(
-            () {
-              Task item = tasks[oldIndex];
-              tasks.remove(item);
-              tasks.insert(newIndex, item);
-              item.index = newIndex;
-              repository.updateTask(item);
-            },
-          );
-        },
       ),
     );
   }
@@ -169,21 +158,18 @@ class _ToDoTabState extends State<ToDoTab> {
         ),
       ),
       onDismissed: (direction) {
-        //removeTask(item);
-        //deleteTask(item);
         taskBloc.deleteTask(item.taskKey);
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("Task " + item.title + " dismissed"),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              //reAddTask(item);
-              //tasks.insert(item.index, item);
-              //_setIndex();
-              taskBloc.addTask(item.title, item.index, item.completed);
-            },
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Task " + item.title + " dismissed"),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                taskBloc.addTask(item.title, item.index, item.completed);
+              },
+            ),
           ),
-        ));
+        );
       },
       direction: DismissDirection.endToStart,
     );
@@ -197,10 +183,6 @@ class _ToDoTabState extends State<ToDoTab> {
       });
     }
   }
-
-  /* void addTask(Task task) {
-    tasks.insert(task.index, task);
-  } */
 
   void reAddTask(Task task) async {
     await repository.addTask(

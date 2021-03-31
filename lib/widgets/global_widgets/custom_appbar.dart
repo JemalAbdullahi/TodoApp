@@ -8,11 +8,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
   final String title;
   final List<Widget> actions;
+  final double fontSize;
 
   CustomAppBar(
     this.title, {
     Key key,
     this.actions,
+    this.fontSize = 32.0,
   })  : preferredSize = Size.fromHeight(100.0),
         super(key: key);
 
@@ -25,7 +27,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           color: Colors.white,
           fontWeight: FontWeight.bold,
           fontFamily: "Segoe UI",
-          fontSize: 32.0,
+          fontSize: fontSize,
         ),
       ),
       backgroundColor: Colors.transparent,
