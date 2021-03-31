@@ -11,7 +11,7 @@ import 'package:todolist/models/user.dart';
 
 class ApiProvider {
   Client client = Client();
-  static String baseURL = "http://10.0.2.2:5000/api";
+  static String baseURL = "https://taskmanager-group.herokuapp.com/api";
   String signinURL = baseURL + "/signin";
   String userURL = baseURL + "/user";
   String taskURL = baseURL + "/tasks";
