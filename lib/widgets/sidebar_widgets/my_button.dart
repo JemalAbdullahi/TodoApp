@@ -26,7 +26,7 @@ class MyButton extends StatelessWidget {
           SizedBox(width: 10),
           Text(
             text,
-            style: TextStyle(color: Colors.black45, fontSize: textSize, decoration: TextDecoration.lineThrough),
+            style: TextStyle(color: Colors.black45, fontSize: textSize),
           )
         ],
       ),

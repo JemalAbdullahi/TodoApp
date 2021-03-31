@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask import request
-from Models import db, User
+from Models import User
 import random
 import string
 

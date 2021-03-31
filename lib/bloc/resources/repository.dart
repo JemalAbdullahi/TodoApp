@@ -37,11 +37,25 @@ class Repository {
 
   Future<String> getApiKey() => apiProvider.getApiKey();
 
+  //Groups: Get, Post, Delete
   Future getUserGroups() => apiProvider.getUserGroups();
 
+  Future addGroup(String groupName, bool isPublic) =>
+      apiProvider.addGroup(groupName, isPublic);
+
+  Future deleteGroup(String groupKey) => apiProvider.deleteGroup(groupKey);
+
+  //Group Members: Get, Post, Delete
   Future getGroupMembers(String groupKey) =>
       apiProvider.getGroupMembers(groupKey);
 
+  Future addGroupMember(String groupKey, String username) =>
+      apiProvider.addGroupMember(groupKey, username);
+
+  Future deleteGroupMember(String groupKey, String username) =>
+      apiProvider.deleteGroupMember(groupKey, username);
+
+  //Tasks
   Future getTasks(String groupKey) => apiProvider.getTasks(groupKey);
 
   Future<Null> addTask(
@@ -57,6 +71,7 @@ class Repository {
     apiProvider.deleteTask(taskKey);
   }
 
+  //Subtasks
   Future getSubtasks(String taskKey) => apiProvider.getSubtasks(taskKey);
 
   Future<Null> addSubtask(
@@ -71,6 +86,8 @@ class Repository {
   FutureOr<dynamic> deleteSubtask(String subtaskKey) async {
     apiProvider.deleteSubtask(subtaskKey);
   }
+
+  Future searchUser(String searchTerm) => apiProvider.searchUser(searchTerm);
 }
 
 final repository = Repository();

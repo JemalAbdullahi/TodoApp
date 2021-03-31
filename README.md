@@ -19,16 +19,16 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
 - [x] Add to subtask list
 - [x] Delete from subtask list action
 - [x] Undo Delete from subtask list action
-- [ ] Organize Widgets
-- [ ] Create Navigation drawer UI
+- [x] Organize Widgets
+- [x] Create Navigation drawer UI
   - [x] Profile
     - [x] Name
     - [x] Password (change)
     - [x] Email Address (change)
-  - [ ] Groups
+  - [x] Groups
   - [ ] Friends
   - [ ] Settings
-  - [ ] Log out
+  - [x] Log out
   - [x] Animated
 
 ### Goal
@@ -37,10 +37,10 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
 - [ ] Gain a better understanding of flutter
 
 ### Future Functionality
-- [ ] Add groups
-  - [ ] Groups can share a task/project
-    - [ ] Can add subtasks to the main task
+- [x] Add groups
+  - [x] Groups can share a task/project
+    - [x] Can add subtasks to the main task
   - [ ] Provide various permissions to different users in groups (Read only, Read+Write, Delete)
-  - [ ] Each user can have numerous groups
+  - [x] Each user can have numerous groups
 - [ ] Implement all attributes of tasks/subtasks (Reminders, Notes, Repeat, Deadline, etc.)
 - [ ] Create a Detailed Page for SubTask

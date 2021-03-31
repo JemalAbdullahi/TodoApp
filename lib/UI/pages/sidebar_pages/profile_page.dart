@@ -3,7 +3,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/user.dart';
-import 'package:todolist/widgets/global_widgets/avatar.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
@@ -86,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          Center(child: Avatar(radius: 56.0)),
+          Center(child: _user.cAvatar(radius: 56.0)),
           SizedBox(height: 20),
           _firstnameField(),
           SizedBox(height: 20),
@@ -266,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _emailAddressField() {
-    _emailAddressController.text = _user.emailAddress;
+    _emailAddressController.text = _user.emailaddress;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -364,8 +363,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 5.0,
+          padding: EdgeInsets.all(15),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          primary: Colors.white,
+        ),
         autofocus: false,
         onPressed: () async {
           if (_formKey.currentState.validate()) {
@@ -380,14 +385,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   _lastname,
                   _phonenumber,
                   null);
-              _scaffoldKey.currentState.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Success: Profile Updated!'),
                   backgroundColor: Colors.green,
                 ),
               );
             } catch (e) {
-              _scaffoldKey.currentState.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(e.message),
                   backgroundColor: Colors.red,
@@ -396,7 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
             }
             return;
           } else {
-            _scaffoldKey.currentState.showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Failure: Profile Did Not Update!'),
                 backgroundColor: Colors.red,
@@ -404,10 +409,6 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           }
         },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.white,
-        disabledColor: Colors.white,
         child: Text(
           'Update Profile',
           style: TextStyle(
