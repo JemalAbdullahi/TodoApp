@@ -71,9 +71,7 @@ class GroupBloc {
   List<Group> _groups = [];
 
   GroupBloc._privateConstructor() {
-    updateGroups().then((_) {
-      _groupSubject.add(_groups);
-    });
+    updateGroups();
   }
 
   static final GroupBloc _instance = GroupBloc._privateConstructor();
@@ -87,9 +85,14 @@ class GroupBloc {
   } 
   */
 
-  Stream<List<Group>> get getGroups => _groupSubject.stream;
+  Stream<List<Group>> get getGroups {
+    updateGroups();
+    return _groupSubject.stream;
+  }
+
   Future<Null> updateGroups() async {
     _groups = await repository.getUserGroups();
+    _groupSubject.add(_groups);
   }
 }
 

@@ -41,24 +41,24 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              //print("No Connection: " + snapshot.toString());
+              print("No Connection: " + snapshot.toString());
               break;
             case ConnectionState.waiting:
-              //print("Waiting Data: " + snapshot.toString());
+              print("Waiting Data: " + snapshot.toString());
               if (!snapshot.hasData)
                 return Center(child: CircularProgressIndicator());
               groups = snapshot.data;
               return buildGroupListView();
               break;
             case ConnectionState.active:
-              //print("Active Data: " + snapshot.toString());
+              print("Active Data: " + snapshot.toString());
               if (snapshot.hasData) {
                 groups = snapshot.data;
                 return buildGroupListView();
               }
               break;
             case ConnectionState.done:
-              //print("Done Data: " + snapshot.toString());
+              print("Done Data: " + snapshot.toString());
               if (snapshot.hasData) {
                 groups = snapshot.data;
                 return buildGroupListView();

@@ -11,7 +11,8 @@ import 'package:todolist/models/user.dart';
 
 class ApiProvider {
   Client client = Client();
-  static String baseURL = "https://taskmanager-group.herokuapp.com/api";
+  static String baseURL = "https://taskmanager-group-stage.herokuapp.com/api";
+  //static String baseURL = "http://10.0.2.2:5000/api";
   String signinURL = baseURL + "/signin";
   String userURL = baseURL + "/user";
   String taskURL = baseURL + "/tasks";
@@ -50,7 +51,7 @@ class ApiProvider {
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
-      throw Exception('Failed to load post');
+      throw Exception(result["Message"]);
     }
   }
 

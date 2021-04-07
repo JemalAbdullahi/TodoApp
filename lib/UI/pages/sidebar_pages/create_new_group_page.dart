@@ -17,7 +17,8 @@ class CreateGroupPage extends StatefulWidget {
 class _CreateGroupPageState extends State<CreateGroupPage> {
   Group newGroup = new Group.blank();
   int membersLength = 0;
-  bool isPublic = true;
+  bool isPrivate = true;
+  TextEditingController groupName = new TextEditingController();
 
   @override
   void initState() {
@@ -40,13 +41,14 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             actions: <Widget>[
               TextButton(
                 onPressed: saveGroup,
-                child: Text("Save",
-                    style: TextStyle(
+                child: Text(
+                  "Save",
+                  style: TextStyle(
                       color: Colors.lightBlue,
-                        fontFamily: "Segoe UI",
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),),
-                
+                      fontFamily: "Segoe UI",
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ],
             fontSize: 24,
@@ -62,7 +64,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   void saveGroup() async {
-    String groupKey = await repository.addGroup(newGroup.name, isPublic);
+    print(newGroup.name);
+    String groupKey = await repository.addGroup(groupName.text, !isPrivate);
     for (GroupMember member in newGroup.members) {
       try {
         await repository.addGroupMember(groupKey, member.username);
@@ -70,6 +73,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         print(e.message);
       }
     }
+    Navigator.pop(context);
   }
 
   Stack _buildStack() {
@@ -119,6 +123,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
   TextField _buildGroupNameTF() {
     return TextField(
+      controller: groupName,
       textAlign: TextAlign.center,
       keyboardType: TextInputType.name,
       decoration: InputDecoration(
@@ -142,7 +147,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         color: lightBlue,
         fontSize: 30,
       ),
-      onSubmitted: (groupName) => newGroup.name = groupName,
+      onChanged: (groupName) => newGroup.name = groupName,
     );
   }
 
@@ -201,10 +206,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             fontSize: 20),
       ),
       Switch(
-          value: isPublic,
+          value: isPrivate,
           onChanged: (newValue) {
             setState(() {
-              isPublic = newValue;
+              isPrivate = newValue;
             });
           }),
     ]);
@@ -243,7 +248,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   Widget _addMembers() {
-    return !this.isPublic
+    return this.isPrivate
         ? Align(
             alignment: Alignment(0.9, 0.9),
             child: FloatingActionButton(
