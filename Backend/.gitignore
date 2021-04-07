@@ -1,0 +1,4 @@
+env
+.env
+heroku keys:add
+heroku keys:add.pub
