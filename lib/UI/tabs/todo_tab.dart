@@ -80,14 +80,14 @@ class _ToDoTabState extends State<ToDoTab> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            //print("None Data: " + snapshot.toString());
+            print("None Data: " + snapshot.toString());
             return Container(
               child: Center(
                 child: Text("No Connection Message"),
               ),
             );
           case ConnectionState.active:
-            //print("Active Data: " + snapshot.toString());
+            print("Active Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
               _setIndex();
@@ -96,13 +96,13 @@ class _ToDoTabState extends State<ToDoTab> {
             return SizedBox.shrink();
             break;
           case ConnectionState.waiting:
-            //print("Waiting Data: " + snapshot.toString());
+            print("Waiting Data: " + snapshot.toString());
             if (tasks.length == 0) {
               return SizedBox.shrink();
             }
             break;
           case ConnectionState.done:
-            //print("Done Data: " + snapshot.toString());
+            print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
               _setIndex();

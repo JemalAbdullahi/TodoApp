@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/pages/home_page.dart';
+import 'package:splashscreen/splashscreen.dart';
 //import 'package:flutter/services.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
@@ -8,23 +9,58 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
-main() => runApp(
-      MyApp(),
-    );
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    return MaterialApp(
+main() => runApp(new MaterialApp(
       title: 'To Do List',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primaryColorLight: lightBlue,
           primaryColorDark: darkBlue,
           fontFamily: 'Segoe UI'),
-      home: SignIn(),
+      home: new MyApp(),
+    ));
+
+class MyApp extends StatelessWidget {
+  Future<Widget> loadFromFuture() async {
+    // <fetch data from server. ex. login>
+
+    return Future.value(new AfterSplash());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    return new SplashScreen(
+        navigateAfterSeconds: SignIn(),
+        seconds: 5,
+        title: new Text(
+          'ToDo',
+          style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+        ),
+        gradientBackground: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [lightBlue, lightBlueGradient],
+        ),
+        styleTextUnderTheLoader: new TextStyle(),
+        onClick: () => print("Flutter Egypt"),
+        loaderColor: Colors.black54);
+  }
+}
+
+class AfterSplash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+          title: new Text("Welcome In SplashScreen Package"),
+          automaticallyImplyLeading: false),
+      body: new Center(
+        child: new Text(
+          "Done!",
+          style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+        ),
+      ),
     );
   }
 }

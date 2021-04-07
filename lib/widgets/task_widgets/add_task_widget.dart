@@ -113,6 +113,8 @@ class _AddTaskState extends State<AddTask> {
     if (controller.text.isNotEmpty) {
       await widget.taskbloc.addTask(controller.text, widget.length, false);
       controller.clear();
+      textfieldFocus.unfocus();
+      widget.taskbloc.updateTasks();
     }
   }
 }

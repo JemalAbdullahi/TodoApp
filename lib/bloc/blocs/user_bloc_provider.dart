@@ -120,25 +120,25 @@ class TaskBloc {
 
   TaskBloc(String groupKey) {
     this._groupKey = groupKey;
-    _updateTasks().then((tasks) {
-      _taskSubject.add(tasks);
-    });
+    updateTasks();
   }
 
   Stream<List<Task>> get getTasks => _taskSubject.stream;
 
   Future<Null> addTask(String taskName, int index, bool completed) async {
     await repository.addTask(taskName, this._groupKey, index, completed);
-    _updateTasks().then((tasks) => _taskSubject.add(tasks));
+    //await updateTasks();
   }
 
   Future<Null> deleteTask(String taskKey) async {
     await repository.deleteTask(taskKey);
-    await _updateTasks().then((tasks) => _taskSubject.add(tasks));
+    await updateTasks();
   }
 
-  Future<List<Task>> _updateTasks() async {
-    return await repository.getTasks(_groupKey);
+  Future<Null> updateTasks() async {
+    await repository
+        .getTasks(_groupKey)
+        .then((tasks) => _taskSubject.add(tasks));
   }
 }
 

@@ -130,6 +130,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         autofocus: false,
         onPressed: () async {
+          print("Attempt Login");
           await _handleLoginInput;
         },
         child: Text(
