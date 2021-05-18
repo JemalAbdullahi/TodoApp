@@ -91,9 +91,11 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             break;
           case ConnectionState.waiting:
             //print("Waiting Data: " + snapshot.toString());
-            if (subtasks.length == 0) {
+            /* if (subtasks.length == 0) {
               return SizedBox.shrink();
-            }
+            } */
+            if (!snapshot.hasData || snapshot.data.isEmpty)
+              return Center(child: CircularProgressIndicator());
             break;
           case ConnectionState.done:
             //print("Done Data: " + snapshot.toString());

@@ -45,10 +45,8 @@ class _ListGroupsTabState extends State<ListGroupsTab> {
               break;
             case ConnectionState.waiting:
               print("Waiting Data: " + snapshot.toString());
-              if (!snapshot.hasData)
+              if (!snapshot.hasData || snapshot.data.isEmpty)
                 return Center(child: CircularProgressIndicator());
-              groups = snapshot.data;
-              return buildGroupListView();
               break;
             case ConnectionState.active:
               print("Active Data: " + snapshot.toString());

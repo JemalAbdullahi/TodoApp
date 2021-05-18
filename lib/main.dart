@@ -6,7 +6,7 @@ import 'package:splashscreen/splashscreen.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
-//import 'package:todolist/bloc/resources/repository.dart';
+import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
 main() => runApp(new MaterialApp(
@@ -85,8 +85,8 @@ class _SignInState extends State<SignIn> {
       future: signInUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          //apiKey = snapshot.data;
-          apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
+          apiKey = snapshot.data;
+          //apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
         }
         return apiKey.isNotEmpty
             ? HomePage(logout: logout)
@@ -99,8 +99,8 @@ class _SignInState extends State<SignIn> {
   }
 
   Future signInUser() async {
-    //apiKey = await repository.getApiKey();
-    apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
+    apiKey = await repository.getApiKey();
+    //apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
     if (apiKey.isNotEmpty && apiKey.length > 0) {
       try {
         print(apiKey);

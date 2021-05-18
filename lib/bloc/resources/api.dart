@@ -441,6 +441,6 @@ class ApiProvider {
   Future<String> getApiKey() async {
     //if(apiKey.isNotEmpty) return apiKey;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('API_Token');
+    return prefs.getString('API_Token') ?? "";
   }
 }

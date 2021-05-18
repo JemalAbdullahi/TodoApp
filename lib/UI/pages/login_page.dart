@@ -34,10 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: _newUser ? _getSignUpScreen : _getSigninScreen,
-      ),
+      body: _newUser ? _getSignUpScreen : _getSigninScreen,
     );
   }
 
