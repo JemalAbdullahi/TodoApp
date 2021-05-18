@@ -20,6 +20,7 @@ main() => runApp(new MaterialApp(
     ));
 
 class MyApp extends StatelessWidget {
+  //unused
   Future<Widget> loadFromFuture() async {
     // <fetch data from server. ex. login>
 
@@ -28,8 +29,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    //Navigate to Sign In page after SplashScreen is displayed
     return new SplashScreen(
         navigateAfterSeconds: SignIn(),
         seconds: 5,
@@ -85,7 +85,8 @@ class _SignInState extends State<SignIn> {
       future: signInUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          apiKey = snapshot.data;
+          //apiKey = snapshot.data;
+          apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
         }
         return apiKey.isNotEmpty
             ? HomePage(logout: logout)
@@ -98,9 +99,11 @@ class _SignInState extends State<SignIn> {
   }
 
   Future signInUser() async {
-    apiKey = await repository.getApiKey();
+    //apiKey = await repository.getApiKey();
+    apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
     if (apiKey.isNotEmpty && apiKey.length > 0) {
       try {
+        print(apiKey);
         userBloc.signinUser("", "", apiKey);
         return apiKey;
       } catch (e) {

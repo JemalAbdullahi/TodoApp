@@ -111,29 +111,32 @@ class ApiProvider {
   // Get User's Group's
   Future<List<Group>> getUserGroups() async {
     final _apiKey = await getApiKey();
-    final response = await client.get(
-      groupURL,
-      headers: {"Authorization": _apiKey},
-    );
-    final Map result = json.decode(response.body);
-    if (response.statusCode == 200) {
-      // If the call to the server was successful, parse the JSON
-      List<Group> groups = [];
-      for (Map json_ in result["data"]) {
-        try {
-          Group group = Group.fromJson(json_);
-          group.members = await getGroupMembers(group.groupKey);
-          group.tasks = await getTasks(group.groupKey);
-          groups.add(group);
-        } catch (Exception) {
-          print(Exception);
+    List<Group> groups = [];
+    if (_apiKey.isNotEmpty) {
+      final response = await client.get(
+        groupURL,
+        headers: {"Authorization": _apiKey},
+      );
+      final Map result = json.decode(response.body);
+      if (response.statusCode == 200) {
+        // If the call to the server was successful, parse the JSON
+        for (Map json_ in result["data"]) {
+          try {
+            Group group = Group.fromJson(json_);
+            group.members = await getGroupMembers(group.groupKey);
+            group.tasks = await getTasks(group.groupKey);
+            groups.add(group);
+          } catch (Exception) {
+            print(Exception);
+          }
         }
+        return groups;
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception(result["Message"]);
       }
-      return groups;
-    } else {
-      // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
     }
+    return groups;
   }
 
   // Add Group
