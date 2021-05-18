@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
@@ -44,14 +44,15 @@ class _LoginPageState extends State<LoginPage> {
       TextInputType keyboardType,
       IconData iconData,
       String hintText,
-      bool obscureText) {
+      bool obscureText,
+      TextInputAction textInputAction) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _label(label),
         SizedBox(height: 10),
-        _buildContainer(
-            controller, keyboardType, iconData, hintText, obscureText),
+        _buildContainer(controller, keyboardType, iconData, hintText,
+            obscureText, textInputAction),
       ],
     );
   }
@@ -63,13 +64,14 @@ class _LoginPageState extends State<LoginPage> {
       TextInputType keyboardType,
       IconData iconData,
       String hintText,
-      bool obscureText) {
+      bool obscureText,
+      TextInputAction textInputAction) {
     return Container(
       alignment: Alignment.centerLeft,
       decoration: boxDecorationStyle,
       height: 60,
-      child: _buildTextFormField(
-          controller, keyboardType, iconData, hintText, obscureText),
+      child: _buildTextFormField(controller, keyboardType, iconData, hintText,
+          obscureText, textInputAction),
     );
   }
 
@@ -78,11 +80,12 @@ class _LoginPageState extends State<LoginPage> {
       TextInputType keyboardType,
       IconData iconData,
       String hintText,
-      bool obscureText) {
+      bool obscureText,
+      TextInputAction textInputAction) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      textInputAction: TextInputAction.next,
+      textInputAction: textInputAction,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -203,11 +206,17 @@ class _LoginPageState extends State<LoginPage> {
       children: <Widget>[
         _signText("Sign In"),
         SizedBox(height: 30.0),
-        _buildTF('Username', usernameText, TextInputType.text,
-            Icons.account_circle, 'Enter Username', false),
+        _buildTF(
+            'Username',
+            usernameText,
+            TextInputType.text,
+            Icons.account_circle,
+            'Enter Username',
+            false,
+            TextInputAction.next),
         SizedBox(height: 30),
         _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
-            'Enter a Password', true),
+            'Enter a Password', true, TextInputAction.done),
         _buildForgotPasswordBtn,
         _buildLoginBtn('LOGIN'),
         _buildSignupBtn,
@@ -307,22 +316,28 @@ class _LoginPageState extends State<LoginPage> {
         _signText("Sign Up"),
         SizedBox(height: 30.0),
         _buildTF('Firstname', firstnameText, TextInputType.name, Icons.person,
-            'Enter a Firstname', false),
+            'Enter a Firstname', false, TextInputAction.next),
         SizedBox(height: 30.0),
         _buildTF('Lastname', lastnameText, TextInputType.name, Icons.person,
-            'Enter a Lastname', false),
+            'Enter a Lastname', false, TextInputAction.next),
         SizedBox(height: 30.0),
-        _buildTF('Username', usernameText, TextInputType.text,
-            Icons.account_circle, 'Enter a Username', false),
+        _buildTF(
+            'Username',
+            usernameText,
+            TextInputType.text,
+            Icons.account_circle,
+            'Enter a Username',
+            false,
+            TextInputAction.next),
         SizedBox(height: 30),
         _buildTF('Phone Number', phonenumberText, TextInputType.phone,
-            Icons.phone, 'Enter a Phone Number', false),
+            Icons.phone, 'Enter a Phone Number', false, TextInputAction.next),
         SizedBox(height: 30),
         _buildTF('Email', emailText, TextInputType.emailAddress, Icons.email,
-            'Enter an Email', false),
+            'Enter an Email', false, TextInputAction.next),
         SizedBox(height: 30),
         _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
-            'Enter a Password', true),
+            'Enter a Password', true, TextInputAction.go),
         _buildSigningUpBtn('SIGN UP'),
         _buildBackToSignIn
       ],

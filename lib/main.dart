@@ -2,22 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/pages/home_page.dart';
 import 'package:splashscreen/splashscreen.dart';
-//import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
-main() => runApp(new MaterialApp(
-      title: 'To Do List',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primaryColorLight: lightBlue,
-          primaryColorDark: darkBlue,
-          fontFamily: 'Segoe UI'),
-      home: new MyApp(),
-    ));
+main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  runApp(new MaterialApp(
+    title: 'To Do List',
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+        primaryColorLight: lightBlue,
+        primaryColorDark: darkBlue,
+        fontFamily: 'Segoe UI'),
+    home: new MyApp(),
+  ));
+}
 
 class MyApp extends StatelessWidget {
   //unused
