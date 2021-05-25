@@ -90,6 +90,11 @@ class GroupBloc {
     return _groupSubject.stream;
   }
 
+  Future<Null> deleteGroup(String groupKey) async {
+    await repository.deleteGroup(groupKey);
+    await updateGroups();
+  }
+
   Future<Null> updateGroups() async {
     _groups = await repository.getUserGroups();
     _groupSubject.add(_groups);

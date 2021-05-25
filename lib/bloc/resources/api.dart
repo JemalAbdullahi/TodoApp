@@ -23,8 +23,8 @@ class ApiProvider {
 
   String apiKey;
 
-//User CRUD Functions
-  //Sign Up
+/// User CRUD Functions
+  /// Sign Up
   Future<User> registerUser(
       String username,
       String password,
@@ -55,7 +55,7 @@ class ApiProvider {
     }
   }
 
-  //Sign In
+  /// Sign User In using username and password or API_Key
   Future signinUser(String username, String password, String apiKey) async {
     final response = await client.post(signinURL,
         headers: {"Authorization": apiKey},
@@ -74,7 +74,7 @@ class ApiProvider {
     }
   }
 
-  // Edit Profile
+  /// Edit Profile
   Future updateUserProfile(
       String currentPassword,
       String newPassword,
@@ -107,8 +107,8 @@ class ApiProvider {
     }
   }
 
-//Group CRUD Functions
-  // Get User's Group's
+/// Group CRUD Functions
+  /// Get a list of the User's Groups
   Future<List<Group>> getUserGroups() async {
     final _apiKey = await getApiKey();
     List<Group> groups = [];
@@ -139,7 +139,7 @@ class ApiProvider {
     return groups;
   }
 
-  // Add Group
+  /// Add a Group
   Future addGroup(String groupName, bool isPublic) async {
     final response = await client.post(groupURL,
         headers: {"Authorization": apiKey},
@@ -160,7 +160,7 @@ class ApiProvider {
     }
   }
 
-  //Delete Group
+  /// Delete a Group
   Future deleteGroup(String groupKey) async {
     final response = await client.delete(
       groupURL,
@@ -176,8 +176,8 @@ class ApiProvider {
     }
   }
 
-  // GroupMember CRUD Functions
-  // Get Group's Members
+// GroupMember CRUD Functions
+  // Get a list of the Group's Members
   Future<List<GroupMember>> getGroupMembers(String groupKey) async {
     final response = await client.get(
       groupmemberURL,
@@ -202,7 +202,9 @@ class ApiProvider {
     }
   }
 
-  // Add Group Members
+  /// Add a Group Member to the Group
+  /// GroupKey: Unique Group Identifier
+  /// Username: Group Member's Username to be added
   Future addGroupMember(String groupKey, String username) async {
     final response = await client.post(groupmemberURL,
         headers: {"Authorization": groupKey},
@@ -218,7 +220,9 @@ class ApiProvider {
       throw Exception(result["Message"]);
     }
   }
-
+  /// Delete a Group Member
+  /// GroupKey: Unique Group Identifier
+  /// Username: Group Member's Username to be added
   Future deleteGroupMember(String groupKey, String username) async {
     final response = await client.delete(
       "$groupmemberURL?username=$username",
@@ -235,7 +239,8 @@ class ApiProvider {
   }
 
 //Task CRUD Functions
-  // Get Tasks
+  /// Get a list of the Group's Tasks
+  /// GroupKey: Unique group identifier
   Future<List<Task>> getTasks(String groupKey) async {
     final response = await client.get(
       taskURL,
@@ -261,7 +266,10 @@ class ApiProvider {
     }
   }
 
-  //Add Task
+  /// Add a Task to the Group
+  /// GroupKey: Unique Group Identifier
+  /// Index: Position within Group's task list
+  /// Completed: True or False, Has the task been completed
   Future addTask(
       String taskName, String groupKey, int index, bool completed) async {
     final response = await client.post(taskURL,
@@ -282,7 +290,7 @@ class ApiProvider {
     }
   }
 
-  //Update Task
+  /// Update Task Info
   Future updateTask(Task task) async {
     final response = await client.put(taskURL,
         headers: {"Authorization": task.taskKey},
@@ -303,7 +311,8 @@ class ApiProvider {
     }
   }
 
-  //Delete Task
+  /// Delete Task from the Group's List of tasks
+  /// Task Key: Unique Task Identifier
   Future deleteTask(String taskKey) async {
     final response = await client.delete(
       taskURL,

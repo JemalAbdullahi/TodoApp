@@ -40,4 +40,9 @@ class User extends GroupMember {
   }
   @override
   List<Object> get props => [username];
+
+  @override
+  String toString() {
+    return username;
+  }
 }

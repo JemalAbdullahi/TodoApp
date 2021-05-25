@@ -249,7 +249,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
   Widget _addMembers() {
     return this.isPrivate
-        ? Align(
+        ? SizedBox.shrink()
+        : Align(
             alignment: Alignment(0.9, 0.9),
             child: FloatingActionButton(
               tooltip: "Search to Add Members",
@@ -265,7 +266,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               },
               child: Icon(Icons.arrow_forward, size: 36),
             ),
-          )
-        : SizedBox.shrink();
+          );
   }
 }

@@ -80,14 +80,14 @@ class _ToDoTabState extends State<ToDoTab> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            print("None Data: " + snapshot.toString());
+            print("None Data");
             return Container(
               child: Center(
                 child: Text("No Connection Message"),
               ),
             );
           case ConnectionState.active:
-            print("Active Data: " + snapshot.toString());
+            print("Active Data: " + snapshot.data.toString());
             if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
               _setIndex();
@@ -96,12 +96,14 @@ class _ToDoTabState extends State<ToDoTab> {
             return SizedBox.shrink();
             break;
           case ConnectionState.waiting:
-            print("Waiting Data: " + snapshot.toString());
-            /* if (tasks.length == 0) {
-              return SizedBox.shrink();
-            } */
-            if (!snapshot.hasData || snapshot.data.isEmpty)
-                return Center(child: CircularProgressIndicator());
+            print("Waiting Data");
+            if (!snapshot.hasData || snapshot.data.isEmpty) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.data.isNotEmpty) {
+              tasks = snapshot.data;
+              _setIndex();
+              return _buildList();
+            }
             break;
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
@@ -142,7 +144,6 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildListTile(Task item) {
-    //print("Build List Tile: " + item.title);
     return Dismissible(
       key: Key(item.taskKey),
       child: ListTile(

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/models/tasks.dart';
 
-class Group extends ChangeNotifier{
+class Group extends ChangeNotifier {
   int id;
   String _name;
   String groupKey;
@@ -31,13 +31,18 @@ class Group extends ChangeNotifier{
     notifyListeners();
   }
 
-  void addGroupMember(GroupMember member){
+  void addGroupMember(GroupMember member) {
     members.add(member);
     notifyListeners();
   }
 
-  void removeGroupMember(GroupMember member){
+  void removeGroupMember(GroupMember member) {
     members.remove(member);
     notifyListeners();
+  }
+
+  @override
+  String toString() {
+    return "Name: $_name Public: $isPublic Members: ${members.length}.";
   }
 }

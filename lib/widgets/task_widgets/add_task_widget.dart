@@ -17,7 +17,7 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
-  //GlobalKey<_CustomDropdownState> _keyCustomDropdown = GlobalKey();
+  
   TextEditingController controller = new TextEditingController();
   FocusNode textfieldFocus = new FocusNode();
 
@@ -26,24 +26,14 @@ class _AddTaskState extends State<AddTask> {
   double bottom = 0;
   double focusWidth, marginH;
   Size size;
-  //bool isFocused = false;
-  //bool _isDropdownOpen = false;
-
-  /* _selectGroupTapFormat(bool dropdownBool) {
-    setState(() {
-      _isDropdownOpen = dropdownBool;
-    });
-  } */
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     focusWidth = size.width * 0.9;
     width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : 250;
-    //bottom = (!isFocused && _isDropdownOpen) ? 230 : 0;
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
-      //bottom = (isFocused && !_res.isOpen) ? 100 : 0;
       return Positioned(
         bottom: bottom,
         child: Container(
@@ -101,7 +91,6 @@ class _AddTaskState extends State<AddTask> {
                   ),
                 ),
               ),
-              //DropDownViewController()
             ],
           ),
         ),

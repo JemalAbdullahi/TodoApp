@@ -15,8 +15,6 @@ class TitleCard extends StatelessWidget {
       children: <Widget>[
         child,
         _titleCardBackground(),
-        //_titleCardTitle(),
-        //_TitleCardButton(addTask),
       ],
     );
   }
@@ -53,75 +51,3 @@ class TitleCard extends StatelessWidget {
     );
   }
 }
-
-/* class _TitleCardTitle extends StatelessWidget {
-  final String title;
-  _TitleCardTitle(this.title);
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      height: 53,
-      top: 35,
-      left: 30,
-      child: Text(
-        title,
-        style: cardTitleStyle,
-      ),
-    );
-  }
-} */
-
-/* class _TitleCardBackground extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
-        ),
-      ),
-    );
-  }
-} */
-
-/* class _TitleCardButton extends StatefulWidget {
-  final VoidCallback addTaskDialog;
-  
-
-  _TitleCardButton(this.addTaskDialog);
-
-  @override
-  __TitleCardButtonState createState() => __TitleCardButtonState();
-}
-
-class __TitleCardButtonState extends State<_TitleCardButton> {
-  Widget listOverlay() {
-    print("In listOverlay");
-    return Positioned(
-      top: 200,
-      child: Container(
-        height: 200,
-        color: red,
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      /* scale: 1.1,
-      origin: Offset(-3300, -500) */
-      alignment: Alignment(0.9, 0.95),
-      child: FloatingActionButton(
-        tooltip: "Press to Add a Task",
-        onPressed: () {
-          widget.addTaskDialog();
-        },
-        child: Icon(Icons.add, size: 40),
-      ),
-    );
-  }
-} */

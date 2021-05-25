@@ -1,12 +1,29 @@
 class Subtask {
-  String title; //project title
-  int subtaskId; //project Id
+  /// Subtask Name/Title
+  String title;
+
+  /// Subtask ID
+  int subtaskId;
+
+  /// Subtask Index in the list
   int index;
+
+  /// Subtask Key
   String subtaskKey;
+
+  /// Group Name
   String group;
+
+  /// Has the subtask been completed
+  bool completed;
+
+  /// Not Implemented
   String note;
-  bool completed; // has all tasks within the project been completed
+
+  /// Not Implemented
   String repeats;
+
+  /// Not Implemented
   List<DateTime> reminders;
   //DateTime deadline;
 
@@ -23,5 +40,10 @@ class Subtask {
       parsedJson['subtask_key'],
       parsedJson['index'],
     );
+  }
+
+  @override
+  String toString() {
+    return title;
   }
 }

@@ -1,16 +1,37 @@
 import 'package:todolist/models/subtasks.dart';
 
 class Task {
-  String title; //project title
-  int id; //project Id
+  /// Task Name/Title
+  String title;
+
+  /// Task ID
+  int id;
+
+  /// Task Index in the list
   int index;
+
+  /// Task Key
   String taskKey;
-  List<Subtask> subtasks; // tasks associated with the project
-  String groupKey; // which group added that project
+
+  /// List of Subtasks associated with the Task
+  List<Subtask> subtasks;
+
+  /// GroupKey from the Group that added the task
+  String groupKey;
+
+  /// Name of Group that added the task
   String groupName;
-  String note;
-  bool completed; // has all tasks within the project been completed
+
+  /// Has the Task been completed
+  bool completed;
+
+  /// Not Implemented
   String repeats;
+
+  /// Not Implemented
+  String note;
+
+  /// Not Implemented
   List<DateTime> reminders;
   //DateTime deadline;
 
@@ -35,5 +56,10 @@ class Task {
       groupKey: parsedJson['group_key'],
       groupName: parsedJson['group_name'],
     );
+  }
+
+  @override
+  String toString() {
+    return "Task Name: $title, Subtasks: ${subtasks.length}";
   }
 }
