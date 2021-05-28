@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     //Navigate to Sign In page after SplashScreen is displayed
     return new SplashScreen(
         navigateAfterSeconds: SignIn(),
-        seconds: 5,
+        seconds: 2,
         title: new Text(
           'ToDo',
           style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
@@ -90,7 +90,6 @@ class _SignInState extends State<SignIn> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
-          //apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
         }
         return apiKey.isNotEmpty
             ? HomePage(logout: logout)
@@ -104,7 +103,6 @@ class _SignInState extends State<SignIn> {
 
   Future signInUser() async {
     apiKey = await repository.getApiKey();
-    //apiKey = "Qdm6Ug5eTKOXMdmCjEuacljTWVTzMDhggtKSg5vRMKVwli5lFZ";
     if (apiKey.isNotEmpty && apiKey.length > 0) {
       try {
         print(apiKey);

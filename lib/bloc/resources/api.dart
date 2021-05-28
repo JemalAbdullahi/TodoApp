@@ -11,6 +11,7 @@ import 'package:todolist/models/user.dart';
 
 class ApiProvider {
   Client client = Client();
+  //static String baseURL = "https://taskmanager-group-pro.herokuapp.com/api";
   static String baseURL = "https://taskmanager-group-stage.herokuapp.com/api";
   //static String baseURL = "http://10.0.2.2:5000/api";
   String signinURL = baseURL + "/signin";
@@ -177,7 +178,7 @@ class ApiProvider {
   }
 
 // GroupMember CRUD Functions
-  // Get a list of the Group's Members
+  // Get a list of the Group's Members.
   Future<List<GroupMember>> getGroupMembers(String groupKey) async {
     final response = await client.get(
       groupmemberURL,
@@ -202,9 +203,9 @@ class ApiProvider {
     }
   }
 
-  /// Add a Group Member to the Group
-  /// GroupKey: Unique Group Identifier
-  /// Username: Group Member's Username to be added
+  /// Add a Group Member to the Group.
+  /// * GroupKey: Unique Group Identifier
+  /// * Username: Group Member's Username to be added
   Future addGroupMember(String groupKey, String username) async {
     final response = await client.post(groupmemberURL,
         headers: {"Authorization": groupKey},
@@ -221,8 +222,8 @@ class ApiProvider {
     }
   }
   /// Delete a Group Member
-  /// GroupKey: Unique Group Identifier
-  /// Username: Group Member's Username to be added
+  /// * GroupKey: Unique Group Identifier
+  /// * Username: Group Member's Username to be added
   Future deleteGroupMember(String groupKey, String username) async {
     final response = await client.delete(
       "$groupmemberURL?username=$username",
@@ -240,7 +241,7 @@ class ApiProvider {
 
 //Task CRUD Functions
   /// Get a list of the Group's Tasks
-  /// GroupKey: Unique group identifier
+  /// * GroupKey: Unique group identifier
   Future<List<Task>> getTasks(String groupKey) async {
     final response = await client.get(
       taskURL,
@@ -266,10 +267,12 @@ class ApiProvider {
     }
   }
 
-  /// Add a Task to the Group
-  /// GroupKey: Unique Group Identifier
-  /// Index: Position within Group's task list
-  /// Completed: True or False, Has the task been completed
+  /// Add a Task to the Group.
+  /// 
+  /// * Task Name: Name of the task
+  /// * GroupKey: Unique Group Identifier
+  /// * Index: Position within Group's task list
+  /// * Completed: True or False, Has the task been completed
   Future addTask(
       String taskName, String groupKey, int index, bool completed) async {
     final response = await client.post(taskURL,
@@ -312,7 +315,7 @@ class ApiProvider {
   }
 
   /// Delete Task from the Group's List of tasks
-  /// Task Key: Unique Task Identifier
+  /// * Task Key: Unique Task Identifier
   Future deleteTask(String taskKey) async {
     final response = await client.delete(
       taskURL,
@@ -440,13 +443,13 @@ class ApiProvider {
     }
   }
 
-  //Save API key
+  /// Save API key to Device's persistant storage
   saveApiKey(String apiKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('API_Token', apiKey);
     this.apiKey = apiKey;
   }
-
+  /// Get API Key from persistant storage.
   Future<String> getApiKey() async {
     //if(apiKey.isNotEmpty) return apiKey;
     SharedPreferences prefs = await SharedPreferences.getInstance();
