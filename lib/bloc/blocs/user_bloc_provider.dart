@@ -22,7 +22,7 @@ class UserBloc {
     return _instance;
   }
 
-  Observable<User> get getUser => _userGetter.stream;
+  PublishSubject<User> get getUser => _userGetter.stream;
 
   User getUserObject() {
     return _user;

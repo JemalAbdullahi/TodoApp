@@ -12,19 +12,40 @@ import 'package:todolist/models/user.dart';
 class ApiProvider {
   Client client = Client();
   //static String baseURL = "https://taskmanager-group-pro.herokuapp.com/api";
-  static String baseURL = "https://taskmanager-group-stage.herokuapp.com/api";
+  //static Uri baseURL = 'https://taskmanager-group-stage.herokuapp.com/api';
   //static String baseURL = "http://10.0.2.2:5000/api";
-  String signinURL = baseURL + "/signin";
-  String userURL = baseURL + "/user";
-  String taskURL = baseURL + "/tasks";
-  String subtaskURL = baseURL + "/subtasks";
-  String groupURL = baseURL + "/group";
-  String groupmemberURL = baseURL + "/groupmember";
-  String searchURL = baseURL + "/search";
+  Uri signinURL = Uri(
+      scheme: 'https',
+      host: 'taskmanager-group-stage.herokuapp.com',
+      path: '/api/signin');
+  Uri userURL = Uri(
+      scheme: 'https',
+      host: 'taskmanager-group-stage.herokuapp.com',
+      path: '/api/user');
+  Uri taskURL = Uri(
+      scheme: 'https',
+      host: 'taskmanager-group-stage.herokuapp.com',
+      path: '/api/tasks');
+  Uri subtaskURL = Uri(
+      scheme: 'https',
+      host: 'taskmanager-group-stage.herokuapp.com',
+      path: '/api/subtasks');
+  Uri groupURL = Uri(
+      scheme: 'https',
+      host: 'taskmanager-group-stage.herokuapp.com',
+      path: '/api/group');
+  Uri groupmemberURL = Uri(
+      scheme: 'https',
+      host: 'taskmanager-group-stage.herokuapp.com',
+      path: '/api/groupmember');
+  Uri searchURL = Uri(
+      scheme: 'https',
+      host: 'taskmanager-group-stage.herokuapp.com',
+      path: '/api/search');
 
   String apiKey;
 
-/// User CRUD Functions
+  /// User CRUD Functions
   /// Sign Up
   Future<User> registerUser(
       String username,
@@ -108,7 +129,7 @@ class ApiProvider {
     }
   }
 
-/// Group CRUD Functions
+  /// Group CRUD Functions
   /// Get a list of the User's Groups
   Future<List<Group>> getUserGroups() async {
     final _apiKey = await getApiKey();
@@ -221,12 +242,13 @@ class ApiProvider {
       throw Exception(result["Message"]);
     }
   }
+
   /// Delete a Group Member
   /// * GroupKey: Unique Group Identifier
   /// * Username: Group Member's Username to be added
   Future deleteGroupMember(String groupKey, String username) async {
     final response = await client.delete(
-      "$groupmemberURL?username=$username",
+      groupmemberURL.replace(query: "username=$username"),
       headers: {"Authorization": groupKey},
     );
     if (response.statusCode == 200) {
@@ -268,7 +290,7 @@ class ApiProvider {
   }
 
   /// Add a Task to the Group.
-  /// 
+  ///
   /// * Task Name: Name of the task
   /// * GroupKey: Unique Group Identifier
   /// * Index: Position within Group's task list
@@ -449,6 +471,7 @@ class ApiProvider {
     await prefs.setString('API_Token', apiKey);
     this.apiKey = apiKey;
   }
+
   /// Get API Key from persistant storage.
   Future<String> getApiKey() async {
     //if(apiKey.isNotEmpty) return apiKey;
