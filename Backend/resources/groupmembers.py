@@ -43,7 +43,7 @@ class GroupMembers(Resource):
                         group.members.append(member)
                         db.session.commit()
                         result = group.get_members()
-                        return {"status": 'success', 'data': result}, 201
+                        return {"status": 'success', 'data': member}, 201
                     else:
                         return {
                             "status": 'No user found by that username'

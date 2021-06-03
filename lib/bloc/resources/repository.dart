@@ -43,7 +43,7 @@ class Repository {
   Future addGroup(String groupName, bool isPublic) =>
       apiProvider.addGroup(groupName, isPublic);
 
-  Future deleteGroup(String groupKey) => apiProvider.deleteGroup(groupKey);
+  Future<dynamic> deleteGroup(String groupKey) => apiProvider.deleteGroup(groupKey);
 
   //Group Members: Get, Post, Delete
   Future getGroupMembers(String groupKey) =>
@@ -52,7 +52,7 @@ class Repository {
   Future addGroupMember(String groupKey, String username) =>
       apiProvider.addGroupMember(groupKey, username);
 
-  Future deleteGroupMember(String groupKey, String username) =>
+  Future<dynamic> deleteGroupMember(String groupKey, String username) =>
       apiProvider.deleteGroupMember(groupKey, username);
 
   //Tasks

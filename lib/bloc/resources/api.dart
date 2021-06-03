@@ -150,6 +150,7 @@ class ApiProvider {
             groups.add(group);
           } catch (Exception) {
             print(Exception);
+            throw Exception;
           }
         }
         return groups;
@@ -163,6 +164,7 @@ class ApiProvider {
 
   /// Add a Group
   Future addGroup(String groupName, bool isPublic) async {
+    print(groupURL.toString());
     final response = await client.post(groupURL,
         headers: {"Authorization": apiKey},
         body: jsonEncode({
@@ -170,9 +172,9 @@ class ApiProvider {
           "is_public": isPublic,
         }));
     if (response.statusCode == 201) {
-      print("Group " + groupName + " added");
       final Map result = json.decode(response.body);
       Group addedGroup = Group.fromJson(result["data"]);
+      print("Group: " + addedGroup.name + " added");
       return addedGroup.groupKey;
     } else {
       // If that call was not successful, throw an error.
@@ -199,7 +201,7 @@ class ApiProvider {
   }
 
 // GroupMember CRUD Functions
-  // Get a list of the Group's Members.
+  /// Get a list of the Group's Members.
   Future<List<GroupMember>> getGroupMembers(String groupKey) async {
     final response = await client.get(
       groupmemberURL,
@@ -214,7 +216,7 @@ class ApiProvider {
           groupMembers.add(GroupMember.fromJson(json_));
         } catch (Exception) {
           print(Exception);
-          throw Exception;
+          //throw Exception;
         }
       }
       return groupMembers;
@@ -228,16 +230,19 @@ class ApiProvider {
   /// * GroupKey: Unique Group Identifier
   /// * Username: Group Member's Username to be added
   Future addGroupMember(String groupKey, String username) async {
+    print(groupmemberURL.toString());
     final response = await client.post(groupmemberURL,
         headers: {"Authorization": groupKey},
         body: jsonEncode({
           "username": username,
         }));
+    print(json.decode(response.body).toString());
+    final Map result = json.decode(response.body);
     if (response.statusCode == 201) {
-      print("User $username added to Group");
+      GroupMember addedGroupMember = GroupMember.fromJson(result["data"]);
+      print("User ${addedGroupMember.username} added to GroupKey: $groupKey");
     } else {
       // If that call was not successful, throw an error.
-      final Map result = json.decode(response.body);
       print(result["Message"]);
       throw Exception(result["Message"]);
     }
@@ -247,14 +252,18 @@ class ApiProvider {
   /// * GroupKey: Unique Group Identifier
   /// * Username: Group Member's Username to be added
   Future deleteGroupMember(String groupKey, String username) async {
+    Uri gmURLQuery = groupmemberURL.replace(query: "username=$username");
+    print(gmURLQuery.toString());
     final response = await client.delete(
-      groupmemberURL.replace(query: "username=$username"),
+      gmURLQuery,
       headers: {"Authorization": groupKey},
     );
     if (response.statusCode == 200) {
       // If the call to the server was successful
       print("Group Member $username deleted");
-    } else {
+    } else if (response.statusCode == 400 ||
+        response.statusCode == 401 ||
+        response.statusCode == 404) {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
       throw Exception(result["Message"]);
