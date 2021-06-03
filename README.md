@@ -9,7 +9,9 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
 - cd ../../project
 - python run.py
 ### How to update remote DB/Backend:
--
+- first change directory into Backend directory (cd todolist/Backend)
+- Then push to the master branch to the relevant branch production, stage, or heroku (main) branch
+  - git push (heroku/pro/stage) master
 
 
 ## To Do

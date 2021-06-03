@@ -42,8 +42,8 @@ class GroupMembers(Resource):
                                 return {"status": "User is already added"}, 409
                         group.members.append(member)
                         db.session.commit()
-                        result = group.get_members()
-                        return {"status": 'success', 'data': member}, 201
+                        result = User.serialize_public(member)
+                        return {"status": 'success', 'data': result}, 201
                     else:
                         return {
                             "status": 'No user found by that username'

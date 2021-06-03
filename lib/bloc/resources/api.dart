@@ -236,8 +236,8 @@ class ApiProvider {
         body: jsonEncode({
           "username": username,
         }));
-    print(json.decode(response.body).toString());
     final Map result = json.decode(response.body);
+    print(result.toString());
     if (response.statusCode == 201) {
       GroupMember addedGroupMember = GroupMember.fromJson(result["data"]);
       print("User ${addedGroupMember.username} added to GroupKey: $groupKey");

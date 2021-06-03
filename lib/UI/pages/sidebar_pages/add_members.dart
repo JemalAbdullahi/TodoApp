@@ -101,11 +101,11 @@ class _AddMembersPageState extends State<AddMembersPage> {
         IconButton(
           icon: const Icon(Icons.clear, color: Colors.red),
           onPressed: () {
-            if (_searchQueryController == null ||
+            /* if (_searchQueryController == null ||
                 _searchQueryController.text.isEmpty) {
-              Navigator.pop(context);
               return;
-            }
+            } */
+            Navigator.pop(context);
             _clearSearchQuery();
           },
         ),
@@ -151,6 +151,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
     setState(() {
       _searchQueryController.clear();
       searchResults = [];
+      _isSearching = false;
       updateSearchQuery("");
     });
   }
