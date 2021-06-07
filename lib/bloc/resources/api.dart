@@ -291,6 +291,7 @@ class ApiProvider {
           print(Exception);
         }
       }
+      print("getTasks: " + tasks.toString() + " @" + DateTime.now().toString());
       return tasks;
     } else {
       // If that call was not successful, throw an error.
@@ -315,7 +316,7 @@ class ApiProvider {
           "completed": completed
         }));
     if (response.statusCode == 201) {
-      print("Task " + taskName + " added");
+      print("Task " + taskName + " added @" + DateTime.now().toString());
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -354,7 +355,7 @@ class ApiProvider {
     );
     if (response.statusCode == 200) {
       // If the call to the server was successful
-      print("Task deleted");
+      print("Task deleted @" + DateTime.now().toString());
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);

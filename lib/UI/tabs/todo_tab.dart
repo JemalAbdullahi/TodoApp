@@ -5,7 +5,6 @@ import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
-import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
 import 'package:todolist/models/tasks.dart';
@@ -22,14 +21,17 @@ class ToDoTab extends StatefulWidget {
 }
 
 class _ToDoTabState extends State<ToDoTab> {
-  List<Task> tasks;
   TaskBloc taskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     taskBloc = TaskBloc(widget.group.groupKey);
-    tasks = widget.group.tasks;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
@@ -61,7 +63,7 @@ class _ToDoTabState extends State<ToDoTab> {
                 ),
               ),
               AddTask(
-                length: tasks.length,
+                length: widget.group.tasks.length,
                 taskbloc: taskBloc,
               ),
             ],
@@ -76,7 +78,7 @@ class _ToDoTabState extends State<ToDoTab> {
       key: UniqueKey(),
       // Wrap our widget with a StreamBuilder
       stream: taskBloc.getTasks, // pass our Stream getter here
-      initialData: tasks, // provide an initial data
+      initialData: widget.group.tasks, // provide an initial data
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -87,28 +89,32 @@ class _ToDoTabState extends State<ToDoTab> {
               ),
             );
           case ConnectionState.active:
-            print("Active Data: " + snapshot.data.toString());
+            print("Active Data: " +
+                snapshot.data.toString() +
+                " @" +
+                DateTime.now().toString());
             if (snapshot.data.isNotEmpty) {
-              tasks = snapshot.data;
+              widget.group.tasks = snapshot.data;
+              print("Group Task List: " +
+                  widget.group.tasks.toString() +
+                  " @" +
+                  DateTime.now().toString());
               //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
             break;
           case ConnectionState.waiting:
-            print("Waiting Data");
-            if (!snapshot.hasData || snapshot.data.isEmpty) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.data.isNotEmpty) {
-              tasks = snapshot.data;
-              //_setIndex();
-              return _buildList();
-            }
+            print("Waiting Data" +
+                snapshot.data.toString() +
+                " @" +
+                DateTime.now().toString());
+            return Center(child: CircularProgressIndicator());
             break;
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
-              tasks = snapshot.data;
+              widget.group.tasks = snapshot.data;
               //_setIndex();
               return _buildList();
             }
@@ -120,14 +126,14 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildList() {
-    //print("Reorderable List" + tasks.toString());
+    //print("Reorderable List" + widget.group.tasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
       child: ListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 175, bottom: 90),
-        children: tasks.map<Dismissible>((Task item) {
+        children: widget.group.tasks.map<Dismissible>((Task item) {
           return _buildListTile(item);
         }).toList(),
       ),
@@ -135,9 +141,9 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   /* void _setIndex() {
-    for (int i = 0; i < tasks.length; i++) {
+    for (int i = 0; i < widget.group.tasks.length; i++) {
       if (tasks[i].index != i) {
-        tasks[i].index = i;
+        widget.group.tasks[i].index = i;
         repository.updateTask(tasks[i]);
       }
     }
@@ -161,14 +167,14 @@ class _ToDoTabState extends State<ToDoTab> {
         ),
       ),
       onDismissed: (direction) {
-        taskBloc.deleteTask(item.taskKey);
+        deleteTask(item);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Task " + item.title + " dismissed"),
             action: SnackBarAction(
               label: 'Undo',
               onPressed: () {
-                taskBloc.addTask(item.title, item.index, item.completed);
+                reAddTask(item);
               },
             ),
           ),
@@ -179,24 +185,22 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   void removeTask(Task task) {
-    if (tasks.contains(task)) {
+    if (widget.group.tasks.contains(task)) {
       setState(() {
-        tasks.remove(task);
+        widget.group.tasks.remove(task);
         //_setIndex();
       });
     }
   }
 
   void reAddTask(Task task) async {
-    await repository.addTask(
-        task.title, task.groupKey, task.index, task.completed);
-    setState(() {
-      build(context);
-    });
+    await taskBloc.addTask(task.title, task.index, task.completed);
+    setState(() {});
   }
 
   Future<Null> deleteTask(Task task) async {
-    removeTask(task);
-    await repository.deleteTask(task.taskKey);
+    await taskBloc.deleteTask(task.taskKey);
+    setState(() {});
+    //removeTask(task);
   }
 }
