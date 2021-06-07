@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/pages/home_page.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/services.dart';
@@ -12,63 +11,29 @@ import 'package:todolist/models/global.dart';
 main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-  runApp(new MaterialApp(
-    title: 'To Do List',
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-        primaryColorLight: lightBlue,
-        primaryColorDark: darkBlue,
-        fontFamily: 'Segoe UI'),
-    home: new MyApp(),
-  ));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  //unused
-  Future<Widget> loadFromFuture() async {
-    // <fetch data from server. ex. login>
-
-    return Future.value(new AfterSplash());
-  }
-
   @override
   Widget build(BuildContext context) {
-    //Navigate to Sign In page after SplashScreen is displayed
-    return new SplashScreen(
-        navigateAfterSeconds: SignIn(),
-        seconds: 2,
-        title: new Text(
-          'ToDo',
-          style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
-        ),
-        gradientBackground: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [lightBlue, lightBlueGradient],
-        ),
-        styleTextUnderTheLoader: new TextStyle(),
-        onClick: () => print("Flutter Egypt"),
-        loaderColor: Colors.black54);
-  }
-}
-
-class AfterSplash extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-          title: new Text("Welcome In SplashScreen Package"),
-          automaticallyImplyLeading: false),
-      body: new Center(
-        child: new Text(
-          "Done!",
-          style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
-        ),
-      ),
+    return MaterialApp(
+      title: 'To Do List',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          primaryColorLight: lightBlue,
+          primaryColorDark: darkBlue,
+          fontFamily: 'Segoe UI'),
+      home: SignIn(),
+      routes: <String, WidgetBuilder>{
+        '/login': (BuildContext context) => LoginPage(),
+        '/splash': (BuildContext context) => Splash()
+      },
     );
   }
 }
 
+/// Determines whether to direct user to login page or homepage.
 class SignIn extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
@@ -79,11 +44,6 @@ class _SignInState extends State<SignIn> {
   String apiKey = "";
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: signInUser(),
@@ -91,12 +51,7 @@ class _SignInState extends State<SignIn> {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
         }
-        return apiKey.isNotEmpty
-            ? HomePage(logout: logout)
-            : LoginPage(
-                login: login,
-                newUser: false,
-              );
+        return apiKey.isNotEmpty ? Splash() : LoginPage();
       },
     );
   }
@@ -105,7 +60,6 @@ class _SignInState extends State<SignIn> {
     apiKey = await repository.getApiKey();
     if (apiKey.isNotEmpty && apiKey.length > 0) {
       try {
-        print(apiKey);
         userBloc.signinUser("", "", apiKey);
         return apiKey;
       } catch (e) {
@@ -114,16 +68,32 @@ class _SignInState extends State<SignIn> {
     }
     return apiKey;
   }
+}
 
-  void login() {
-    setState(() {
-      build(context);
-    });
+/// Display Splash screen while loading User's groups. Then redirect to Homepage.
+class Splash extends StatelessWidget {
+  /// Update Group list from server, then load homepage.
+  Future<Widget> loadFromFuture() {
+    // <fetch data from server. ex. login>
+    groupBloc.updateGroups();
+    return Future.value(HomePage());
   }
 
-  logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("API_Token", "");
-    setState(() {});
+  @override
+  Widget build(BuildContext context) {
+    return new SplashScreen(
+      navigateAfterFuture: loadFromFuture(),
+      title: new Text(
+        'ToDo',
+        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+      ),
+      gradientBackground: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [lightBlue, lightBlueGradient],
+      ),
+      //styleTextUnderTheLoader: new TextStyle(),
+      loaderColor: Colors.black54,
+    );
   }
 }

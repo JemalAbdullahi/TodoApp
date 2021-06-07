@@ -45,7 +45,7 @@ class ApiProvider {
 
   String apiKey;
 
-  /// User CRUD Functions
+  // User CRUD Functions
   /// Sign Up
   Future<User> registerUser(
       String username,
@@ -475,7 +475,7 @@ class ApiProvider {
   }
 
   /// Save API key to Device's persistant storage
-  saveApiKey(String apiKey) async {
+  Future<void> saveApiKey(String apiKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('API_Token', apiKey);
     this.apiKey = apiKey;

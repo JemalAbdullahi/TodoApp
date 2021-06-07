@@ -30,6 +30,11 @@ class Users(Resource):
         if user:
             return {'Message': 'Email address already exists'}, 409
 
+        user = User.query.filter_by(
+            phonenumber=json_data['phonenumber']).first()
+        if user:
+            return {'Message': 'Phone Number already exists'}, 409
+
         api_key = self.generate_key()
 
         user = User.query.filter_by(api_key=api_key).first()

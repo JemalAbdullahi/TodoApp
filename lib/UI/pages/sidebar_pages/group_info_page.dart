@@ -64,7 +64,6 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
 
   /* void updateGroup() async {
     String groupKey = widget.group.groupKey;
-    print("---Update Group Button Pressed---");
     //delete from members
     for (GroupMember member in initialMembers) {
       if (!widget.group.members.contains(member)) {
@@ -224,7 +223,6 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           onChanged: (newValue) {
             if (!widget.group.isPublic || widget.group.members.length == 1) {
               setState(() {
-                print("Switch to ${!newValue}");
                 widget.group.isPublic = !newValue;
               });
             }

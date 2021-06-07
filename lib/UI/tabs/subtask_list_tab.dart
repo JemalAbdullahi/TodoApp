@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
-import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
@@ -20,7 +19,7 @@ class SubtaskListTab extends StatefulWidget {
 }
 
 class _SubtaskListTabState extends State<SubtaskListTab> {
-  List<Subtask> subtasks = [];
+  List<Subtask> subtasks;
   SubtaskBloc subtaskBloc;
 
   @override
@@ -84,7 +83,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             //print("Active Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
               subtasks = snapshot.data;
-              _setIndex();
+              //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
@@ -95,7 +94,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.data.isNotEmpty) {
               subtasks = snapshot.data;
-              _setIndex();
+              //_setIndex();
               return _buildList();
             }
             break;
@@ -103,7 +102,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             //print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
               subtasks = snapshot.data;
-              _setIndex();
+              //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
@@ -114,7 +113,6 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   }
 
   Widget _buildList() {
-    //print("Reorderable List" + subtasks.toString());
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
@@ -128,17 +126,16 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     );
   }
 
-  void _setIndex() {
+  /* void _setIndex() {
     for (int i = 0; i < subtasks.length; i++) {
       if (subtasks[i].index != i) {
         subtasks[i].index = i;
         repository.updateSubtask(subtasks[i]);
       }
     }
-  }
+  } */
 
   Widget _buildListTile(Subtask subtask) {
-    //print("Build List Tile: " + item.title);
     return Dismissible(
       key: Key(subtask.subtaskKey),
       child: ListTile(
@@ -176,7 +173,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     if (subtasks.contains(subtask)) {
       setState(() {
         subtasks.remove(subtask);
-        _setIndex();
+        //_setIndex();
       });
     }
   }

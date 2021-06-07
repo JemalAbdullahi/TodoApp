@@ -258,15 +258,20 @@ class _AddMembersPageState extends State<AddMembersPage> {
             activeColor: Colors.blue,
             onChanged: (val) {
               if (widget.group.members.contains(searchResults[index])) {
-                _deleteGroupMember(searchResults[index].username);
+                if (widget.group.groupKey != null) {
+                  _deleteGroupMember(searchResults[index].username);
+                }
                 this.setState(() {
                   widget.group.removeGroupMember(searchResults[index]);
                 });
-              } else
-                _addGroupMember(searchResults[index].username);
-              this.setState(() {
-                widget.group.addGroupMember(searchResults[index]);
-              });
+              } else if (!widget.group.members.contains(searchResults[index])) {
+                if (widget.group.groupKey != null) {
+                  _addGroupMember(searchResults[index].username);
+                }
+                this.setState(() {
+                  widget.group.addGroupMember(searchResults[index]);
+                });
+              }
             }),
         /*CircularCheckBox(
           value: widget.group.members.contains(searchResults[index]),

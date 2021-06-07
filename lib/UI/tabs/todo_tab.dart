@@ -90,7 +90,7 @@ class _ToDoTabState extends State<ToDoTab> {
             print("Active Data: " + snapshot.data.toString());
             if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
-              _setIndex();
+              //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
@@ -101,7 +101,7 @@ class _ToDoTabState extends State<ToDoTab> {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
-              _setIndex();
+              //_setIndex();
               return _buildList();
             }
             break;
@@ -109,7 +109,7 @@ class _ToDoTabState extends State<ToDoTab> {
             print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
               tasks = snapshot.data;
-              _setIndex();
+              //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
@@ -134,14 +134,14 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  void _setIndex() {
+  /* void _setIndex() {
     for (int i = 0; i < tasks.length; i++) {
       if (tasks[i].index != i) {
         tasks[i].index = i;
         repository.updateTask(tasks[i]);
       }
     }
-  }
+  } */
 
   Widget _buildListTile(Task item) {
     return Dismissible(
@@ -182,7 +182,7 @@ class _ToDoTabState extends State<ToDoTab> {
     if (tasks.contains(task)) {
       setState(() {
         tasks.remove(task);
-        _setIndex();
+        //_setIndex();
       });
     }
   }

@@ -40,7 +40,7 @@ class GroupList extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupList> {
-  List<Group> groups = [];
+  List<Group> groups = groupBloc.getGroupList();
 
   Size mediaQuery;
 
@@ -58,40 +58,42 @@ class _GroupListState extends State<GroupList> {
 
   StreamBuilder<List<Group>> _buildStreamBuilder() {
     return StreamBuilder(
-        key: UniqueKey(),
-        // Wrap our widget with a StreamBuilder
-        stream: groupBloc.getGroups, // pass our Stream getter here
-        initialData: groups, // provide an initial data
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              print("No Connection");
-              break;
-            case ConnectionState.waiting:
+      key: UniqueKey(),
+      // Wrap our widget with a StreamBuilder
+      stream: groupBloc.getGroups, // pass our Stream getter here
+      initialData: groups, // provide an initial data
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            print("No Connection");
+            return buildGroupListView();
+            break;
+          case ConnectionState.waiting:
+            if (!snapshot.hasData || snapshot.data.isEmpty) {
               print("Waiting Data");
-              if (!snapshot.hasData || snapshot.data.isEmpty)
-                return Center(child: CircularProgressIndicator());
-              else if (snapshot.hasData) {
-                groups = snapshot.data;
-                return buildGroupListView();
-              }
-              break;
-            case ConnectionState.active:
-              print("Active Data: " + snapshot.data.toString());
-              if (snapshot.hasData) {
-                groups = snapshot.data;
-                return buildGroupListView();
-              }
-              break;
-            case ConnectionState.done:
-              print("Done Data: " + snapshot.toString());
-              if (snapshot.hasData) {
-                groups = snapshot.data;
-                return buildGroupListView();
-              }
-          }
-          return SizedBox.shrink();
-        });
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
+              groups = snapshot.data;
+              return buildGroupListView();
+            }
+            break;
+          case ConnectionState.active:
+            print("Active Data: " + snapshot.data.toString());
+            if (snapshot.hasData) {
+              groups = snapshot.data;
+            }
+            return buildGroupListView();
+            break;
+          case ConnectionState.done:
+            print("Done Data: " + snapshot.toString());
+            if (snapshot.hasData) {
+              groups = snapshot.data;
+            }
+            return buildGroupListView();
+        }
+        return SizedBox.shrink();
+      },
+    );
   }
 
   Widget buildGroupListView() {

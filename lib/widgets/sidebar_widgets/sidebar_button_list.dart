@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/group_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
+import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/widgets/sidebar_widgets/my_button.dart';
 
 class SideBarButtonList extends StatefulWidget {
@@ -8,12 +9,10 @@ class SideBarButtonList extends StatefulWidget {
     Key key,
     @required this.offset,
     @required this.menuContainerHeight,
-    @required this.logout,
   }) : super(key: key);
 
   final Offset offset;
   final double menuContainerHeight;
-  final VoidCallback logout;
 
   @override
   _SideBarButtonListState createState() => _SideBarButtonListState();
@@ -40,7 +39,6 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
     for (double x = start; x <= contLimit; x = x + step) {
       limits.add(x);
     }
-    //print(limits.length);
     setState(() {
       limits = limits;
     });
@@ -109,7 +107,10 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
             iconData: Icons.exit_to_app,
             textSize: getSize(2),
             height: (widget.menuContainerHeight) / 4,
-            buttonFunction: widget.logout,
+            buttonFunction: () {
+              repository.saveApiKey("");
+              Navigator.pushNamed(context, '/login');
+            },
           ),
         ],
       ),

@@ -4,10 +4,9 @@ import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback login;
   final bool newUser;
 
-  const LoginPage({Key key, this.login, this.newUser}) : super(key: key);
+  const LoginPage({Key key, this.newUser = false}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -18,11 +17,19 @@ class _LoginPageState extends State<LoginPage> {
   final _signUpFormKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController usernameText = new TextEditingController();
+  final _userFocusNode = new FocusNode();
   TextEditingController passwordText = new TextEditingController();
+  final _passwordFocusNode = new FocusNode();
   TextEditingController emailText = new TextEditingController();
+  final _emailFocusNode = new FocusNode();
   TextEditingController firstnameText = new TextEditingController();
+  final _firstnameFocusNode = new FocusNode();
   TextEditingController lastnameText = new TextEditingController();
+  final _lastnameFocusNode = new FocusNode();
   TextEditingController phonenumberText = new TextEditingController();
+  final _phoneFocusNode = new FocusNode();
+  final _loginFocusNode = new FocusNode();
+  final _signupFocusNode = new FocusNode();
 
   @override
   void initState() {
@@ -45,14 +52,16 @@ class _LoginPageState extends State<LoginPage> {
       IconData iconData,
       String hintText,
       bool obscureText,
-      TextInputAction textInputAction) {
+      TextInputAction textInputAction,
+      FocusNode currentFocusNode,
+      FocusNode nextFocusNode) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _label(label),
         SizedBox(height: 10),
         _buildContainer(controller, keyboardType, iconData, hintText,
-            obscureText, textInputAction),
+            obscureText, textInputAction, currentFocusNode, nextFocusNode)
       ],
     );
   }
@@ -65,13 +74,15 @@ class _LoginPageState extends State<LoginPage> {
       IconData iconData,
       String hintText,
       bool obscureText,
-      TextInputAction textInputAction) {
+      TextInputAction textInputAction,
+      FocusNode currentFocusNode,
+      FocusNode nextFocusNode) {
     return Container(
       alignment: Alignment.centerLeft,
       decoration: boxDecorationStyle,
       height: 60,
       child: _buildTextFormField(controller, keyboardType, iconData, hintText,
-          obscureText, textInputAction),
+          obscureText, textInputAction, currentFocusNode, nextFocusNode),
     );
   }
 
@@ -81,11 +92,17 @@ class _LoginPageState extends State<LoginPage> {
       IconData iconData,
       String hintText,
       bool obscureText,
-      TextInputAction textInputAction) {
+      TextInputAction textInputAction,
+      FocusNode currentFocusNode,
+      FocusNode nextFocusNode) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      focusNode: currentFocusNode,
+      onFieldSubmitted: (value) {
+        _fieldFocusChange(context, currentFocusNode, nextFocusNode);
+      },
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -103,6 +120,17 @@ class _LoginPageState extends State<LoginPage> {
       },
       obscureText: obscureText,
     );
+  }
+
+  Future<void> _fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) async {
+    currentFocus.unfocus();
+    if (nextFocus == _loginFocusNode) {
+      await _handleLoginInput;
+    } else if (nextFocus == _signupFocusNode) {
+      await _handleSignUpInput;
+    } else
+      FocusScope.of(context).requestFocus(nextFocus);
   }
 
   Widget get _buildForgotPasswordBtn {
@@ -130,7 +158,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
         autofocus: false,
         onPressed: () async {
-          print("Attempt Login");
           await _handleLoginInput;
         },
         child: Text(
@@ -158,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await userBloc.signinUser(
           usernameText.text.trim(), passwordText.text.trim(), "");
-      widget.login();
+      Navigator.pushNamed(context, '/splash');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -213,10 +240,20 @@ class _LoginPageState extends State<LoginPage> {
             Icons.account_circle,
             'Enter Username',
             false,
-            TextInputAction.next),
+            TextInputAction.next,
+            _userFocusNode,
+            _passwordFocusNode),
         SizedBox(height: 30),
-        _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
-            'Enter a Password', true, TextInputAction.done),
+        _buildTF(
+            'Password',
+            passwordText,
+            TextInputType.text,
+            Icons.lock,
+            'Enter a Password',
+            true,
+            TextInputAction.done,
+            _passwordFocusNode,
+            _loginFocusNode),
         _buildForgotPasswordBtn,
         _buildLoginBtn('LOGIN'),
         _buildSignupBtn,
@@ -315,11 +352,27 @@ class _LoginPageState extends State<LoginPage> {
       children: <Widget>[
         _signText("Sign Up"),
         SizedBox(height: 30.0),
-        _buildTF('Firstname', firstnameText, TextInputType.name, Icons.person,
-            'Enter a Firstname', false, TextInputAction.next),
+        _buildTF(
+            'Firstname',
+            firstnameText,
+            TextInputType.name,
+            Icons.person,
+            'Enter a Firstname',
+            false,
+            TextInputAction.next,
+            _firstnameFocusNode,
+            _lastnameFocusNode),
         SizedBox(height: 30.0),
-        _buildTF('Lastname', lastnameText, TextInputType.name, Icons.person,
-            'Enter a Lastname', false, TextInputAction.next),
+        _buildTF(
+            'Lastname',
+            lastnameText,
+            TextInputType.name,
+            Icons.person,
+            'Enter a Lastname',
+            false,
+            TextInputAction.next,
+            _lastnameFocusNode,
+            _userFocusNode),
         SizedBox(height: 30.0),
         _buildTF(
             'Username',
@@ -328,16 +381,42 @@ class _LoginPageState extends State<LoginPage> {
             Icons.account_circle,
             'Enter a Username',
             false,
-            TextInputAction.next),
+            TextInputAction.next,
+            _userFocusNode,
+            _phoneFocusNode),
         SizedBox(height: 30),
-        _buildTF('Phone Number', phonenumberText, TextInputType.phone,
-            Icons.phone, 'Enter a Phone Number', false, TextInputAction.next),
+        _buildTF(
+            'Phone Number',
+            phonenumberText,
+            TextInputType.phone,
+            Icons.phone,
+            'Enter a Phone Number',
+            false,
+            TextInputAction.next,
+            _phoneFocusNode,
+            _emailFocusNode),
         SizedBox(height: 30),
-        _buildTF('Email', emailText, TextInputType.emailAddress, Icons.email,
-            'Enter an Email', false, TextInputAction.next),
+        _buildTF(
+            'Email',
+            emailText,
+            TextInputType.emailAddress,
+            Icons.email,
+            'Enter an Email',
+            false,
+            TextInputAction.next,
+            _emailFocusNode,
+            _passwordFocusNode),
         SizedBox(height: 30),
-        _buildTF('Password', passwordText, TextInputType.text, Icons.lock,
-            'Enter a Password', true, TextInputAction.go),
+        _buildTF(
+            'Password',
+            passwordText,
+            TextInputType.text,
+            Icons.lock,
+            'Enter a Password',
+            true,
+            TextInputAction.go,
+            _passwordFocusNode,
+            _signupFocusNode),
         _buildSigningUpBtn('SIGN UP'),
         _buildBackToSignIn
       ],
@@ -392,7 +471,7 @@ class _LoginPageState extends State<LoginPage> {
               phonenumberText.text.trim(),
               null)
           .then((_) {
-        widget.login();
+        Navigator.pushNamed(context, '/splash');
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

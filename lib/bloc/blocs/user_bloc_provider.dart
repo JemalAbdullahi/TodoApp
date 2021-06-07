@@ -90,6 +90,10 @@ class GroupBloc {
     return _groupSubject.stream;
   }
 
+  List<Group> getGroupList() {
+    return _groups;
+  }
+
   Future<Null> deleteGroup(String groupKey) async {
     await repository.deleteGroup(groupKey);
     await updateGroups();
@@ -132,7 +136,7 @@ class TaskBloc {
 
   Future<Null> addTask(String taskName, int index, bool completed) async {
     await repository.addTask(taskName, this._groupKey, index, completed);
-    //await updateTasks();
+    await updateTasks();
   }
 
   Future<Null> deleteTask(String taskKey) async {
