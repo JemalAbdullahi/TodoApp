@@ -8,10 +8,9 @@ import 'package:todolist/widgets/global_widgets/avatar.dart';
 import 'package:todolist/widgets/sidebar_widgets/sidebar_menu.dart';
 
 class HomePage extends StatefulWidget {
-  final VoidCallback logout;
   final String title;
 
-  HomePage({this.title, this.logout});
+  HomePage({this.title});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -66,10 +65,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               ListGroupsTab(),
               //ToDoTab(widget.addTaskDialog, widget.tasksBloc, widget.reAddTask),
-              SideBarMenu(
-                isMenuOpen: isMenuOpen,
-                logout: widget.logout,
-              )
+              SideBarMenu(isMenuOpen: isMenuOpen)
             ],
           ),
         ),
