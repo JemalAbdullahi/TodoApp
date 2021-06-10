@@ -160,25 +160,25 @@ class SubtaskBloc {
 
   SubtaskBloc(String taskKey) {
     this._taskKey = taskKey;
-    _updateSubtasks().then((subtasks) {
-      _subtaskSubject.add(subtasks);
-    });
+    _updateSubtasks();
   }
 
   Stream<List<Subtask>> get getSubtasks => _subtaskSubject.stream;
 
   Future<Null> addSubtask(String subtaskName, int index, bool completed) async {
     await repository.addSubtask(_taskKey, subtaskName, index, completed);
-    await _updateSubtasks().then((subtasks) => _subtaskSubject.add(subtasks));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await _updateSubtasks();
   }
 
   Future<Null> deleteSubtask(String subtaskKey) async {
     await repository.deleteSubtask(subtaskKey);
-    await _updateSubtasks().then((subtasks) => _subtaskSubject.add(subtasks));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await _updateSubtasks();
   }
 
-  Future<List<Subtask>> _updateSubtasks() async {
-    return await repository.getSubtasks(_taskKey);
+  Future<Null> _updateSubtasks() async {
+    await repository.getSubtasks(_taskKey).then((subtasks){_subtaskSubject.add(subtasks);});
   }
 }
 

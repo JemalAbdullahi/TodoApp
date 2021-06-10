@@ -19,14 +19,19 @@ class SubtaskListTab extends StatefulWidget {
 }
 
 class _SubtaskListTabState extends State<SubtaskListTab> {
-  List<Subtask> subtasks;
+  //List<Subtask> subtasks;
   SubtaskBloc subtaskBloc;
 
   @override
-  Widget build(BuildContext context) {
-    print("Building SubtaskList Context");
+  void initState(){
     subtaskBloc = SubtaskBloc(widget.task.taskKey);
-    subtasks = widget.task.subtasks;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //print("Building SubtaskList Context");
+    //subtasks = widget.task.subtasks;
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
@@ -55,7 +60,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
                     TitleCard(title: 'Subtasks', child: _buildStreamBuilder()),
               ),
               AddSubtask(
-                length: subtasks.length,
+                length: widget.task.subtasks.length,
                 subtaskBloc: subtaskBloc,
               ),
             ],
@@ -69,7 +74,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     return StreamBuilder(
       // Wrap our widget with a StreamBuilder
       stream: subtaskBloc.getSubtasks, // pass our Stream getter here
-      initialData: subtasks, // provide an initial data
+      initialData: widget.task.subtasks, // provide an initial data
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -80,28 +85,32 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
               ),
             );
           case ConnectionState.active:
-            //print("Active Data: " + snapshot.toString());
+            print("Active Data: " +
+                snapshot.data.toString() +
+                " @" +
+                DateTime.now().toString());
             if (snapshot.data.isNotEmpty) {
-              subtasks = snapshot.data;
+              widget.task.subtasks = snapshot.data;
+              print("Group Task List: " +
+                  widget.task.subtasks.toString() +
+                  " @" +
+                  DateTime.now().toString());
               //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
             break;
           case ConnectionState.waiting:
-            //print("Waiting Data: " + snapshot.toString());
-            if (!snapshot.hasData || snapshot.data.isEmpty) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.data.isNotEmpty) {
-              subtasks = snapshot.data;
-              //_setIndex();
-              return _buildList();
-            }
+            print("Waiting Data" +
+                snapshot.data.toString() +
+                " @" +
+                DateTime.now().toString());
+            return Center(child: CircularProgressIndicator());
             break;
           case ConnectionState.done:
-            //print("Done Data: " + snapshot.toString());
+            print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
-              subtasks = snapshot.data;
+              widget.task.subtasks = snapshot.data;
               //_setIndex();
               return _buildList();
             }
@@ -119,7 +128,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       child: ListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 175, bottom: 90),
-        children: subtasks.map<Dismissible>((Subtask item) {
+        children: widget.task.subtasks.map<Dismissible>((Subtask item) {
           return _buildListTile(item);
         }).toList(),
       ),
@@ -153,14 +162,13 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         ),
       ),
       onDismissed: (direction) {
-        subtaskBloc.deleteSubtask(subtask.subtaskKey);
+        deleteSubtask(subtask);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Subtask " + subtask.title + " dismissed"),
           action: SnackBarAction(
             label: 'Undo',
             onPressed: () {
-              subtaskBloc.addSubtask(
-                  subtask.title, subtask.index, subtask.completed);
+              reAddSubtask(subtask);
             },
           ),
         ));
@@ -170,23 +178,21 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   }
 
   void removeSubtask(Subtask subtask) {
-    if (subtasks.contains(subtask)) {
+    if (widget.task.subtasks.contains(subtask)) {
       setState(() {
-        subtasks.remove(subtask);
+        widget.task.subtasks.remove(subtask);
         //_setIndex();
       });
     }
   }
 
   void reAddSubtask(Subtask subtask) async {
-    await subtaskBloc.addSubtask(
-        subtask.title, subtask.index, subtask.completed);
-    setState(() {
-      build(context);
-    });
+    await subtaskBloc.addSubtask(subtask.title, subtask.index, subtask.completed);
+    setState(() {});
   }
 
-  Future<Null> deleteTask(Subtask subtask) async {
+  Future<Null> deleteSubtask(Subtask subtask) async {
     await subtaskBloc.deleteSubtask(subtask.subtaskKey);
+    setState(() {});
   }
 }

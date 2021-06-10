@@ -17,7 +17,6 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
-  
   TextEditingController controller = new TextEditingController();
   FocusNode textfieldFocus = new FocusNode();
 
@@ -100,9 +99,9 @@ class _AddTaskState extends State<AddTask> {
 
   void addTask() async {
     if (controller.text.isNotEmpty) {
-      await widget.taskbloc.addTask(controller.text, widget.length, false);
       controller.clear();
       textfieldFocus.unfocus();
+      await widget.taskbloc.addTask(controller.text, widget.length, false);
       //widget.taskbloc.updateTasks();
     }
   }
