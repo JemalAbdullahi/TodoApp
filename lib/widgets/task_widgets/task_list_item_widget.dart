@@ -42,7 +42,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
         height: 90,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: darkBlue,
+          color: darkGreenBlue,
           boxShadow: [
             new BoxShadow(
               color: Colors.black.withOpacity(0.5),
@@ -70,7 +70,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                 child: Text(
                   widget.task.title,
                   style: toDoListTileStyle,
-                  maxLines: 2,
+                  maxLines: 3,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                 ),

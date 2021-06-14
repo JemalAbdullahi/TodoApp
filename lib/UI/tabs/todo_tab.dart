@@ -45,12 +45,13 @@ class _ToDoTabState extends State<ToDoTab> {
             backgroundColor: Colors.white,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, size: 32.0, color: darkBlueGradient),
               onPressed: () {
                 Navigator.pop(context);
               },
               color: Colors.blueGrey,
             ),
+            actions: [],
           ),
           body: Stack(
             children: <Widget>[

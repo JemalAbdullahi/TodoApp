@@ -107,6 +107,7 @@ class _AddSubtaskState extends State<AddSubtask> {
       await widget.subtaskBloc
           .addSubtask(controller.text, widget.length, false);
       controller.clear();
+      textfieldFocus.unfocus();
     }
   }
 }

@@ -54,10 +54,10 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
           body: Stack(
             children: <Widget>[
               BackgroundColorContainer(
-                startColor: darkBlueGradient,
-                endColor: darkBlue,
+                startColor: lightGreenBlue,
+                endColor: darkGreenBlue,
                 widget:
-                    TitleCard(title: 'Subtasks', child: _buildStreamBuilder()),
+                    TitleCard(title: 'To Do', child: _buildStreamBuilder()),
               ),
               AddSubtask(
                 length: widget.task.subtasks.length,

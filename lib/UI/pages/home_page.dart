@@ -35,8 +35,12 @@ class _HomePageState extends State<HomePage> {
           iconTheme: IconThemeData(color: Colors.black),
           leading: IconButton(
             icon: isMenuOpen
-                ? Icon(Icons.arrow_back)
-                : Icon(Icons.settings, size: 32.0),
+                ? Icon(Icons.arrow_back, color: darkBlueGradient, size: 32.0)
+                : Icon(
+                    Icons.settings,
+                    size: 32.0,
+                    color: darkBlueGradient,
+                  ),
             onPressed: () {
               setState(() {
                 isMenuOpen = !isMenuOpen;
@@ -47,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: Icon(
                 Icons.group_add,
-                color: Colors.black,
+                color: darkBlueGradient,
                 size: 32.0,
               ),
               onPressed: () {
