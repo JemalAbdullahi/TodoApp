@@ -14,34 +14,17 @@ class ApiProvider {
   //static String baseURL = "https://taskmanager-group-pro.herokuapp.com/api";
   //static Uri baseURL = 'https://taskmanager-group-stage.herokuapp.com/api';
   //static String baseURL = "http://10.0.2.2:5000/api";
-  Uri signinURL = Uri(
-      scheme: 'https',
-      host: 'taskmanager-group-stage.herokuapp.com',
-      path: '/api/signin');
-  Uri userURL = Uri(
-      scheme: 'https',
-      host: 'taskmanager-group-stage.herokuapp.com',
-      path: '/api/user');
-  Uri taskURL = Uri(
-      scheme: 'https',
-      host: 'taskmanager-group-stage.herokuapp.com',
-      path: '/api/tasks');
-  Uri subtaskURL = Uri(
-      scheme: 'https',
-      host: 'taskmanager-group-stage.herokuapp.com',
-      path: '/api/subtasks');
-  Uri groupURL = Uri(
-      scheme: 'https',
-      host: 'taskmanager-group-stage.herokuapp.com',
-      path: '/api/group');
-  Uri groupmemberURL = Uri(
-      scheme: 'https',
-      host: 'taskmanager-group-stage.herokuapp.com',
-      path: '/api/groupmember');
-  Uri searchURL = Uri(
-      scheme: 'https',
-      host: 'taskmanager-group-stage.herokuapp.com',
-      path: '/api/search');
+  static String stageHost = 'taskmanager-group-stage.herokuapp.com';
+  static String productionHost = 'taskmanager-group-pro.herokuapp.com';
+  static String localhost = "http://10.0.2.2:5000/api";
+  Uri signinURL = Uri(scheme: 'https', host: stageHost, path: '/api/signin');
+  Uri userURL = Uri(scheme: 'https', host: stageHost, path: '/api/user');
+  Uri taskURL = Uri(scheme: 'https', host: stageHost, path: '/api/tasks');
+  Uri subtaskURL = Uri(scheme: 'https', host: stageHost, path: '/api/subtasks');
+  Uri groupURL = Uri(scheme: 'https', host: stageHost, path: '/api/group');
+  Uri groupmemberURL =
+      Uri(scheme: 'https', host: stageHost, path: '/api/groupmember');
+  Uri searchURL = Uri(scheme: 'https', host: stageHost, path: '/api/search');
 
   String apiKey;
 

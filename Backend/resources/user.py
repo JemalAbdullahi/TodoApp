@@ -11,7 +11,7 @@ class Users(Resource):
         users = User.query.all()
         user_list = []
         for user in users:
-            user_list.append(user.serialize_public())
+            user_list.append(user.serialize())
         return {"status": user_list}, 200
 
     # Create New User (Sign Up/register User)
