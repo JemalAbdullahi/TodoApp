@@ -40,7 +40,7 @@ class SubTasks(Resource):
                 result = SubTask.serialize(subtask)
                 return {"status": 'success', 'data': result}, 201
             else:
-                return {"Messege": "No task found with that id"}, 404
+                return {"Messege": "No task found with that key"}, 404
 
     # List Subtasks
     def get(self):
@@ -55,8 +55,9 @@ class SubTasks(Resource):
                 subtasks = SubTask.query.filter_by(task_id=task.id).all()
                 for subtask in subtasks:
                     result.append(SubTask.serialize(subtask))
-
-            return {"status": 'success', 'data': result}, 200
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {"Message": "No task found with that task key"}, 404
 
     def put(self):
         header = request.headers["Authorization"]

@@ -23,10 +23,12 @@ class ToDoTab extends StatefulWidget {
 class _ToDoTabState extends State<ToDoTab> {
   TaskBloc taskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  int orderBy;
 
   @override
   void initState() {
     taskBloc = TaskBloc(widget.group.groupKey);
+    orderBy = 1;
     super.initState();
   }
 
@@ -51,7 +53,9 @@ class _ToDoTabState extends State<ToDoTab> {
               },
               color: Colors.blueGrey,
             ),
-            actions: [],
+            actions: [
+              _popupMenuButton(),
+            ],
           ),
           body: Stack(
             children: <Widget>[
@@ -96,11 +100,6 @@ class _ToDoTabState extends State<ToDoTab> {
                 DateTime.now().toString());
             if (snapshot.data.isNotEmpty) {
               widget.group.tasks = snapshot.data;
-              print("Group Task List: " +
-                  widget.group.tasks.toString() +
-                  " @" +
-                  DateTime.now().toString());
-              //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
@@ -116,7 +115,6 @@ class _ToDoTabState extends State<ToDoTab> {
             print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
               widget.group.tasks = snapshot.data;
-              //_setIndex();
               return _buildList();
             }
             return SizedBox.shrink();
@@ -127,7 +125,7 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildList() {
-    //print("Reorderable List" + widget.group.tasks.toString());
+    _orderBy(orderBy);
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
@@ -140,15 +138,6 @@ class _ToDoTabState extends State<ToDoTab> {
       ),
     );
   }
-
-  /* void _setIndex() {
-    for (int i = 0; i < widget.group.tasks.length; i++) {
-      if (tasks[i].index != i) {
-        widget.group.tasks[i].index = i;
-        repository.updateTask(tasks[i]);
-      }
-    }
-  } */
 
   Widget _buildListTile(Task item) {
     return Dismissible(
@@ -189,7 +178,6 @@ class _ToDoTabState extends State<ToDoTab> {
     if (widget.group.tasks.contains(task)) {
       setState(() {
         widget.group.tasks.remove(task);
-        //_setIndex();
       });
     }
   }
@@ -202,6 +190,80 @@ class _ToDoTabState extends State<ToDoTab> {
   Future<Null> deleteTask(Task task) async {
     await taskBloc.deleteTask(task.taskKey);
     setState(() {});
-    //removeTask(task);
+  }
+
+  PopupMenuButton _popupMenuButton() {
+    return PopupMenuButton<int>(
+      icon: Icon(Icons.sort, size: 32.0, color: darkBlueGradient),
+      iconSize: 24.0,
+      color: darkGreenBlue,
+      offset: Offset(0, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15.0),
+        ),
+      ),
+      onSelected: (value) {
+        setState(() {
+          orderBy = value;
+        });
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem<int>(
+          value: 0,
+          child: Row(children: [
+            Icon(Icons.sort_by_alpha),
+            SizedBox(width: 6.0),
+            Text(
+              "Alphabetical",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+        PopupMenuItem<int>(
+          value: 1,
+          child: Row(children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 6.0),
+            Text(
+              "Recent-Oldest",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+        PopupMenuItem<int>(
+          value: 2,
+          child: Row(children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 6.0),
+            Text(
+              "Oldest-Recent",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+      ],
+    );
+  }
+
+  _orderBy(int value) {
+    orderBy = value;
+    switch (value) {
+      case 0:
+        widget.group.tasks.sort(
+            (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        break;
+      case 1:
+        widget.group.tasks
+            .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
+        print(widget.group.tasks.toString());
+        break;
+      case 2:
+        widget.group.tasks
+            .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
+        print(widget.group.tasks.toString());
+        break;
+      default:
+    }
   }
 }

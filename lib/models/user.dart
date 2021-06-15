@@ -5,6 +5,7 @@ class User extends GroupMember {
   final int id;
   final String password;
   final String apiKey;
+  
   //List<Group> groups;
 
   User(

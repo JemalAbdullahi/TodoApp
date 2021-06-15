@@ -47,7 +47,7 @@ class User(db.Model):
 
     def serialize(self):
         if self.time_updated is None:
-            time_updated = ""
+            time_updated = self.time_created.isoformat()
         else:
             time_updated = self.time_updated.isoformat()
         return {
@@ -119,7 +119,7 @@ class Task(db.Model):
 
     def serialize(self):
         if self.time_updated is None:
-            time_updated = ""
+            time_updated = self.time_created.isoformat()
         else:
             time_updated = self.time_updated.isoformat()
         return {
@@ -183,7 +183,7 @@ class SubTask(db.Model):
 
     def serialize(self):
         if self.time_updated is None:
-            time_updated = ""
+            time_updated = self.time_created.isoformat()
         else:
             time_updated = self.time_updated.isoformat()
         return {
@@ -224,7 +224,7 @@ class Group(db.Model):
 
     def serialize(self):
         if self.time_updated is None:
-            time_updated = ""
+            time_updated = self.time_created.isoformat()
         else:
             time_updated = self.time_updated.isoformat()
         return {

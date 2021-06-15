@@ -21,17 +21,17 @@ class SubtaskListTab extends StatefulWidget {
 class _SubtaskListTabState extends State<SubtaskListTab> {
   //List<Subtask> subtasks;
   SubtaskBloc subtaskBloc;
+  int orderBy;
 
   @override
-  void initState(){
+  void initState() {
     subtaskBloc = SubtaskBloc(widget.task.taskKey);
+    orderBy = 0;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    //print("Building SubtaskList Context");
-    //subtasks = widget.task.subtasks;
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
@@ -44,20 +44,20 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             backgroundColor: Colors.white,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, size: 32.0, color: darkBlueGradient),
               onPressed: () {
                 Navigator.pop(context);
               },
               color: Colors.blueGrey,
             ),
+            actions: [_popupMenuButton()],
           ),
           body: Stack(
             children: <Widget>[
               BackgroundColorContainer(
                 startColor: lightGreenBlue,
                 endColor: darkGreenBlue,
-                widget:
-                    TitleCard(title: 'To Do', child: _buildStreamBuilder()),
+                widget: TitleCard(title: 'To Do', child: _buildStreamBuilder()),
               ),
               AddSubtask(
                 length: widget.task.subtasks.length,
@@ -78,7 +78,6 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            //print("None Data: " + snapshot.toString());
             return Container(
               child: Center(
                 child: Text("No Connection Message"),
@@ -95,7 +94,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
                   widget.task.subtasks.toString() +
                   " @" +
                   DateTime.now().toString());
-              //_setIndex();
+
               return _buildList();
             }
             return SizedBox.shrink();
@@ -111,7 +110,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
               widget.task.subtasks = snapshot.data;
-              //_setIndex();
+
               return _buildList();
             }
             return SizedBox.shrink();
@@ -122,6 +121,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   }
 
   Widget _buildList() {
+    _orderBy(orderBy);
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
@@ -134,15 +134,6 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       ),
     );
   }
-
-  /* void _setIndex() {
-    for (int i = 0; i < subtasks.length; i++) {
-      if (subtasks[i].index != i) {
-        subtasks[i].index = i;
-        repository.updateSubtask(subtasks[i]);
-      }
-    }
-  } */
 
   Widget _buildListTile(Subtask subtask) {
     return Dismissible(
@@ -158,7 +149,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         color: darkRed,
         child: Icon(
           Icons.delete,
-          color: lightBlueGradient,
+          color: lightGreenBlue,
         ),
       ),
       onDismissed: (direction) {
@@ -181,18 +172,91 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     if (widget.task.subtasks.contains(subtask)) {
       setState(() {
         widget.task.subtasks.remove(subtask);
-        //_setIndex();
       });
     }
   }
 
   void reAddSubtask(Subtask subtask) async {
-    await subtaskBloc.addSubtask(subtask.title, subtask.index, subtask.completed);
+    await subtaskBloc.addSubtask(
+        subtask.title, subtask.index, subtask.completed);
     setState(() {});
   }
 
   Future<Null> deleteSubtask(Subtask subtask) async {
     await subtaskBloc.deleteSubtask(subtask.subtaskKey);
     setState(() {});
+  }
+
+  PopupMenuButton _popupMenuButton() {
+    return PopupMenuButton<int>(
+      icon: Icon(Icons.sort, size: 32.0, color: darkBlueGradient),
+      iconSize: 24.0,
+      color: darkGreenBlue,
+      offset: Offset(0, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15.0),
+        ),
+      ),
+      onSelected: (value) {
+        setState(() {
+          orderBy = value;
+        });
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem<int>(
+          value: 0,
+          child: Row(children: [
+            Icon(Icons.sort_by_alpha),
+            SizedBox(width: 6.0),
+            Text(
+              "Alphabetical",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+        PopupMenuItem<int>(
+          value: 1,
+          child: Row(children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 6.0),
+            Text(
+              "Recent-Oldest",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+        PopupMenuItem<int>(
+          value: 2,
+          child: Row(children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 6.0),
+            Text(
+              "Oldest-Recent",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+      ],
+    );
+  }
+
+  _orderBy(int value) {
+    orderBy = value;
+    switch (value) {
+      case 0:
+        widget.task.subtasks.sort(
+            (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        break;
+      case 1:
+        widget.task.subtasks
+            .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
+        break;
+      case 2:
+        widget.task.subtasks
+            .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
+        break;
+      default:
+    }
   }
 }

@@ -25,6 +25,12 @@ class Task {
   /// Has the Task been completed
   bool completed;
 
+  /// Time Created
+  DateTime timeCreated;
+
+  /// Time Updated
+  DateTime timeUpdated;
+
   /// Not Implemented
   String repeats;
 
@@ -43,19 +49,22 @@ class Task {
       this.id,
       this.note,
       this.taskKey,
-      this.index});
+      this.index,
+      this.timeCreated,
+      this.timeUpdated});
 
   factory Task.fromJson(Map<String, dynamic> parsedJson) {
     return Task(
-      id: parsedJson['id'],
-      title: parsedJson['title'],
-      index: parsedJson['index'],
-      taskKey: parsedJson['task_key'],
-      completed: parsedJson['completed'],
-      note: parsedJson['note'],
-      groupKey: parsedJson['group_key'],
-      groupName: parsedJson['group_name'],
-    );
+        id: parsedJson['id'],
+        title: parsedJson['title'],
+        index: parsedJson['index'],
+        taskKey: parsedJson['task_key'],
+        completed: parsedJson['completed'],
+        note: parsedJson['note'],
+        groupKey: parsedJson['group_key'],
+        groupName: parsedJson['group_name'],
+        timeCreated: DateTime.parse(parsedJson['time_created']),
+        timeUpdated: DateTime.parse(parsedJson['time_updated']));
   }
 
   @override
