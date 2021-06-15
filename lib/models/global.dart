@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 Color loginBlue = new Color(0xff56C7F1);
 Color lightBlue = new Color(0xffceecf2);
 Color lightBlueGradient = new Color(0xff00D4FF);
+Color lightGreenBlue = Color(0xff4AD2EE);
+Color darkGreenBlue = Color(0xff006F85);
+Color darkerGreenBlue = Color(0xff006175);
 Color darkBlue = new Color(0xff023059);
 Color darkBlueGradient = new Color(0xff0087FF);
 Color red = new Color(0xfff20f38);
-Color darkRed = new Color(0xffbf0426);
+Color darkRed = new Color(0xffc70000);
 Color brownRed = new Color(0xff590209);
 
 final appTitleStyle = TextStyle(

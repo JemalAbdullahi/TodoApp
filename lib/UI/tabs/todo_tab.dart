@@ -5,7 +5,6 @@ import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
-import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
 import 'package:todolist/models/tasks.dart';
@@ -22,14 +21,19 @@ class ToDoTab extends StatefulWidget {
 }
 
 class _ToDoTabState extends State<ToDoTab> {
-  List<Task> tasks;
   TaskBloc taskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  int orderBy;
+
+  @override
+  void initState() {
+    taskBloc = TaskBloc(widget.group.groupKey);
+    orderBy = 1;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    taskBloc = TaskBloc(widget.group.groupKey);
-    tasks = widget.group.tasks;
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
@@ -43,12 +47,15 @@ class _ToDoTabState extends State<ToDoTab> {
             backgroundColor: Colors.white,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, size: 32.0, color: darkBlueGradient),
               onPressed: () {
                 Navigator.pop(context);
               },
               color: Colors.blueGrey,
             ),
+            actions: [
+              _popupMenuButton(),
+            ],
           ),
           body: Stack(
             children: <Widget>[
@@ -61,7 +68,7 @@ class _ToDoTabState extends State<ToDoTab> {
                 ),
               ),
               AddTask(
-                length: tasks.length,
+                length: widget.group.tasks.length,
                 taskbloc: taskBloc,
               ),
             ],
@@ -76,36 +83,38 @@ class _ToDoTabState extends State<ToDoTab> {
       key: UniqueKey(),
       // Wrap our widget with a StreamBuilder
       stream: taskBloc.getTasks, // pass our Stream getter here
-      initialData: tasks, // provide an initial data
+      initialData: widget.group.tasks, // provide an initial data
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            //print("None Data: " + snapshot.toString());
+            print("None Data");
             return Container(
               child: Center(
                 child: Text("No Connection Message"),
               ),
             );
           case ConnectionState.active:
-            //print("Active Data: " + snapshot.toString());
+            print("Active Data: " +
+                snapshot.data.toString() +
+                " @" +
+                DateTime.now().toString());
             if (snapshot.data.isNotEmpty) {
-              tasks = snapshot.data;
-              _setIndex();
+              widget.group.tasks = snapshot.data;
               return _buildList();
             }
             return SizedBox.shrink();
             break;
           case ConnectionState.waiting:
-            //print("Waiting Data: " + snapshot.toString());
-            if (tasks.length == 0) {
-              return SizedBox.shrink();
-            }
+            print("Waiting Data" +
+                snapshot.data.toString() +
+                " @" +
+                DateTime.now().toString());
+            return Center(child: CircularProgressIndicator());
             break;
           case ConnectionState.done:
-            //print("Done Data: " + snapshot.toString());
+            print("Done Data: " + snapshot.toString());
             if (snapshot.data.isNotEmpty) {
-              tasks = snapshot.data;
-              _setIndex();
+              widget.group.tasks = snapshot.data;
               return _buildList();
             }
             return SizedBox.shrink();
@@ -116,31 +125,21 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildList() {
-    //print("Reorderable List" + tasks.toString());
+    _orderBy(orderBy);
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
       child: ListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 175, bottom: 90),
-        children: tasks.map<Dismissible>((Task item) {
+        children: widget.group.tasks.map<Dismissible>((Task item) {
           return _buildListTile(item);
         }).toList(),
       ),
     );
   }
 
-  void _setIndex() {
-    for (int i = 0; i < tasks.length; i++) {
-      if (tasks[i].index != i) {
-        tasks[i].index = i;
-        repository.updateTask(tasks[i]);
-      }
-    }
-  }
-
   Widget _buildListTile(Task item) {
-    //print("Build List Tile: " + item.title);
     return Dismissible(
       key: Key(item.taskKey),
       child: ListTile(
@@ -158,14 +157,14 @@ class _ToDoTabState extends State<ToDoTab> {
         ),
       ),
       onDismissed: (direction) {
-        taskBloc.deleteTask(item.taskKey);
+        deleteTask(item);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Task " + item.title + " dismissed"),
             action: SnackBarAction(
               label: 'Undo',
               onPressed: () {
-                taskBloc.addTask(item.title, item.index, item.completed);
+                reAddTask(item);
               },
             ),
           ),
@@ -176,24 +175,95 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   void removeTask(Task task) {
-    if (tasks.contains(task)) {
+    if (widget.group.tasks.contains(task)) {
       setState(() {
-        tasks.remove(task);
-        _setIndex();
+        widget.group.tasks.remove(task);
       });
     }
   }
 
   void reAddTask(Task task) async {
-    await repository.addTask(
-        task.title, task.groupKey, task.index, task.completed);
-    setState(() {
-      build(context);
-    });
+    await taskBloc.addTask(task.title, task.index, task.completed);
+    setState(() {});
   }
 
   Future<Null> deleteTask(Task task) async {
-    removeTask(task);
-    await repository.deleteTask(task.taskKey);
+    await taskBloc.deleteTask(task.taskKey);
+    setState(() {});
+  }
+
+  PopupMenuButton _popupMenuButton() {
+    return PopupMenuButton<int>(
+      icon: Icon(Icons.sort, size: 32.0, color: darkBlueGradient),
+      iconSize: 24.0,
+      color: darkGreenBlue,
+      offset: Offset(0, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15.0),
+        ),
+      ),
+      onSelected: (value) {
+        setState(() {
+          orderBy = value;
+        });
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem<int>(
+          value: 0,
+          child: Row(children: [
+            Icon(Icons.sort_by_alpha),
+            SizedBox(width: 6.0),
+            Text(
+              "Alphabetical",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+        PopupMenuItem<int>(
+          value: 1,
+          child: Row(children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 6.0),
+            Text(
+              "Recent-Oldest",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+        PopupMenuItem<int>(
+          value: 2,
+          child: Row(children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 6.0),
+            Text(
+              "Oldest-Recent",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
+      ],
+    );
+  }
+
+  _orderBy(int value) {
+    orderBy = value;
+    switch (value) {
+      case 0:
+        widget.group.tasks.sort(
+            (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        break;
+      case 1:
+        widget.group.tasks
+            .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
+        print(widget.group.tasks.toString());
+        break;
+      case 2:
+        widget.group.tasks
+            .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
+        print(widget.group.tasks.toString());
+        break;
+      default:
+    }
   }
 }

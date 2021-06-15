@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "c:\\Users\\Jemal\\projects\\flutter-app-test\\todolist\\Backend\\env\\Scripts\\python.exe",
+  "python.pythonPath": "C:/Python/Python39/python.exe",
   "python.autoComplete.extraPaths": [
     "C:\\Users\\Jemal\\projects\\flutter-app-test\\todolist\\Backend"
   ],
@@ -8,6 +8,6 @@
 "python.linting.enabled": false,
 "python.languageServer": "Jedi",
 "python.analysis.extraPaths": [
-  "C:\\Users\\Jemal\\projects\\flutter-app-test\\todolist\\Backend"
+  "C:\\Python\\Python39"
 ]
 }

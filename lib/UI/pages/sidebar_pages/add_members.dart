@@ -1,4 +1,4 @@
-import 'package:circular_check_box/circular_check_box.dart';
+//import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
@@ -101,11 +101,11 @@ class _AddMembersPageState extends State<AddMembersPage> {
         IconButton(
           icon: const Icon(Icons.clear, color: Colors.red),
           onPressed: () {
-            if (_searchQueryController == null ||
+            /* if (_searchQueryController == null ||
                 _searchQueryController.text.isEmpty) {
-              Navigator.pop(context);
               return;
-            }
+            } */
+            Navigator.pop(context);
             _clearSearchQuery();
           },
         ),
@@ -151,6 +151,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
     setState(() {
       _searchQueryController.clear();
       searchResults = [];
+      _isSearching = false;
       updateSearchQuery("");
     });
   }
@@ -171,32 +172,32 @@ class _AddMembersPageState extends State<AddMembersPage> {
       itemBuilder: (context, index) {
         final member = widget.group.members[index];
         return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0),
-        child: Dismissible(
-          key: Key(member.username),
-          direction: DismissDirection.down,
-          onDismissed: (direction) {
-            setState(() {
-              widget.group.removeGroupMember(member);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    Text("Removed ${member.username}"),
-              ),
-            );
-          },
-          child: Column(
-            children: [
-              widget.group.members[index].cAvatar(radius: 25),
-              Text(
-                widget.group.members[index].firstname,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+          child: Dismissible(
+            key: Key(member.username),
+            direction: DismissDirection.down,
+            onDismissed: (direction) async {
+              setState(() {
+                widget.group.removeGroupMember(member);
+              });
+              _deleteGroupMember(member.username);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Removed ${member.username}"),
+                ),
+              );
+            },
+            child: Column(
+              children: [
+                widget.group.members[index].cAvatar(radius: 25),
+                Text(
+                  widget.group.members[index].firstname,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
-      );
+        );
       },
       itemCount: widget.group.members.length,
     );
@@ -251,7 +252,28 @@ class _AddMembersPageState extends State<AddMembersPage> {
         title: Text(
             "${searchResults[index].firstname} ${searchResults[index].lastname}"),
         subtitle: Text(searchResults[index].username),
-        trailing: CircularCheckBox(
+        trailing: Checkbox(
+            value: widget.group.members.contains(searchResults[index]),
+            checkColor: Colors.white,
+            activeColor: Colors.blue,
+            onChanged: (val) {
+              if (widget.group.members.contains(searchResults[index])) {
+                if (widget.group.groupKey != null) {
+                  _deleteGroupMember(searchResults[index].username);
+                }
+                this.setState(() {
+                  widget.group.removeGroupMember(searchResults[index]);
+                });
+              } else if (!widget.group.members.contains(searchResults[index])) {
+                if (widget.group.groupKey != null) {
+                  _addGroupMember(searchResults[index].username);
+                }
+                this.setState(() {
+                  widget.group.addGroupMember(searchResults[index]);
+                });
+              }
+            }),
+        /*CircularCheckBox(
           value: widget.group.members.contains(searchResults[index]),
           checkColor: Colors.white,
           activeColor: Colors.blue,
@@ -263,10 +285,27 @@ class _AddMembersPageState extends State<AddMembersPage> {
             } else
               widget.group.addGroupMember(searchResults[index]);
           }),
-        ),
+        ),*/
       ),
       separatorBuilder: (context, index) => Divider(),
       itemCount: searchResults.length,
     );
+  }
+
+  //delete memeber from group dbtable
+  Future<void> _deleteGroupMember(String username) async {
+    try {
+      await repository.deleteGroupMember(widget.group.groupKey, username);
+    } catch (e) {
+      print(e.message);
+    }
+  }
+
+  Future<void> _addGroupMember(String username) async {
+    try {
+      await repository.addGroupMember(widget.group.groupKey, username);
+    } catch (e) {
+      print(e);
+    }
   }
 }

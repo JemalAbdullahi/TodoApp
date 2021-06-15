@@ -5,6 +5,7 @@ class User extends GroupMember {
   final int id;
   final String password;
   final String apiKey;
+  
   //List<Group> groups;
 
   User(
@@ -40,4 +41,9 @@ class User extends GroupMember {
   }
   @override
   List<Object> get props => [username];
+
+  @override
+  String toString() {
+    return username;
+  }
 }

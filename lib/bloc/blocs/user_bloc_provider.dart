@@ -22,7 +22,7 @@ class UserBloc {
     return _instance;
   }
 
-  Observable<User> get getUser => _userGetter.stream;
+  PublishSubject<User> get getUser => _userGetter.stream;
 
   User getUserObject() {
     return _user;
@@ -71,9 +71,7 @@ class GroupBloc {
   List<Group> _groups = [];
 
   GroupBloc._privateConstructor() {
-    updateGroups().then((_) {
-      _groupSubject.add(_groups);
-    });
+    updateGroups();
   }
 
   static final GroupBloc _instance = GroupBloc._privateConstructor();
@@ -87,9 +85,23 @@ class GroupBloc {
   } 
   */
 
-  Stream<List<Group>> get getGroups => _groupSubject.stream;
+  Stream<List<Group>> get getGroups {
+    updateGroups();
+    return _groupSubject.stream;
+  }
+
+  List<Group> getGroupList() {
+    return _groups;
+  }
+
+  Future<Null> deleteGroup(String groupKey) async {
+    await repository.deleteGroup(groupKey);
+    await updateGroups();
+  }
+
   Future<Null> updateGroups() async {
     _groups = await repository.getUserGroups();
+    _groupSubject.add(_groups);
   }
 }
 
@@ -117,25 +129,28 @@ class TaskBloc {
 
   TaskBloc(String groupKey) {
     this._groupKey = groupKey;
-    _updateTasks().then((tasks) {
-      _taskSubject.add(tasks);
-    });
+    updateTasks();
   }
 
   Stream<List<Task>> get getTasks => _taskSubject.stream;
 
   Future<Null> addTask(String taskName, int index, bool completed) async {
     await repository.addTask(taskName, this._groupKey, index, completed);
-    _updateTasks().then((tasks) => _taskSubject.add(tasks));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await updateTasks();
   }
 
   Future<Null> deleteTask(String taskKey) async {
     await repository.deleteTask(taskKey);
-    await _updateTasks().then((tasks) => _taskSubject.add(tasks));
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    await updateTasks();
   }
 
-  Future<List<Task>> _updateTasks() async {
-    return await repository.getTasks(_groupKey);
+  Future<Null> updateTasks() async {
+    await repository.getTasks(this._groupKey).then((tasks) {
+      print("Updated List" + tasks.toString());
+      _taskSubject.add(tasks);
+    });
   }
 }
 
@@ -145,25 +160,25 @@ class SubtaskBloc {
 
   SubtaskBloc(String taskKey) {
     this._taskKey = taskKey;
-    _updateSubtasks().then((subtasks) {
-      _subtaskSubject.add(subtasks);
-    });
+    _updateSubtasks();
   }
 
   Stream<List<Subtask>> get getSubtasks => _subtaskSubject.stream;
 
   Future<Null> addSubtask(String subtaskName, int index, bool completed) async {
     await repository.addSubtask(_taskKey, subtaskName, index, completed);
-    await _updateSubtasks().then((subtasks) => _subtaskSubject.add(subtasks));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await _updateSubtasks();
   }
 
   Future<Null> deleteSubtask(String subtaskKey) async {
     await repository.deleteSubtask(subtaskKey);
-    await _updateSubtasks().then((subtasks) => _subtaskSubject.add(subtasks));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await _updateSubtasks();
   }
 
-  Future<List<Subtask>> _updateSubtasks() async {
-    return await repository.getSubtasks(_taskKey);
+  Future<Null> _updateSubtasks() async {
+    await repository.getSubtasks(_taskKey).then((subtasks){_subtaskSubject.add(subtasks);});
   }
 }
 

@@ -18,10 +18,10 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
       height: 90,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.blue,
+        color: darkerGreenBlue,
         boxShadow: [
           new BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.white12,
             blurRadius: 25.0,
           ),
         ],

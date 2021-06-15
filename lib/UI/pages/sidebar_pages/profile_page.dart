@@ -64,17 +64,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BackgroundColorContainer(
-      startColor: lightBlue,
-      endColor: lightBlueGradient,
-      widget: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.transparent,
-        appBar: CustomAppBar('Edit Profile'),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          physics: AlwaysScrollableScrollPhysics(),
-          child: _buildForm(context),
+    return SafeArea(
+      child: BackgroundColorContainer(
+        startColor: lightBlue,
+        endColor: lightBlueGradient,
+        widget: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.transparent,
+          appBar: CustomAppBar('Edit Profile'),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 40),
+            physics: AlwaysScrollableScrollPhysics(),
+            child: _buildForm(context),
+          ),
         ),
       ),
     );

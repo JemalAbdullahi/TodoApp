@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/pages/home_page.dart';
-//import 'package:flutter/services.dart';
+import 'package:splashscreen/splashscreen.dart';
+import 'package:flutter/services.dart';
 
 import 'package:todolist/UI/pages/login_page.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 
-main() => runApp(
-      MyApp(),
-    );
+main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
       title: 'To Do List',
       debugShowCheckedModeBanner: false,
@@ -25,10 +25,15 @@ class MyApp extends StatelessWidget {
           primaryColorDark: darkBlue,
           fontFamily: 'Segoe UI'),
       home: SignIn(),
+      routes: <String, WidgetBuilder>{
+        '/login': (BuildContext context) => LoginPage(),
+        '/splash': (BuildContext context) => Splash()
+      },
     );
   }
 }
 
+/// Determines whether to direct user to login page or homepage.
 class SignIn extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
@@ -39,11 +44,6 @@ class _SignInState extends State<SignIn> {
   String apiKey = "";
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: signInUser(),
@@ -51,12 +51,7 @@ class _SignInState extends State<SignIn> {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           apiKey = snapshot.data;
         }
-        return apiKey.isNotEmpty
-            ? HomePage(logout: logout)
-            : LoginPage(
-                login: login,
-                newUser: false,
-              );
+        return apiKey.isNotEmpty ? Splash() : LoginPage();
       },
     );
   }
@@ -73,16 +68,32 @@ class _SignInState extends State<SignIn> {
     }
     return apiKey;
   }
+}
 
-  void login() {
-    setState(() {
-      build(context);
-    });
+/// Display Splash screen while loading User's groups. Then redirect to Homepage.
+class Splash extends StatelessWidget {
+  /// Update Group list from server, then load homepage.
+  Future<Widget> loadFromFuture() {
+    // <fetch data from server. ex. login>
+    groupBloc.updateGroups();
+    return Future.value(HomePage());
   }
 
-  logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("API_Token", "");
-    setState(() {});
+  @override
+  Widget build(BuildContext context) {
+    return new SplashScreen(
+      navigateAfterFuture: loadFromFuture(),
+      title: new Text(
+        'ToDo',
+        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+      ),
+      gradientBackground: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [lightBlue, lightBlueGradient],
+      ),
+      //styleTextUnderTheLoader: new TextStyle(),
+      loaderColor: Colors.black54,
+    );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/add_members.dart';
-import 'package:todolist/bloc/resources/repository.dart';
+//import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
 import 'package:todolist/models/groupmember.dart';
@@ -37,7 +37,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           key: _scaffoldKey,
           appBar: CustomAppBar(
             widget.group.name,
-            actions: <Widget>[
+            /* actions: <Widget>[
               TextButton(
                 onPressed: updateGroup,
                 child: Text(
@@ -49,7 +49,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-            ],
+            ], */
             fontSize: 24,
           ),
           backgroundColor: Colors.transparent,
@@ -62,7 +62,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
     );
   }
 
-  void updateGroup() async {
+  /* void updateGroup() async {
     String groupKey = widget.group.groupKey;
     //delete from members
     for (GroupMember member in initialMembers) {
@@ -72,6 +72,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           await repository.deleteGroupMember(groupKey, member.username);
         } catch (e) {
           print(e.message);
+          throw e;
         }
       }
     }
@@ -82,10 +83,11 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           await repository.addGroupMember(groupKey, member.username);
         } catch (e) {
           print(e.message);
+          throw e;
         }
       }
     }
-  }
+  } */
 
   Stack _buildStack() {
     return Stack(
@@ -221,7 +223,6 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           onChanged: (newValue) {
             if (!widget.group.isPublic || widget.group.members.length == 1) {
               setState(() {
-                print("Switch to ${!newValue}");
                 widget.group.isPublic = !newValue;
               });
             }
