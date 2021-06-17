@@ -1,4 +1,4 @@
-
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -35,7 +35,7 @@ class User(db.Model):
                  lastname, phonenumber, avatar):
         self.api_key = api_key
         self.emailaddress = emailaddress
-        self.password = password
+        self.password = generate_password_hash(password)
         self.username = username
         self.firstname = firstname
         self.lastname = lastname
@@ -44,6 +44,9 @@ class User(db.Model):
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+
+    def verify_password(self, pwd):
+        return check_password_hash(self.password, pwd)
 
     def serialize(self):
         if self.time_updated is None:

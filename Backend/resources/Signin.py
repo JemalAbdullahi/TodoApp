@@ -32,7 +32,7 @@ class Signin(Resource):
         if not user:
             return {'Message': 'Username does not exist'}, 404
 
-        if user.password != json_data['password']:
+        if not user.verify_password(json_data["password"]):
             return {'Message': 'Password incorrect'}, 401
 
         result = User.serialize(user)
