@@ -142,6 +142,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         key: Key(subtask.title),
         title: SubtaskListItemWidget(
           subtask: subtask,
+          subtaskBloc: subtaskBloc,
         ),
       ),
       background: Container(

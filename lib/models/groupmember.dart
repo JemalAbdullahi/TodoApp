@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:todolist/models/global.dart';
 
 // ignore: must_be_immutable
 class GroupMember extends Equatable {
@@ -47,10 +48,13 @@ class GroupMember extends Equatable {
   String initials() => firstname[0].toUpperCase() + lastname[0].toUpperCase();
 
   /// Create CircleAvatar
-  CircleAvatar cAvatar({double radius = 12}) {
+  CircleAvatar cAvatar({
+    double radius = 12,
+    Color color = darkBlue,
+  }) {
     return CircleAvatar(
       //backgroundImage: member.avatar,
-      //backgroundColor: Colors.grey,
+      backgroundColor: color,
       child: Text(
         this.initials(),
         style: TextStyle(

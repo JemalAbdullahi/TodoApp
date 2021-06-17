@@ -23,6 +23,9 @@ class Subtask {
   /// Time Updated
   DateTime timeUpdated;
 
+  /// Deadline
+  DateTime deadline;
+
   /// Not Implemented
   String note;
 

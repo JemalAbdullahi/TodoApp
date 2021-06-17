@@ -64,7 +64,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   void saveGroup() async {
-    String groupKey = await repository.addGroup(groupName.text, !isPrivate);
+    String groupKey = await groupBloc.addGroup(groupName.text, !isPrivate);
     for (GroupMember member in newGroup.members) {
       try {
         await repository.addGroupMember(groupKey, member.username);
@@ -72,6 +72,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         print(e.message);
       }
     }
+    await groupBloc.updateGroups();
     Navigator.pop(context);
   }
 

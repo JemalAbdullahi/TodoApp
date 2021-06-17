@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
+import 'package:todolist/widgets/forgot_password_dialog_box.dart';
 
 class LoginPage extends StatefulWidget {
   final bool newUser;
@@ -15,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _newUser = false;
   final _signInFormKey = GlobalKey<FormState>();
   final _signUpFormKey = GlobalKey<FormState>();
+  //final _forgotPasswordFormKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController usernameText = new TextEditingController();
   final _userFocusNode = new FocusNode();
@@ -138,7 +140,13 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       padding: EdgeInsets.only(right: 0.0),
       child: TextButton(
-        onPressed: null,
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ForgotPasswordDialogBox();
+              });
+        },
         child: Text('Forgot Password?', style: labelStyle),
       ),
     );
@@ -322,6 +330,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //---------------------------------------
+  /// Get Sign Up Screen
   Widget get _getSignUpScreen {
     return Container(
       height: double.infinity,
@@ -497,4 +506,95 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  //-----------------------------------------
+  /// Get Forgot Password Screen
+  /* void _showForgotPasswordAlertDialog(BuildContext context) {
+    ForgotPasswordDialogBox();
+    /* return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: _boxDecorationGradient,
+      child: _buildForgotPasswordSingleChildScrollView,
+    ); */
+  } */
+/* 
+  SingleChildScrollView get _buildForgotPasswordSingleChildScrollView {
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+      child: _buildForgotPasswordForm,
+    );
+  }
+
+  Form get _buildForgotPasswordForm {
+    return Form(
+      key: _forgotPasswordFormKey,
+      child: _buildForgotPasswordColumn,
+    );
+  }
+
+  Column get _buildForgotPasswordColumn {
+    return null;
+  }
+  
+  Widget _buildResetPasswordpBtn(String btnText) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 5.0,
+          padding: EdgeInsets.all(15),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          primary: Colors.white,
+        ),
+        onPressed: () async {
+          await _handleSignUpInput;
+        },
+        child: Text(
+          btnText,
+          style: TextStyle(
+              color: Color(0xff527daa),
+              letterSpacing: 1.5,
+              fontFamily: 'OpenSans',
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0),
+        ),
+      ),
+    );
+  }
+
+  get _handleResetPasswordInput async {
+    if (_signUpFormKey.currentState.validate()) {
+      await _attemptSignUp;
+    } else {
+      _displayInvalidFormError();
+    }
+  }
+
+  Future get _attemptResetPassword async {
+    try {
+      userBloc
+          .registerUser(
+              usernameText.text.trim(),
+              passwordText.text.trim(),
+              emailText.text.trim(),
+              firstnameText.text.trim(),
+              lastnameText.text.trim(),
+              phonenumberText.text.trim(),
+              null)
+          .then((_) {
+        Navigator.pushNamed(context, '/splash');
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } */
 }

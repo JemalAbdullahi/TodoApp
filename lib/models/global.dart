@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-Color loginBlue = new Color(0xff56C7F1);
-Color lightBlue = new Color(0xffceecf2);
-Color lightBlueGradient = new Color(0xff00D4FF);
-Color lightGreenBlue = Color(0xff4AD2EE);
-Color darkGreenBlue = Color(0xff006F85);
-Color darkerGreenBlue = Color(0xff006175);
-Color darkBlue = new Color(0xff023059);
-Color darkBlueGradient = new Color(0xff0087FF);
-Color red = new Color(0xfff20f38);
-Color darkRed = new Color(0xffc70000);
-Color brownRed = new Color(0xff590209);
+const Color loginBlue = Color(0xff56C7F1);
+const Color lightBlue = Color(0xffceecf2);
+const Color lightBlueGradient = Color(0xff00D4FF);
+const Color lightGreenBlue = Color(0xff4AD2EE);
+const Color darkGreenBlue = Color(0xff006F85);
+const Color darkerGreenBlue = Color(0xff006175);
+const Color darkBlue = Color(0xff023059);
+const Color darkBlueGradient = Color(0xff0087FF);
+const Color red = Color(0xfff20f38);
+const Color darkRed = Color(0xffc70000);
+const Color brownRed = Color(0xff590209);
 
 final appTitleStyle = TextStyle(
   color: darkBlueGradient,
@@ -20,14 +20,14 @@ final appTitleStyle = TextStyle(
 );
 
 final hintTextStyle = TextStyle(
-  color: Colors.white54,
-  fontFamily: 'OpenSans',
+  color: Colors.white70,
+  fontFamily: 'Segoe UI',
 );
 
 final labelStyle = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
+  fontFamily: 'Segoe UI',
 );
 
 final boxDecorationStyle = BoxDecoration(

@@ -99,7 +99,14 @@ class GroupBloc {
     await updateGroups();
   }
 
+  Future<String> addGroup(String groupName, bool isPublic) async {
+    String groupKey = await repository.addGroup(groupName, isPublic);
+    await updateGroups();
+    return groupKey;
+  }
+
   Future<Null> updateGroups() async {
+    await Future<void>.delayed(const Duration(milliseconds: 150));
     _groups = await repository.getUserGroups();
     _groupSubject.add(_groups);
   }
@@ -136,19 +143,17 @@ class TaskBloc {
 
   Future<Null> addTask(String taskName, int index, bool completed) async {
     await repository.addTask(taskName, this._groupKey, index, completed);
-    await Future<void>.delayed(const Duration(milliseconds: 300));
     await updateTasks();
   }
 
   Future<Null> deleteTask(String taskKey) async {
     await repository.deleteTask(taskKey);
-    await Future<void>.delayed(const Duration(milliseconds: 400));
     await updateTasks();
   }
 
   Future<Null> updateTasks() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
     await repository.getTasks(this._groupKey).then((tasks) {
-      print("Updated List" + tasks.toString());
       _taskSubject.add(tasks);
     });
   }
@@ -167,18 +172,19 @@ class SubtaskBloc {
 
   Future<Null> addSubtask(String subtaskName, int index, bool completed) async {
     await repository.addSubtask(_taskKey, subtaskName, index, completed);
-    await Future<void>.delayed(const Duration(milliseconds: 300));
     await _updateSubtasks();
   }
 
   Future<Null> deleteSubtask(String subtaskKey) async {
     await repository.deleteSubtask(subtaskKey);
-    await Future<void>.delayed(const Duration(milliseconds: 300));
     await _updateSubtasks();
   }
 
   Future<Null> _updateSubtasks() async {
-    await repository.getSubtasks(_taskKey).then((subtasks){_subtaskSubject.add(subtasks);});
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await repository.getSubtasks(_taskKey).then((subtasks) {
+      _subtaskSubject.add(subtasks);
+    });
   }
 }
 
