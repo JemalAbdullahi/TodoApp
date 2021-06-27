@@ -8,9 +8,7 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
 class GroupInfoPage extends StatefulWidget {
-  final Group group;
-
-  const GroupInfoPage({Key key, @required this.group}) : super(key: key);
+  static const routeName = '/GroupInfoPage';
 
   @override
   _GroupInfoPageState createState() => _GroupInfoPageState();
@@ -18,13 +16,16 @@ class GroupInfoPage extends StatefulWidget {
 
 class _GroupInfoPageState extends State<GroupInfoPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  int membersLength = 0;
-  List<GroupMember> initialMembers;
+  late final Group group;
+  late List<GroupMember> initialMembers;
+  late int membersLength;
 
-  @override
-  void initState() {
-    initialMembers = widget.group.members;
-    super.initState();
+  _GroupInfoPageState() {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as GroupInfoPageArguments;
+    group = args.group;
+    initialMembers = group.members;
+    membersLength = initialMembers.length;
   }
 
   @override
@@ -36,7 +37,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         widget: Scaffold(
           key: _scaffoldKey,
           appBar: CustomAppBar(
-            widget.group.name,
+            group.name,
             /* actions: <Widget>[
               TextButton(
                 onPressed: updateGroup,
@@ -63,10 +64,10 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
   }
 
   /* void updateGroup() async {
-    String groupKey = widget.group.groupKey;
+    String groupKey = group.groupKey;
     //delete from members
     for (GroupMember member in initialMembers) {
-      if (!widget.group.members.contains(member)) {
+      if (!group.members.contains(member)) {
         //delete memeber from group dbtable
         try {
           await repository.deleteGroupMember(groupKey, member.username);
@@ -77,7 +78,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       }
     }
     //add to members
-    for (GroupMember member in widget.group.members) {
+    for (GroupMember member in group.members) {
       if (!initialMembers.contains(member)) {
         try {
           await repository.addGroupMember(groupKey, member.username);
@@ -127,7 +128,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       width: double.infinity,
       alignment: Alignment.topCenter,
       child: Text(
-        widget.group.name,
+        group.name,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: 'Segoe UI',
@@ -201,7 +202,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         radius: 16,
         backgroundColor: darkBlue,
         child: Text(
-          "${widget.group.members.length}",
+          "${group.members.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -219,14 +220,14 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             fontSize: 20),
       ),
       Switch(
-          value: !widget.group.isPublic,
+          value: !group.isPublic,
           onChanged: (newValue) {
-            if (!widget.group.isPublic || widget.group.members.length == 1) {
+            if (!group.isPublic || group.members.length == 1) {
               setState(() {
-                widget.group.isPublic = !newValue;
+                group.isPublic = !newValue;
               });
             }
-            if (widget.group.members.length > 1) {
+            if (group.members.length > 1) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Personal Groups are Limited to 1 Member Only"),
@@ -238,7 +239,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
   }
 
   Padding _buildMembersList() {
-    widget.group.addListener(() {
+    group.addListener(() {
       setState(() {});
     });
     return Padding(
@@ -251,9 +252,9 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             mainAxisSpacing: 10.0),
         itemBuilder: (context, index) => Column(
           children: [
-            widget.group.members[index].cAvatar(radius: 34),
+            group.members[index].cAvatar(radius: 34),
             Text(
-              widget.group.members[index].firstname,
+              group.members[index].firstname,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: 'Segoe UI',
@@ -262,13 +263,13 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             ),
           ],
         ),
-        itemCount: widget.group.members.length,
+        itemCount: group.members.length,
       ),
     );
   }
 
   Widget _addMembers() {
-    return this.widget.group.isPublic
+    return this.group.isPublic
         ? Align(
             alignment: Alignment(0.9, 0.9),
             child: FloatingActionButton(
@@ -278,7 +279,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AddMembersPage(
-                      group: widget.group,
+                      group: group,
                     ),
                   ),
                 );
@@ -288,4 +289,10 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           )
         : SizedBox.shrink();
   }
+}
+
+class GroupInfoPageArguments {
+  final Group group;
+
+  GroupInfoPageArguments(this.group);
 }

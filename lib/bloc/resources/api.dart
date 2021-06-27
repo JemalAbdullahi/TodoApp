@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/models/group.dart';
@@ -16,17 +15,17 @@ class ApiProvider {
   //static String baseURL = "http://10.0.2.2:5000/api";
   static String stageHost = 'taskmanager-group-stage.herokuapp.com';
   static String productionHost = 'taskmanager-group-pro.herokuapp.com';
-  static String localhost = "http://10.0.2.2:5000/api";
+  static String localhost = "10.0.2.2:5000";
   Uri signinURL = Uri(scheme: 'https', host: stageHost, path: '/api/signin');
   Uri userURL = Uri(scheme: 'https', host: stageHost, path: '/api/user');
   Uri taskURL = Uri(scheme: 'https', host: stageHost, path: '/api/tasks');
   Uri subtaskURL = Uri(scheme: 'https', host: stageHost, path: '/api/subtasks');
   Uri groupURL = Uri(scheme: 'https', host: stageHost, path: '/api/group');
   Uri groupmemberURL =
-      Uri(scheme: 'https', host: stageHost, path: '/api/groupmember');
-  Uri searchURL = Uri(scheme: 'https', host: stageHost, path: '/api/search');
+      Uri(scheme: 'http', host: stageHost, path: '/api/groupmember');
+  Uri searchURL = Uri(scheme: 'http', host: stageHost, path: '/api/search');
 
-  String apiKey;
+  String apiKey='';
 
   // User CRUD Functions
   /// Sign Up
@@ -37,7 +36,7 @@ class ApiProvider {
       String firstname,
       String lastname,
       String phonenumber,
-      ImageProvider avatar) async {
+      avatar) async {
     final response = await client.post(userURL,
         // headers: "",
         body: jsonEncode({
@@ -88,7 +87,7 @@ class ApiProvider {
       String firstname,
       String lastname,
       String phonenumber,
-      ImageProvider avatar) async {
+      avatar) async {
     final response = await client.put(userURL,
         headers: {"Authorization": apiKey},
         body: jsonEncode({
@@ -103,7 +102,7 @@ class ApiProvider {
         }));
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
-      print("User Profile Updated");
+      //print("User Profile Updated");
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
@@ -125,15 +124,17 @@ class ApiProvider {
       final Map result = json.decode(response.body);
       if (response.statusCode == 200) {
         // If the call to the server was successful, parse the JSON
-        for (Map json_ in result["data"]) {
+        for (Map<String, dynamic> json_ in result["data"]) {
           try {
             Group group = Group.fromJson(json_);
+            //print("Get User Groups: ${group.groupKey}");
             group.members = await getGroupMembers(group.groupKey);
+            //print("--------------End members-------------");
             group.tasks = await getTasks(group.groupKey);
+            //print("--------------End tasks-------------");
             groups.add(group);
           } catch (Exception) {
             print(Exception);
-            throw Exception;
           }
         }
         return groups;
@@ -157,7 +158,7 @@ class ApiProvider {
     if (response.statusCode == 201) {
       final Map result = json.decode(response.body);
       Group addedGroup = Group.fromJson(result["data"]);
-      print("Group: " + addedGroup.name + " added");
+      //print("Group: " + addedGroup.name + " added");
       return addedGroup.groupKey;
     } else {
       // If that call was not successful, throw an error.
@@ -175,7 +176,7 @@ class ApiProvider {
     );
     if (response.statusCode == 200) {
       // If the call to the server was successful
-      print("Group deleted");
+      //print("Group deleted");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -186,6 +187,7 @@ class ApiProvider {
 // GroupMember CRUD Functions
   /// Get a list of the Group's Members.
   Future<List<GroupMember>> getGroupMembers(String groupKey) async {
+    //print("$groupKey");
     final response = await client.get(
       groupmemberURL,
       headers: {"Authorization": groupKey},
@@ -194,7 +196,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       List<GroupMember> groupMembers = [];
-      for (Map json_ in result["data"]) {
+      for (Map<String, dynamic> json_ in result["data"]) {
         try {
           groupMembers.add(GroupMember.fromJson(json_));
         } catch (Exception) {
@@ -202,6 +204,7 @@ class ApiProvider {
           //throw Exception;
         }
       }
+      //print("getGroupMembers: " +groupMembers.toString() +" @" +DateTime.now().toString());
       return groupMembers;
     } else {
       // If that call was not successful, throw an error.
@@ -243,7 +246,7 @@ class ApiProvider {
     );
     if (response.statusCode == 200) {
       // If the call to the server was successful
-      print("Group Member $username deleted");
+      //print("Group Member $username deleted");
     } else if (response.statusCode == 400 ||
         response.statusCode == 401 ||
         response.statusCode == 404) {
@@ -257,6 +260,7 @@ class ApiProvider {
   /// Get a list of the Group's Tasks
   /// * GroupKey: Unique group identifier
   Future<List<Task>> getTasks(String groupKey) async {
+    //print("$groupKey");
     final response = await client.get(
       taskURL,
       headers: {"Authorization": groupKey},
@@ -265,7 +269,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       List<Task> tasks = [];
-      for (Map json_ in result["data"]) {
+      for (Map<String, dynamic> json_ in result["data"]) {
         try {
           Task task = Task.fromJson(json_);
           task.subtasks = await getSubtasks(task.taskKey);
@@ -299,7 +303,7 @@ class ApiProvider {
           "completed": completed
         }));
     if (response.statusCode == 201) {
-      print("Task " + taskName + " added @" + DateTime.now().toString());
+      //print("Task " + taskName + " added @" + DateTime.now().toString());
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -315,13 +319,13 @@ class ApiProvider {
         body: jsonEncode({
           "title": task.title,
           "note": task.note,
-          "repeats": task.repeats,
+          "repeats": '',
           "completed": task.completed,
-          "reminders": task.reminders,
+          "reminders": '',
           "index": task.index
         }));
     if (response.statusCode == 200) {
-      print("Task ${task.title} Updated");
+      //print("Task ${task.title} Updated");
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
@@ -338,7 +342,7 @@ class ApiProvider {
     );
     if (response.statusCode == 200) {
       // If the call to the server was successful
-      print("Task deleted @" + DateTime.now().toString());
+      //print("Task deleted @" + DateTime.now().toString());
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -357,7 +361,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       List<Subtask> subtasks = [];
-      for (Map json_ in result["data"]) {
+      for (Map<String, dynamic> json_ in result["data"]) {
         try {
           subtasks.add(Subtask.fromJson(json_));
         } catch (Exception) {
@@ -386,8 +390,9 @@ class ApiProvider {
           "index": index
         }));
     if (response.statusCode == 201) {
-      print("Subtask " + subtaskName + " added @" + DateTime.now().toString());
+      //print("Subtask " + subtaskName + " added @" + DateTime.now().toString());
     } else {
+      print(response.statusCode);
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
       throw Exception(result["Message"]);
@@ -401,14 +406,14 @@ class ApiProvider {
         body: jsonEncode({
           "title": subtask.title,
           "note": subtask.note,
-          "repeats": subtask.repeats,
+          "repeats": '',
           "completed": subtask.completed,
           "group": subtask.group,
-          "reminders": subtask.reminders,
+          "reminders": '',
           "index": subtask.index
         }));
     if (response.statusCode == 200) {
-      print("Subtask " + subtask.title + " Updated");
+      //print("Subtask " + subtask.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -424,7 +429,7 @@ class ApiProvider {
     );
     if (response.statusCode == 200) {
       // If the call to the server was successful
-      print("Subtask deleted @" + DateTime.now().toString());
+      //print("Subtask deleted @" + DateTime.now().toString());
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
@@ -443,7 +448,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       List<GroupMember> searchResults = [];
-      for (Map json_ in result["data"]) {
+      for (Map<String, dynamic> json_ in result["data"]) {
         try {
           searchResults.add(GroupMember.fromJson(json_));
         } catch (Exception) {

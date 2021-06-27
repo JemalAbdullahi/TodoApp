@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/pages/home_page.dart';
 //import 'package:flutter/services.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/widgets/forgot_password_dialog_box.dart';
 
 class LoginPage extends StatefulWidget {
-  final bool newUser;
+  static const routeName = '/login';
 
-  const LoginPage({Key key, this.newUser = false}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -32,12 +32,6 @@ class _LoginPageState extends State<LoginPage> {
   final _phoneFocusNode = new FocusNode();
   final _loginFocusNode = new FocusNode();
   final _signupFocusNode = new FocusNode();
-
-  @override
-  void initState() {
-    _newUser = widget.newUser;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
         errorStyle: TextStyle(fontSize: 14.0),
       ),
       validator: (value) {
-        if (value.isEmpty) {
+        if (value!.isEmpty) {
           return '\t\tPlease Enter some text';
         }
         return null;
@@ -182,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future get _handleLoginInput async {
-    if (_signInFormKey.currentState.validate()) {
+    if (_signInFormKey.currentState!.validate()) {
       await _attemptLogin;
     } else {
       _displayInvalidFormError();
@@ -193,11 +187,12 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await userBloc.signinUser(
           usernameText.text.trim(), passwordText.text.trim(), "");
-      Navigator.pushNamed(context, '/splash');
+      await groupBloc.updateGroups();
+      Navigator.pushNamed(context, HomePage.routeName);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.message),
+          content: Text("$e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -461,7 +456,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   get _handleSignUpInput async {
-    if (_signUpFormKey.currentState.validate()) {
+    if (_signUpFormKey.currentState!.validate()) {
       await _attemptSignUp;
     } else {
       _displayInvalidFormError();
@@ -480,12 +475,13 @@ class _LoginPageState extends State<LoginPage> {
               phonenumberText.text.trim(),
               null)
           .then((_) {
+        _newUser = false;
         Navigator.pushNamed(context, '/splash');
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.message),
+          content: Text("$e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -591,7 +587,7 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.message),
+          content: Text("$e"),
           backgroundColor: Colors.red,
         ),
       );

@@ -29,7 +29,7 @@ class GroupList extends StatefulWidget {
 
   /// Creates a visual Group List.
   GroupList(
-      {@required this.tileNavigatesTo,
+      {required this.tileNavigatesTo,
       this.top = 50,
       this.left = 30,
       this.right = 30,
@@ -42,11 +42,11 @@ class GroupList extends StatefulWidget {
 class _GroupListState extends State<GroupList> {
   List<Group> groups = groupBloc.getGroupList();
 
-  Size mediaQuery;
+  late Size mediaQuery;
 
-  double groupListItemWidth;
+  late double groupListItemWidth;
 
-  double groupListItemHeight;
+  late double groupListItemHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -65,29 +65,30 @@ class _GroupListState extends State<GroupList> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            print("No Connection");
-            return buildGroupListView();
-            break;
+            return Container(
+              child: Center(
+                child: Text("No Connection"),
+              ),
+            );
           case ConnectionState.waiting:
-            if (!snapshot.hasData || snapshot.data.isEmpty) {
-              print("Waiting Data");
+            if (!snapshot.hasData) {
+              //print("Waiting Data");
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasData) {
-              groups = snapshot.data;
+              groups = snapshot.data!;
               return buildGroupListView();
             }
             break;
           case ConnectionState.active:
-            print("Active Data: " + snapshot.data.toString());
+            //print("Active Data: " + snapshot.data.toString());
             if (snapshot.hasData) {
-              groups = snapshot.data;
+              groups = snapshot.data!;
             }
             return buildGroupListView();
-            break;
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
             if (snapshot.hasData) {
-              groups = snapshot.data;
+              groups = snapshot.data!;
             }
             return buildGroupListView();
         }
@@ -115,6 +116,7 @@ class _GroupListState extends State<GroupList> {
   }
 
   Dismissible buildGroupListTile(Group group) {
+    dynamic arguments;
     group.addListener(() {
       setState(() {});
     });
@@ -133,26 +135,23 @@ class _GroupListState extends State<GroupList> {
             await repository.deleteGroupMember(
                 group.groupKey, userBloc.getUserObject().username);
           } catch (e) {
-            print(e.message);
+            print(e);
           }
         }
       },
       direction: DismissDirection.endToStart,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) {
-              switch (widget.tileNavigatesTo) {
-                case "ToDoTab":
-                  return ToDoTab(group: group);
-                case "GroupInfoPage":
-                  return GroupInfoPage(group: group);
-                default:
-                  return null;
-              }
-            }),
-          );
+          switch (widget.tileNavigatesTo) {
+            case ToDoTab.routeName:
+              arguments = ToDoTabArguments(group);
+              break;
+            case GroupInfoPage.routeName:
+              arguments = GroupInfoPageArguments(group);
+              break;
+          }
+          Navigator.pushNamed(context, widget.tileNavigatesTo,
+              arguments: arguments);
         },
         child: Container(
           height: groupListItemHeight,
@@ -199,7 +198,7 @@ class _GroupListState extends State<GroupList> {
 
   ///Group Info
   Column _groupInfoColumn(Group group) {
-    int groupSize = group.members != null ? group.members.length : 0;
+    int groupSize = group.members.length;
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

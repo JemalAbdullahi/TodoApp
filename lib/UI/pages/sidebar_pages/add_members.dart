@@ -9,14 +9,14 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 class AddMembersPage extends StatefulWidget {
   final Group group;
 
-  const AddMembersPage({Key key, this.group}) : super(key: key);
+  const AddMembersPage({Key? key, required this.group}) : super(key: key);
 
   @override
   _AddMembersPageState createState() => _AddMembersPageState();
 }
 
 class _AddMembersPageState extends State<AddMembersPage> {
-  Size size;
+  Size? size;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
   String searchQuery = "Search query";
@@ -120,7 +120,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
   }
 
   void _startSearch() {
-    ModalRoute.of(context)
+    ModalRoute.of(context)!
         .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
 
     setState(() {
@@ -159,8 +159,8 @@ class _AddMembersPageState extends State<AddMembersPage> {
   Column _buildColumnCard() {
     return Column(children: [
       Container(
-          height: size.height * 0.12,
-          width: size.width,
+          height: size!.height * 0.12,
+          width: size!.width,
           child: _addedMembersListView()),
       _expandedCard(),
     ]);
@@ -208,10 +208,10 @@ class _AddMembersPageState extends State<AddMembersPage> {
   }
 
   Container _containerMembers() {
-    double containerHeight = size.height * 0.6;
+    double containerHeight = size!.height * 0.6;
     return Container(
       height: containerHeight,
-      width: size.width,
+      width: size!.width,
       padding: EdgeInsets.only(left: 24.0, top: 18.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -258,16 +258,12 @@ class _AddMembersPageState extends State<AddMembersPage> {
             activeColor: Colors.blue,
             onChanged: (val) {
               if (widget.group.members.contains(searchResults[index])) {
-                if (widget.group.groupKey != null) {
-                  _deleteGroupMember(searchResults[index].username);
-                }
+                _deleteGroupMember(searchResults[index].username);
                 this.setState(() {
                   widget.group.removeGroupMember(searchResults[index]);
                 });
               } else if (!widget.group.members.contains(searchResults[index])) {
-                if (widget.group.groupKey != null) {
-                  _addGroupMember(searchResults[index].username);
-                }
+                _addGroupMember(searchResults[index].username);
                 this.setState(() {
                   widget.group.addGroupMember(searchResults[index]);
                 });
@@ -297,7 +293,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
     try {
       await repository.deleteGroupMember(widget.group.groupKey, username);
     } catch (e) {
-      print(e.message);
+      print(e);
     }
   }
 

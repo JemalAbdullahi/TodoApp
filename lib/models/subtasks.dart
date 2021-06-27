@@ -1,4 +1,9 @@
-class Subtask {
+import 'package:equatable/equatable.dart';
+
+import 'groupmember.dart';
+
+// ignore: must_be_immutable
+class Subtask extends Equatable{
   /// Subtask Name/Title
   String title;
 
@@ -24,17 +29,13 @@ class Subtask {
   DateTime timeUpdated;
 
   /// Deadline
-  DateTime deadline;
+  late DateTime deadline;
 
   /// Not Implemented
   String note;
-
-  /// Not Implemented
-  String repeats;
-
-  /// Not Implemented
-  List<DateTime> reminders;
+  
   //DateTime deadline;
+  late List<GroupMember> assignedTo;
 
   Subtask(this.title, this.group, this.completed, this.subtaskId, this.note,
       this.subtaskKey, this.index, this.timeCreated, this.timeUpdated);
@@ -51,6 +52,9 @@ class Subtask {
         DateTime.parse(parsedJson['time_created']),
         DateTime.parse(parsedJson['time_updated']));
   }
+
+  @override
+  List<Object> get props => [subtaskKey];
 
   @override
   String toString() {

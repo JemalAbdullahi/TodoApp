@@ -20,15 +20,15 @@ class GroupMember extends Equatable {
   final String phonenumber;
 
   /// Avatar Image
-  final ImageProvider avatar;
+  final avatar;
 
   GroupMember(
-      {this.firstname,
-      this.lastname,
-      this.emailaddress,
-      this.username,
-      this.phonenumber,
-      this.avatar});
+      {required this.firstname,
+      required this.lastname,
+      required this.emailaddress,
+      required this.username,
+      required this.phonenumber,
+      required this.avatar});
 
   factory GroupMember.fromJson(Map<String, dynamic> parsedJson) {
     return GroupMember(

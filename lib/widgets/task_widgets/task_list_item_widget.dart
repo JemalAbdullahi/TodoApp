@@ -8,16 +8,15 @@ import 'package:todolist/models/tasks.dart';
 
 class TaskListItemWidget extends StatefulWidget {
   final Task task;
-  final String keyValue;
 
-  TaskListItemWidget({this.task, this.keyValue});
+  TaskListItemWidget({required this.task});
 
   @override
   _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
 }
 
 class _TaskListItemWidgetState extends State<TaskListItemWidget> {
-  SubtaskBloc subtaskBloc;
+  late SubtaskBloc subtaskBloc;
 
   @override
   void initState() {
@@ -29,15 +28,8 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       key: UniqueKey(),
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return SubtaskListTab(task: widget.task);
-          });
-        }),
-      ),
+      onTap: () => Navigator.pushNamed(context, SubtaskListTab.routeName,
+          arguments: SubtaskListTabArguments(widget.task)),
       child: Container(
         height: 90,
         decoration: BoxDecoration(
@@ -58,9 +50,9 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
             children: <Widget>[
               Checkbox(
                   value: widget.task.completed,
-                  onChanged: (bool newValue) {
+                  onChanged: (bool? newValue) {
                     setState(() {
-                      widget.task.completed = newValue;
+                      widget.task.completed = newValue!;
                       repository.updateTask(widget.task);
                     });
                   }),

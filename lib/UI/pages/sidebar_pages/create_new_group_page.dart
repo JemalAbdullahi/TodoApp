@@ -10,6 +10,8 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
 class CreateGroupPage extends StatefulWidget {
+  static const routeName = '/create_group';
+
   @override
   _CreateGroupPageState createState() => _CreateGroupPageState();
 }
@@ -69,7 +71,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       try {
         await repository.addGroupMember(groupKey, member.username);
       } catch (e) {
-        print(e.message);
+        print(e);
       }
     }
     await groupBloc.updateGroups();

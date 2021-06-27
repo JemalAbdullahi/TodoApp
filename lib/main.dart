@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/home_page.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/services.dart';
-
 import 'package:todolist/UI/pages/login_page.dart';
+import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
+import 'package:todolist/UI/pages/sidebar_pages/group_page.dart';
+import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
+import 'package:todolist/UI/tabs/list_groups_tab.dart';
+import 'package:todolist/UI/tabs/subtask_list_tab.dart';
+import 'package:todolist/UI/tabs/todo_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
@@ -24,68 +30,80 @@ class MyApp extends StatelessWidget {
           primaryColorLight: lightBlue,
           primaryColorDark: darkBlue,
           fontFamily: 'Segoe UI'),
-      home: SignIn(),
+      initialRoute: Splash.routeName,
       routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => LoginPage(),
-        '/splash': (BuildContext context) => Splash()
+        Splash.routeName: (BuildContext context) => Splash(),
+        LoginPage.routeName: (BuildContext context) => LoginPage(),
+        HomePage.routeName: (BuildContext context) => HomePage(),
+        ListGroupsTab.routeName: (BuildContext context) => ListGroupsTab(),
+        ToDoTab.routeName: (BuildContext context) => ToDoTab(),
+        SubtaskListTab.routeName: (BuildContext context) => SubtaskListTab(),
+        CreateGroupPage.routeName: (BuildContext context) => CreateGroupPage(),
+        ProfilePage.routeName: (BuildContext context) => ProfilePage(),
+        GroupPage.routeName: (BuildContext context) => GroupPage(),
       },
     );
   }
 }
 
 /// Determines whether to direct user to login page or homepage.
-class SignIn extends StatefulWidget {
-  @override
-  _SignInState createState() => _SignInState();
-}
+/* class SignIn extends StatelessWidget {
+  late final String apiKey;
+  late final String initialRoute;
 
-class _SignInState extends State<SignIn> {
-  TaskBloc tasksBloc;
-  String apiKey = "";
+  SignIn() {
+    signInUser();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: signInUser(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          apiKey = snapshot.data;
-        }
-        return apiKey.isNotEmpty ? Splash() : LoginPage();
-      },
-    );
+    return MyApp(initialRoute: initialRoute);
   }
 
-  Future signInUser() async {
+  Future<void> signInUser() async {
     apiKey = await repository.getApiKey();
     if (apiKey.isNotEmpty && apiKey.length > 0) {
       try {
         userBloc.signinUser("", "", apiKey);
-        return apiKey;
+        initialRoute = Splash.routeName;
       } catch (e) {
         print(e);
       }
+    } else {
+      initialRoute = LoginPage.routeName;
     }
-    return apiKey;
   }
-}
+} */
 
 /// Display Splash screen while loading User's groups. Then redirect to Homepage.
+/// No arguments need to be passed when navigating to page Splash
 class Splash extends StatelessWidget {
+  static const routeName = '/';
+  late final String apiKey;
+
   /// Update Group list from server, then load homepage.
-  Future<Widget> loadFromFuture() {
-    // <fetch data from server. ex. login>
-    groupBloc.updateGroups();
-    return Future.value(HomePage());
+  Future<void> loadFromFuture(BuildContext context) async {
+    apiKey = await repository.getApiKey();
+    if (apiKey.isNotEmpty && apiKey.length > 0) {
+      try {
+        userBloc.signinUser("", "", apiKey);
+        // <fetch data from server. ex. login>
+        await groupBloc.updateGroups();
+      } catch (e) {
+        print(e);
+      }
+      Navigator.pushNamed(context, HomePage.routeName);
+    } else
+      Navigator.pushNamed(context, LoginPage.routeName);
   }
 
   @override
   Widget build(BuildContext context) {
-    return new SplashScreen(
-      navigateAfterFuture: loadFromFuture(),
-      title: new Text(
+    return SplashScreen(
+      navigateAfterFuture: loadFromFuture(context),
+      title: Text(
         'ToDo',
-        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
       ),
       gradientBackground: LinearGradient(
         begin: Alignment.topLeft,

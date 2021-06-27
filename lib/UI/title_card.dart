@@ -8,7 +8,7 @@ class TitleCard extends StatelessWidget {
   final Widget child;
   //final VoidCallback addTask;
 
-  TitleCard({this.title, this.child});
+  TitleCard({required this.title, required this.child});
   @override
   Widget build(BuildContext context) {
     return Stack(

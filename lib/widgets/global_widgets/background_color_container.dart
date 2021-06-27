@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class BackgroundColorContainer extends StatelessWidget {
   const BackgroundColorContainer({
-    Key key,
-    @required this.startColor,
-    @required this.endColor,
-    this.widget,
+    Key? key,
+    required this.startColor,
+    required this.endColor,
+    required this.widget,
   }) : super(key: key);
 
   final Color startColor;

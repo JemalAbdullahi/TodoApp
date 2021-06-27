@@ -10,6 +10,7 @@ import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 //import 'package:todolist/models/global.dart';
 
 class ProfilePage extends StatefulWidget {
+  static const routeName = '/profile';
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -19,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   User _user = userBloc.getUserObject();
 
-  String _currentPassword,
+  late String _currentPassword,
       _newPassword,
       _confirmPassword,
       _emailAddress,
@@ -134,8 +135,8 @@ class _ProfilePageState extends State<ProfilePage> {
               errorMaxLines: 2,
               errorStyle: TextStyle(fontSize: 16, color: Colors.red),
             ),
-            validator: (String value) {
-              if (value.isEmpty) {
+            validator: (String? value) {
+              if (value!.isEmpty) {
                 return 'Current Password is Required';
               }
               if (value != _user.password) {
@@ -143,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
               }
               return null;
             },
-            onSaved: (newValue) => _currentPassword = newValue.trim(),
+            onSaved: (newValue) => _currentPassword = newValue!.trim(),
           ),
         )
       ],
@@ -172,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintStyle: hintTextStyle,
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _username = newValue.trim(),
+            onSaved: (newValue) => _username = newValue!.trim(),
           ),
         ),
       ],
@@ -201,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintStyle: hintTextStyle,
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _firstname = newValue.trim(),
+            onSaved: (newValue) => _firstname = newValue!.trim(),
           ),
         ),
       ],
@@ -230,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintStyle: hintTextStyle,
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _lastname = newValue.trim(),
+            onSaved: (newValue) => _lastname = newValue!.trim(),
           ),
         ),
       ],
@@ -259,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintStyle: hintTextStyle,
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _phonenumber = newValue.trim(),
+            onSaved: (newValue) => _phonenumber = newValue!.trim(),
           ),
         ),
       ],
@@ -289,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             validator: EmailValidator(errorText: 'Enter a Valid Email'),
-            onSaved: (newValue) => _emailAddress = newValue.trim(),
+            onSaved: (newValue) => _emailAddress = newValue!.trim(),
           ),
         ),
       ],
@@ -297,8 +298,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _newPasswordField() {
-    _newPasswordController.text = _user.password;
-    _newPassword = _user.password;
+    _newPasswordController.text = _user.password!;
+    _newPassword = _user.password!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -321,7 +322,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             validator: passwordValidator,
-            onSaved: (newValue) => _newPassword = newValue.trim(),
+            onSaved: (newValue) => _newPassword = newValue!.trim(),
           ),
         ),
       ],
@@ -329,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _confirmPasswordField() {
-    _confirmPasswordController.text = _user.password;
+    _confirmPasswordController.text = _user.password!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -353,8 +354,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 errorStyle: TextStyle(fontSize: 16)),
             validator: (val) =>
                 MatchValidator(errorText: 'Passwords Do Not Match')
-                    .validateMatch(val, _newPassword),
-            onSaved: (newValue) => _confirmPassword = newValue.trim(),
+                    .validateMatch(val!, _newPassword),
+            onSaved: (newValue) => _confirmPassword = newValue!.trim(),
           ),
         ),
       ],
@@ -375,9 +376,9 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         autofocus: false,
         onPressed: () async {
-          if (_formKey.currentState.validate()) {
+          if (_formKey.currentState!.validate()) {
             try {
-              _formKey.currentState.save();
+              _formKey.currentState!.save();
               await userBloc.updateUserProfile(
                   _currentPassword,
                   _confirmPassword,
@@ -396,7 +397,7 @@ class _ProfilePageState extends State<ProfilePage> {
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(e.message),
+                  content: Text("$e"),
                   backgroundColor: Colors.red,
                 ),
               );

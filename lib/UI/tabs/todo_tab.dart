@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
@@ -12,35 +13,35 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 import 'package:todolist/widgets/task_widgets/add_task_widget.dart';
 import 'package:todolist/widgets/task_widgets/task_list_item_widget.dart';
 
+/// Argument that can be passed when navigating to ToDoTab
+/// * group
 class ToDoTab extends StatefulWidget {
-  final Group group;
-
-  ToDoTab({@required this.group});
+  static const routeName = '/list_tasks';
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
 
 class _ToDoTabState extends State<ToDoTab> {
-  TaskBloc taskBloc;
+  late TaskBloc taskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late Group group;
   int orderBy;
+  bool reorder;
 
-  @override
-  void initState() {
-    taskBloc = TaskBloc(widget.group.groupKey);
-    orderBy = 1;
-    super.initState();
-  }
+  _ToDoTabState(): orderBy = 1, reorder = false;
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as ToDoTabArguments;
+    group = args.group;
+    taskBloc = TaskBloc(group.groupKey);
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
             title: Text(
-              widget.group.name,
+              group.name,
               style: appTitleStyle,
             ),
             centerTitle: true,
@@ -68,7 +69,7 @@ class _ToDoTabState extends State<ToDoTab> {
                 ),
               ),
               AddTask(
-                length: widget.group.tasks.length,
+                length: group.tasks.length,
                 taskbloc: taskBloc,
               ),
             ],
@@ -83,41 +84,39 @@ class _ToDoTabState extends State<ToDoTab> {
       key: UniqueKey(),
       // Wrap our widget with a StreamBuilder
       stream: taskBloc.getTasks, // pass our Stream getter here
-      initialData: widget.group.tasks, // provide an initial data
+      initialData: group.tasks, // provide an initial data
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             print("None Data");
-            return Container(
-              child: Center(
-                child: Text("No Connection Message"),
-              ),
-            );
+            break;
           case ConnectionState.active:
             print("Active Data: " +
                 snapshot.data.toString() +
                 " @" +
                 DateTime.now().toString());
-            if (snapshot.data.isNotEmpty) {
-              widget.group.tasks = snapshot.data;
+            print("Active Task List: " + group.tasks.toString());
+            if (snapshot.hasData) {
+              group.tasks = snapshot.data!;
+              return _buildList();
+            }
+            if (reorder) {
+              reorder = false;
               return _buildList();
             }
             return SizedBox.shrink();
-            break;
           case ConnectionState.waiting:
-            print("Waiting Data" +
+            print("Waiting Data: " +
                 snapshot.data.toString() +
                 " @" +
                 DateTime.now().toString());
-            return Center(child: CircularProgressIndicator());
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
             break;
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
-            if (snapshot.data.isNotEmpty) {
-              widget.group.tasks = snapshot.data;
-              return _buildList();
-            }
-            return SizedBox.shrink();
+            break;
         }
         return CircularProgressIndicator();
       },
@@ -132,14 +131,14 @@ class _ToDoTabState extends State<ToDoTab> {
       child: ListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 175, bottom: 90),
-        children: widget.group.tasks.map<Dismissible>((Task item) {
+        children: group.tasks.map<Dismissible>((Task item) {
           return _buildListTile(item);
         }).toList(),
       ),
     );
   }
 
-  Widget _buildListTile(Task item) {
+  Dismissible _buildListTile(Task item) {
     return Dismissible(
       key: Key(item.taskKey),
       child: ListTile(
@@ -156,8 +155,8 @@ class _ToDoTabState extends State<ToDoTab> {
           color: lightBlueGradient,
         ),
       ),
-      onDismissed: (direction) {
-        deleteTask(item);
+      onDismissed: (direction) async {
+        await deleteTask(item);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Task " + item.title + " dismissed"),
@@ -174,22 +173,26 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  void removeTask(Task task) {
-    if (widget.group.tasks.contains(task)) {
+  /* void removeTask(Task task) {
+    if (group.tasks.contains(task)) {
       setState(() {
-        widget.group.tasks.remove(task);
+        group.tasks.remove(task);
       });
     }
-  }
+  } */
 
   void reAddTask(Task task) async {
-    await taskBloc.addTask(task.title, task.index, task.completed);
-    setState(() {});
+    await taskBloc
+        .addTask(task.title, task.index, task.completed)
+        .then((value) {
+      setState(() {});
+    });
   }
 
   Future<Null> deleteTask(Task task) async {
-    await taskBloc.deleteTask(task.taskKey);
-    setState(() {});
+    await taskBloc.deleteTask(task.taskKey).then((value) {
+      setState(() {});
+    });
   }
 
   PopupMenuButton _popupMenuButton() {
@@ -206,6 +209,7 @@ class _ToDoTabState extends State<ToDoTab> {
       onSelected: (value) {
         setState(() {
           orderBy = value;
+          reorder = true;
         });
       },
       itemBuilder: (context) => [
@@ -250,20 +254,24 @@ class _ToDoTabState extends State<ToDoTab> {
     orderBy = value;
     switch (value) {
       case 0:
-        widget.group.tasks.sort(
+        group.tasks.sort(
             (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
         break;
       case 1:
-        widget.group.tasks
+        group.tasks
             .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
-        print(widget.group.tasks.toString());
         break;
       case 2:
-        widget.group.tasks
+        group.tasks
             .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
-        print(widget.group.tasks.toString());
         break;
       default:
     }
   }
+}
+
+class ToDoTabArguments{
+  final Group group;
+
+  ToDoTabArguments(this.group);
 }

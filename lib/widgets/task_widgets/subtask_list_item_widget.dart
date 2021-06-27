@@ -9,7 +9,7 @@ class SubtaskListItemWidget extends StatefulWidget {
   final Subtask subtask;
   final SubtaskBloc subtaskBloc;
 
-  SubtaskListItemWidget({this.subtask, this.subtaskBloc});
+  SubtaskListItemWidget({required this.subtask, required this.subtaskBloc});
   @override
   _SubtaskListItemWidgetState createState() => _SubtaskListItemWidgetState();
 }
@@ -48,9 +48,9 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
             children: <Widget>[
               Checkbox(
                   value: widget.subtask.completed,
-                  onChanged: (bool newValue) {
+                  onChanged: (bool? newValue) {
                     setState(() {
-                      widget.subtask.completed = newValue;
+                      widget.subtask.completed = newValue!;
                       repository.updateSubtask(widget.subtask);
                     });
                   }),

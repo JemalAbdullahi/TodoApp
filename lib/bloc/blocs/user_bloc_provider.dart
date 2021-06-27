@@ -1,6 +1,3 @@
-//import 'package:todolist/models/tasks.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:todolist/models/group.dart';
 import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/models/subtasks.dart';
@@ -11,8 +8,8 @@ import 'package:todolist/models/user.dart';
 import 'package:todolist/models/tasks.dart';
 
 class UserBloc {
-  final _userGetter = PublishSubject<User>();
-  User _user;
+  final PublishSubject<User> _userGetter = PublishSubject<User>();
+  User _user = new User();
 
   UserBloc._privateConstructor();
 
@@ -22,24 +19,24 @@ class UserBloc {
     return _instance;
   }
 
-  PublishSubject<User> get getUser => _userGetter.stream;
+  Stream<User> get getUser => _userGetter.stream;
 
   User getUserObject() {
     return _user;
   }
 
-  registerUser(String username, String password, String email, String firstname,
-      String lastname, String phonenumber, ImageProvider avatar) async {
+  Future<void> registerUser(String username, String password, String email, String firstname,
+      String lastname, String phonenumber, avatar) async {
     _user = await repository.registerUser(
         username, password, email, firstname, lastname, phonenumber, avatar);
     _userGetter.sink.add(_user);
   }
 
-  signinUser(String username, String password, String apiKey) async {
+  Future<void> signinUser(String username, String password, String apiKey) async {
     try {
       _user = await repository.signinUser(username, password, apiKey);
     } catch (e) {
-      throw Exception(e.message);
+      throw e;
     }
     _userGetter.sink.add(_user);
   }
@@ -52,12 +49,12 @@ class UserBloc {
       String firstname,
       String lastname,
       String phonenumber,
-      ImageProvider avatar) async {
+      avatar) async {
     try {
       _user = await repository.updateUserProfile(currentPassword, newPassword,
           email, username, firstname, lastname, phonenumber, avatar);
     } catch (e) {
-      throw Exception(e.message);
+      throw e;
     }
   }
 
@@ -94,7 +91,7 @@ class GroupBloc {
     return _groups;
   }
 
-  Future<Null> deleteGroup(String groupKey) async {
+  Future<void> deleteGroup(String groupKey) async {
     await repository.deleteGroup(groupKey);
     await updateGroups();
   }
@@ -105,7 +102,7 @@ class GroupBloc {
     return groupKey;
   }
 
-  Future<Null> updateGroups() async {
+  Future<void> updateGroups() async {
     await Future<void>.delayed(const Duration(milliseconds: 150));
     _groups = await repository.getUserGroups();
     _groupSubject.add(_groups);
@@ -117,16 +114,14 @@ class GroupMemberBloc {
   String groupKey;
   var _groupMembers = <GroupMember>[];
 
-  GroupMemberBloc(String groupKey) {
-    this.groupKey = groupKey;
-    _updateGroupMembers(groupKey).then((_) {
-      _groupMemberSubject.add(_groupMembers);
-    });
+  GroupMemberBloc(String groupKey) : this.groupKey = groupKey {
+    _updateGroupMembers(groupKey);
   }
 
   Stream<List<GroupMember>> get getGroupMembers => _groupMemberSubject.stream;
-  Future<Null> _updateGroupMembers(String groupKey) async {
+  Future<void> _updateGroupMembers(String groupKey) async {
     _groupMembers = await repository.getGroupMembers(groupKey);
+    _groupMemberSubject.add(_groupMembers);
   }
 }
 
@@ -134,28 +129,26 @@ class TaskBloc {
   final _taskSubject = BehaviorSubject<List<Task>>();
   String _groupKey;
 
-  TaskBloc(String groupKey) {
-    this._groupKey = groupKey;
+  TaskBloc(String groupKey) : this._groupKey = groupKey  {
     updateTasks();
   }
 
   Stream<List<Task>> get getTasks => _taskSubject.stream;
 
-  Future<Null> addTask(String taskName, int index, bool completed) async {
+  Future<void> addTask(String taskName, int index, bool completed) async {
     await repository.addTask(taskName, this._groupKey, index, completed);
     await updateTasks();
   }
 
-  Future<Null> deleteTask(String taskKey) async {
+  Future<void> deleteTask(String taskKey) async {
     await repository.deleteTask(taskKey);
     await updateTasks();
   }
 
-  Future<Null> updateTasks() async {
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-    await repository.getTasks(this._groupKey).then((tasks) {
-      _taskSubject.add(tasks);
-    });
+  Future<void> updateTasks() async {
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    List<Task> tasks = await repository.getTasks(this._groupKey);
+    _taskSubject.add(tasks);
   }
 }
 
@@ -163,28 +156,26 @@ class SubtaskBloc {
   final _subtaskSubject = BehaviorSubject<List<Subtask>>();
   String _taskKey;
 
-  SubtaskBloc(String taskKey) {
-    this._taskKey = taskKey;
+  SubtaskBloc(String taskKey) : this._taskKey = taskKey  {
     _updateSubtasks();
   }
 
   Stream<List<Subtask>> get getSubtasks => _subtaskSubject.stream;
 
-  Future<Null> addSubtask(String subtaskName, int index, bool completed) async {
+  Future<void> addSubtask(String subtaskName, int index, bool completed) async {
     await repository.addSubtask(_taskKey, subtaskName, index, completed);
     await _updateSubtasks();
   }
 
-  Future<Null> deleteSubtask(String subtaskKey) async {
+  Future<void> deleteSubtask(String subtaskKey) async {
     await repository.deleteSubtask(subtaskKey);
     await _updateSubtasks();
   }
 
-  Future<Null> _updateSubtasks() async {
+  Future<void> _updateSubtasks() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    await repository.getSubtasks(_taskKey).then((subtasks) {
-      _subtaskSubject.add(subtasks);
-    });
+    List<Subtask> subtasks = await repository.getSubtasks(_taskKey);
+    _subtaskSubject.add(subtasks);
   }
 }
 

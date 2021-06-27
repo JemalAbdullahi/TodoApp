@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:todolist/models/group.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
@@ -17,7 +16,7 @@ class Repository {
           String firstname,
           String lastname,
           String phonenumber,
-          ImageProvider avatar) =>
+          avatar) =>
       apiProvider.registerUser(
           username, password, email, firstname, lastname, phonenumber, avatar);
 
@@ -32,7 +31,7 @@ class Repository {
           String firstname,
           String lastname,
           String phonenumber,
-          ImageProvider avatar) =>
+          avatar) =>
       apiProvider.updateUserProfile(currentPassword, newPassword, email,
           username, firstname, lastname, phonenumber, avatar);
 

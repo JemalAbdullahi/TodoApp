@@ -67,20 +67,15 @@ class SubTasks(Resource):
         else:
             subtask = SubTask.query.filter_by(subtask_key=header).first()
             if subtask:
-                if (subtask.title != json_data['title']):
-                    subtask.title = json_data['title']
+                #if (subtask.title != json_data['title']): subtask.title = json_data['title']
                 if (subtask.note != json_data['note']):
                     subtask.note = json_data['note']
                 if (subtask.completed != json_data['completed']):
                     subtask.completed = json_data['completed']
-                if (subtask.repeats != json_data['repeats']):
-                    subtask.repeats = json_data['repeats'],
-                if (subtask.group != json_data['group']):
-                    subtask.group = json_data['group']
-                if (subtask.reminders != json_data['reminders']):
-                    subtask.reminders = json_data['reminders']
-                if (subtask.index != json_data['index']):
-                    subtask.index = json_data['index']
+                #if (subtask.repeats != json_data['repeats']): subtask.repeats = json_data['repeats'],
+                #if (subtask.group != json_data['group']): subtask.group = json_data['group']
+                #if (subtask.reminders != json_data['reminders']): subtask.reminders = json_data['reminders']
+                #if (subtask.index != json_data['index']): subtask.index = json_data['index']
                 db.session.commit()
                 result = SubTask.serialize(subtask)
                 return {"status": 'success', 'data': result}, 200

@@ -2,9 +2,9 @@ import 'package:todolist/models/groupmember.dart';
 //import 'package:todolist/models/group.dart';
 
 class User extends GroupMember {
-  final int id;
-  final String password;
-  final String apiKey;
+  final int? id;
+  final String? password;
+  final String? apiKey;
   
   //List<Group> groups;
 

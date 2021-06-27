@@ -6,9 +6,9 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
 class AddSubtask extends StatefulWidget {
   const AddSubtask({
-    Key key,
-    @required this.length,
-    @required this.subtaskBloc,
+    Key? key,
+    required this.length,
+    required this.subtaskBloc,
   }) : super(key: key);
 
   final int length;
@@ -24,17 +24,16 @@ class _AddSubtaskState extends State<AddSubtask> {
   double height = 60.0;
   double width = 250.0;
   double bottom = 0;
-  double focusWidth, marginH;
-  Size size;
+  late double focusWidth, marginH;
+  late Size size;
 
   FocusNode textfieldFocus = new FocusNode();
-
+  
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     focusWidth = size.width * 0.9;
     width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : 250;
-    //bottom = (isFocused) ? 0 : 230;
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
       //bottom = (isFocused && !_res.isOpen) ? 100 : 0;

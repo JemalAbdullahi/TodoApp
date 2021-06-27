@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
 import 'package:todolist/UI/tabs/list_groups_tab.dart';
-import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
 import 'package:todolist/models/global.dart';
 import 'package:todolist/widgets/sidebar_widgets/sidebar_menu.dart';
 
 class HomePage extends StatefulWidget {
-  final String title;
-
-  HomePage({this.title});
-
+  static const routeName = '/home';
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   bool isMenuOpen = false;
-  @override
-  void initState() {
-    groupBloc.updateGroups();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +46,7 @@ class _HomePageState extends State<HomePage> {
                 size: 32.0,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateGroupPage(),
-                  ),
-                );
+                Navigator.pushNamed(context, CreateGroupPage.routeName);
               }, //will go to Create a group Page
             )
           ],

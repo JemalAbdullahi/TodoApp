@@ -11,7 +11,7 @@ class SubtaskInfo extends StatefulWidget {
   final SubtaskBloc subtaskBloc;
   final Subtask subtask;
 
-  const SubtaskInfo({Key key, this.subtaskBloc, this.subtask})
+  const SubtaskInfo({Key? key, required this.subtaskBloc, required this.subtask})
       : super(key: key);
 
   @override
@@ -24,6 +24,13 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
     GroupMember(
         firstname: "Jemal",
         lastname: "Abdullahi",
+        emailaddress: "jebdi12@gmail.com",
+        username: "jebdi12",
+        phonenumber: "123",
+        avatar: null),
+    GroupMember(
+        firstname: "Jack",
+        lastname: "Nicholson",
         emailaddress: "jebdi12@gmail.com",
         username: "jebdi12",
         phonenumber: "123",
@@ -162,7 +169,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         radius: 16,
         backgroundColor: darkerGreenBlue,
         child: Text(
-          "10",
+          "${members.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -182,18 +189,21 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
             childAspectRatio: 0.75,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10.0),
-        itemBuilder: (context, index) => Column(
-          children: [
-            members[index].cAvatar(radius: 34, color: darkerGreenBlue),
-            Text(
-              members[index].firstname,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Segoe UI',
-                fontWeight: FontWeight.bold,
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () => print(members[index].firstname),
+          child: Column(
+            children: [
+              members[index].cAvatar(radius: 34, color: darkerGreenBlue),
+              Text(
+                members[index].firstname,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Segoe UI',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         itemCount: members.length,
       ),

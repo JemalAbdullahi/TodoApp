@@ -6,9 +6,23 @@ db = SQLAlchemy()
 group_member_table = db.Table(
     'group_member', db.Model.metadata,
     db.Column('group_id', db.Integer(),
-              db.ForeignKey('groups.id', ondelete="CASCADE")),
+              db.ForeignKey('groups.id', ondelete="CASCADE"), primary_key=True),
     db.Column('user_id', db.Integer(),
-              db.ForeignKey('users.id', ondelete="CASCADE")))
+              db.ForeignKey('users.id', ondelete="CASCADE"), primary_key=True)
+)
+
+user_assigned_to_subtask_table = db.Table(
+    'user_assigned_to_subtask',
+    db.Model.metadata,
+    db.Column('user_id', db.Integer(),
+              db.ForeignKey('users.id', ondelete='CASCADE'),
+              primary_key=True
+              ),
+    db.Column('subtask_id', db.Integer(),
+              db.ForeignKey('subtasks.id', ondelete='CASCADE'),
+              primary_key=True
+              ),
+)
 
 
 class User(db.Model):
@@ -158,7 +172,7 @@ class SubTask(db.Model):
     note = db.Column(db.String())
     completed = db.Column(db.Boolean(), default=False, nullable=False)
     repeats = db.Column(db.String())
-    #deadline = db.Column(db.Date())
+    due_date = db.Column(db.DateTime(timezone=False))
     reminders = db.Column(db.String())
     group = db.Column(db.String())
     index = db.Column(db.Integer())
@@ -167,12 +181,15 @@ class SubTask(db.Model):
     time_updated = db.Column(db.DateTime(
         timezone=False), onupdate=db.func.now())
     subtask_key = db.Column(db.String(), unique=True)
+    assigned_to_user = db.relationship("User",
+                                       secondary=user_assigned_to_subtask_table,
+                                       backref="subtask")
 
-    def __init__(self, title, task_id, note, completed, repeats, group,
+    def __init__(self, title, task_id, due_date, note, completed, repeats, group,
                  reminders, index, subtask_key):
         self.title = title
         self.task_id = task_id
-        #self.deadline = deadline
+        self.due_date = due_date
         self.reminders = reminders
         self.completed = completed
         self.note = note
@@ -194,7 +211,7 @@ class SubTask(db.Model):
             'task_id': self.task_id,
             'id': self.id,
             'repeats': self.repeats,
-            # 'deadline': self.deadline,
+            'due_date': self.due_date,
             'reminders': self.reminders,
             'completed': self.completed,
             'note': self.note,
@@ -203,6 +220,12 @@ class SubTask(db.Model):
             'time_created': self.time_created.isoformat(),
             'time_updated': time_updated
         }
+
+    def get_users_assigned_to(self):
+        assigned_to = []
+        for user in self.assigned_to_user:
+            assigned_to.append(User.serialize_public(user))
+        return assigned_to
 
 
 class Group(db.Model):

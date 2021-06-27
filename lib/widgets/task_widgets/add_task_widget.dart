@@ -4,9 +4,9 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({
-    Key key,
-    @required this.length,
-    @required this.taskbloc,
+    Key? key,
+    required this.length,
+    required this.taskbloc,
   }) : super(key: key);
 
   final int length;
@@ -23,8 +23,8 @@ class _AddTaskState extends State<AddTask> {
   double height = 60.0;
   double width = 250.0;
   double bottom = 0;
-  double focusWidth, marginH;
-  Size size;
+  late double focusWidth, marginH;
+  late Size size;
 
   @override
   Widget build(BuildContext context) {

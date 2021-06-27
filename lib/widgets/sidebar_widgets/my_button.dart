@@ -8,11 +8,11 @@ class MyButton extends StatelessWidget {
   final VoidCallback buttonFunction;
 
   MyButton(
-      {this.text,
-      this.iconData,
-      this.textSize,
-      this.height,
-      this.buttonFunction});
+      {required this.text,
+      required this.iconData,
+      required this.textSize,
+      required this.height,
+      required this.buttonFunction});
 
   @override
   Widget build(BuildContext context) {

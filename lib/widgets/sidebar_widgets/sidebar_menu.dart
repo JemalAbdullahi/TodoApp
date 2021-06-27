@@ -4,8 +4,8 @@ import 'package:todolist/widgets/sidebar_widgets/sidebar_username.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({
-    Key key,
-    @required this.isMenuOpen,
+    Key? key,
+    required this.isMenuOpen,
   }) : super(key: key);
 
   final bool isMenuOpen;
@@ -75,7 +75,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
 
 class DrawerPainter extends CustomPainter {
   final Offset offset;
-  DrawerPainter({this.offset});
+  DrawerPainter({required this.offset});
 
   double getControlPointX(double width) {
     if (offset.dx == 0) {

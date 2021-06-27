@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:todolist/UI/title_card.dart';
@@ -10,34 +11,31 @@ import 'package:todolist/widgets/task_widgets/add_subtask_widget.dart';
 import 'package:todolist/widgets/task_widgets/subtask_list_item_widget.dart';
 
 class SubtaskListTab extends StatefulWidget {
-  final Task task;
-
-  SubtaskListTab({@required this.task});
-
+  static const routeName = '/listSubtasksTab';
   @override
   _SubtaskListTabState createState() => _SubtaskListTabState();
 }
 
 class _SubtaskListTabState extends State<SubtaskListTab> {
   //List<Subtask> subtasks;
-  SubtaskBloc subtaskBloc;
+  late SubtaskBloc subtaskBloc;
+  late Task task;
   int orderBy;
+  bool reorder;
 
-  @override
-  void initState() {
-    subtaskBloc = SubtaskBloc(widget.task.taskKey);
-    orderBy = 0;
-    super.initState();
-  }
+  _SubtaskListTabState(): orderBy = 1, reorder = false;
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as SubtaskListTabArguments;
+    task = args.task;
+    subtaskBloc = SubtaskBloc(task.taskKey);
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              widget.task.title,
+              task.title,
               style: appTitleStyle,
             ),
             centerTitle: true,
@@ -60,7 +58,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
                 widget: TitleCard(title: 'To Do', child: _buildStreamBuilder()),
               ),
               AddSubtask(
-                length: widget.task.subtasks.length,
+                length: task.subtasks.length,
                 subtaskBloc: subtaskBloc,
               ),
             ],
@@ -74,46 +72,37 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     return StreamBuilder(
       // Wrap our widget with a StreamBuilder
       stream: subtaskBloc.getSubtasks, // pass our Stream getter here
-      initialData: widget.task.subtasks, // provide an initial data
+      initialData: task.subtasks, // provide an initial data
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            return Container(
-              child: Center(
-                child: Text("No Connection Message"),
-              ),
-            );
+            break;
           case ConnectionState.active:
             print("Active Data: " +
                 snapshot.data.toString() +
                 " @" +
                 DateTime.now().toString());
-            if (snapshot.data.isNotEmpty) {
-              widget.task.subtasks = snapshot.data;
-              print("Group Task List: " +
-                  widget.task.subtasks.toString() +
-                  " @" +
-                  DateTime.now().toString());
-
+            if (snapshot.hasData) {
+              task.subtasks = snapshot.data!;
+              return _buildList();
+            }
+            if (reorder) {
+              reorder = false;
               return _buildList();
             }
             return SizedBox.shrink();
-            break;
           case ConnectionState.waiting:
-            print("Waiting Data" +
+            print("Waiting Data: " +
                 snapshot.data.toString() +
                 " @" +
                 DateTime.now().toString());
-            return Center(child: CircularProgressIndicator());
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
             break;
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
-            if (snapshot.data.isNotEmpty) {
-              widget.task.subtasks = snapshot.data;
-
-              return _buildList();
-            }
-            return SizedBox.shrink();
+            break;
         }
         return CircularProgressIndicator();
       },
@@ -128,14 +117,14 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       child: ListView(
         key: UniqueKey(),
         padding: EdgeInsets.only(top: 175, bottom: 90),
-        children: widget.task.subtasks.map<Dismissible>((Subtask item) {
+        children: task.subtasks.map<Dismissible>((Subtask item) {
           return _buildListTile(item);
         }).toList(),
       ),
     );
   }
 
-  Widget _buildListTile(Subtask subtask) {
+  Dismissible _buildListTile(Subtask subtask) {
     return Dismissible(
       key: Key(subtask.subtaskKey),
       child: ListTile(
@@ -170,9 +159,9 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   }
 
   void removeSubtask(Subtask subtask) {
-    if (widget.task.subtasks.contains(subtask)) {
+    if (task.subtasks.contains(subtask)) {
       setState(() {
-        widget.task.subtasks.remove(subtask);
+        task.subtasks.remove(subtask);
       });
     }
   }
@@ -246,18 +235,23 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     orderBy = value;
     switch (value) {
       case 0:
-        widget.task.subtasks.sort(
+        task.subtasks.sort(
             (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
         break;
       case 1:
-        widget.task.subtasks
+        task.subtasks
             .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
         break;
       case 2:
-        widget.task.subtasks
+        task.subtasks
             .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
         break;
       default:
     }
   }
+}
+
+class SubtaskListTabArguments {
+  final Task task;
+  SubtaskListTabArguments(this.task);
 }
