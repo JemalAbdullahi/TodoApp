@@ -25,14 +25,19 @@ class UserBloc {
     return _user;
   }
 
-  Future<void> registerUser(String username, String password, String email, String firstname,
-      String lastname, String phonenumber, avatar) async {
-    _user = await repository.registerUser(
-        username, password, email, firstname, lastname, phonenumber, avatar);
+  Future<void> registerUser(String username, String password, String email,
+      String firstname, String lastname, String phonenumber, avatar) async {
+    try {
+      _user = await repository.registerUser(
+          username, password, email, firstname, lastname, phonenumber, avatar);
+    } catch (e) {
+      throw e;
+    }
     _userGetter.sink.add(_user);
   }
 
-  Future<void> signinUser(String username, String password, String apiKey) async {
+  Future<void> signinUser(
+      String username, String password, String apiKey) async {
     try {
       _user = await repository.signinUser(username, password, apiKey);
     } catch (e) {
@@ -129,7 +134,7 @@ class TaskBloc {
   final _taskSubject = BehaviorSubject<List<Task>>();
   String _groupKey;
 
-  TaskBloc(String groupKey) : this._groupKey = groupKey  {
+  TaskBloc(String groupKey) : this._groupKey = groupKey {
     updateTasks();
   }
 
@@ -156,7 +161,7 @@ class SubtaskBloc {
   final _subtaskSubject = BehaviorSubject<List<Subtask>>();
   String _taskKey;
 
-  SubtaskBloc(String taskKey) : this._taskKey = taskKey  {
+  SubtaskBloc(String taskKey) : this._taskKey = taskKey {
     _updateSubtasks();
   }
 

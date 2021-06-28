@@ -78,6 +78,7 @@ class ForgotPasswordDialogBox extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           ),
           onPressed: () {
+            print("Reset Password");
             Navigator.of(context).pop();
           },
           child: Text(

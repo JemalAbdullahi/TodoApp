@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/UI/pages/login_page.dart';
+import 'package:todolist/UI/pages/authenticate/login_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/group_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
 import 'package:todolist/bloc/resources/repository.dart';
