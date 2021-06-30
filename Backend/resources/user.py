@@ -36,20 +36,19 @@ class Users(Resource):
             return {'Message': 'Phone Number already exists'}, 409
 
         api_key = self.generate_key()
-
         user = User.query.filter_by(api_key=api_key).first()
-        if user:
-            return {'Message': 'API key already exists'}, 409
+        while user:
+            api_key = self.generate_key()
+            user = User.query.filter_by(api_key=api_key).first()
 
         user = User(
             api_key=api_key,
             firstname=json_data['firstname'],
             lastname=json_data['lastname'],
-            phonenumber=json_data['phonenumber'],
-            avatar=json_data['avatar'],
-            emailaddress=json_data['emailaddress'],
-            password=json_data['password'],
             username=json_data['username'],
+            password=json_data['password'],
+            emailaddress=json_data['emailaddress'],
+            phonenumber=json_data['phonenumber'],
         )
         db.session.add(user)
         db.session.commit()

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/authenticate/signup_page.dart';
 import 'package:todolist/UI/pages/home_page.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/services.dart';
 import 'package:todolist/UI/pages/authenticate/login_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
@@ -48,43 +46,27 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Determines whether to direct user to login page or homepage.
-/* class SignIn extends StatelessWidget {
-  late final String apiKey;
-  late final String initialRoute;
-
-  SignIn() {
-    signInUser();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MyApp(initialRoute: initialRoute);
-  }
-
-  Future<void> signInUser() async {
-    apiKey = await repository.getApiKey();
-    if (apiKey.isNotEmpty && apiKey.length > 0) {
-      try {
-        userBloc.signinUser("", "", apiKey);
-        initialRoute = Splash.routeName;
-      } catch (e) {
-        print(e);
-      }
-    } else {
-      initialRoute = LoginPage.routeName;
-    }
-  }
-} */
-
 /// Display Splash screen while loading User's groups. Then redirect to Homepage.
 /// No arguments need to be passed when navigating to page Splash
-class Splash extends StatelessWidget {
+class Splash extends StatefulWidget {
   static const routeName = '/';
+
+  @override
+  _SplashState createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
   late final String apiKey;
 
+  @override
+  void initState() {
+    super.initState();
+    loadFromFuture().then(
+        (navigateTo) => Navigator.of(context).pushReplacementNamed(navigateTo));
+  }
+
   /// Update Group list from server, then load homepage.
-  Future<String> loadFromFuture(BuildContext context) async {
+  Future<String> loadFromFuture() async {
     apiKey = await repository.getApiKey();
     if (apiKey.isNotEmpty && apiKey.length > 0) {
       try {
@@ -101,21 +83,7 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SplashScreen(
-      navigateAfterFuture: loadFromFuture(context),
-      title: Text(
-        'ToDo',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
-      ),
-      gradientBackground: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [lightBlue, lightBlueGradient],
-      ),
-      //styleTextUnderTheLoader: new TextStyle(),
-      loaderColor: Colors.black54,
-    );
-    /* Scaffold(
+    return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -128,25 +96,33 @@ class Splash extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(
-                "ToDo",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+          Column(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: Text(
+                    "ToDo",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
               ),
-            ),
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
+                  ),
+                ),
+              ),
+            ],
           )
         ],
       ),
-    ); */
+    );
   }
 }

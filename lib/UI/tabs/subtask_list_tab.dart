@@ -23,13 +23,16 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   int orderBy;
   bool reorder;
 
-  _SubtaskListTabState(): orderBy = 1, reorder = false;
+  _SubtaskListTabState()
+      : orderBy = 1,
+        reorder = false;
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as SubtaskListTabArguments;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as SubtaskListTabArguments;
     task = args.task;
-    subtaskBloc = SubtaskBloc(task.taskKey);
+    subtaskBloc = SubtaskBloc(task);
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
@@ -82,24 +85,16 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
                 snapshot.data.toString() +
                 " @" +
                 DateTime.now().toString());
-            if (snapshot.hasData) {
+            if (snapshot.hasData && !listEquals(task.subtasks, snapshot.data)) {
               task.subtasks = snapshot.data!;
-              return _buildList();
             }
             if (reorder) {
               reorder = false;
-              return _buildList();
             }
-            return SizedBox.shrink();
+            return _buildList();
           case ConnectionState.waiting:
-            print("Waiting Data: " +
-                snapshot.data.toString() +
-                " @" +
-                DateTime.now().toString());
-            if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
-            }
-            break;
+            return Center(
+                child: CircularProgressIndicator(color: Colors.black54));
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
             break;
@@ -168,7 +163,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
 
   void reAddSubtask(Subtask subtask) async {
     await subtaskBloc.addSubtask(
-        subtask.title, subtask.index, subtask.completed);
+        subtask.title);
     setState(() {});
   }
 
@@ -239,12 +234,10 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
         break;
       case 1:
-        task.subtasks
-            .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
+        task.subtasks.sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
         break;
       case 2:
-        task.subtasks
-            .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
+        task.subtasks.sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
         break;
       default:
     }

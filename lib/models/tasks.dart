@@ -9,14 +9,11 @@ class Task extends Equatable {
   /// Task ID
   int id;
 
-  /// Task Index in the list
-  int index;
-
   /// Task Key
   String taskKey;
 
   /// List of Subtasks associated with the Task
-  late List<Subtask> subtasks;
+  List<Subtask> subtasks = [];
 
   /// GroupKey from the Group that added the task
   String groupKey;
@@ -45,7 +42,6 @@ class Task extends Equatable {
       required this.id,
       required this.note,
       required this.taskKey,
-      required this.index,
       required this.timeCreated,
       required this.timeUpdated});
 
@@ -53,7 +49,6 @@ class Task extends Equatable {
     return Task(
         id: parsedJson['id'],
         title: parsedJson['title'],
-        index: parsedJson['index'],
         taskKey: parsedJson['task_key'],
         completed: parsedJson['completed'],
         note: parsedJson['note'],

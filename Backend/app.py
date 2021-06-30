@@ -3,8 +3,14 @@ from api.api import api_bp
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import sys
+import logging
+
 
 app = Flask(__name__)
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
+
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

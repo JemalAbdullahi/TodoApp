@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/UI/tabs/subtask_info_tab.dart';
+import 'package:todolist/UI/tabs/subtask_info/subtask_info_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
@@ -54,23 +54,34 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                       repository.updateSubtask(widget.subtask);
                     });
                   }),
-              Text(widget.subtask.title, style: toDoListTileStyle),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  widget.subtask.note.isNotEmpty
-                      ? Text(
-                          widget.subtask.note,
-                          style: toDoListSubtitleStyle,
-                          textAlign: TextAlign.right,
-                        )
-                      : Text(
-                          '',
-                          style: toDoListSubtitleStyle,
-                          textAlign: TextAlign.right,
-                        ),
-                  SizedBox(height: 20),
-                ],
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Text(
+                  widget.subtask.title,
+                  style: toDoListTileStyle,
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  textDirection: TextDirection.ltr,
+                  children: <Widget>[
+                    widget.subtask.note.isNotEmpty
+                        ? Text(
+                            widget.subtask.note,
+                            style: toDoListSubtitleStyle,
+                            textAlign: TextAlign.right,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : SizedBox.shrink(),
+                  ],
+                ),
               ),
             ],
           ),

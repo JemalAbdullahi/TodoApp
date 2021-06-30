@@ -32,8 +32,6 @@ class Tasks(Resource):
                         user_id=user.id,
                         group_id=group.id,
                         task_key=task_key,
-                        completed=json_data['completed'],
-                        index=json_data['index'],
                     )
                     db.session.add(task)
                     db.session.commit()
@@ -74,18 +72,8 @@ class Tasks(Resource):
         else:
             task = Task.query.filter_by(task_key=header).first()
             if task:
-                if (task.title != json_data['title']):
-                    task.title = json_data['title']
-                if (task.note != json_data['note']):
-                    task.note = json_data['note']
                 if (task.completed != json_data['completed']):
                     task.completed = json_data['completed']
-                if (task.repeats != json_data['repeats']):
-                    task.repeats = json_data['repeats']
-                if (task.reminders != json_data['reminders']):
-                    task.reminders = json_data['reminders']
-                if (task.index != json_data['index']):
-                    task.index = json_data['index']
 
                 db.session.commit()
 

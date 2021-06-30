@@ -8,7 +8,7 @@ class Group extends ChangeNotifier {
   late String groupKey;
   late bool isPublic;
   late List<GroupMember> members = [];
-  late List<Task> tasks;
+  List<Task> tasks = [];
 
   /// Time Created
   late DateTime timeCreated;

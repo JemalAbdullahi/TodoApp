@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/tabs/subtask_info/viewmodel/subtask_view_model.dart';
+import 'package:todolist/UI/tabs/subtask_info/widgets/due_date_row.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/groupmember.dart';
@@ -11,7 +13,8 @@ class SubtaskInfo extends StatefulWidget {
   final SubtaskBloc subtaskBloc;
   final Subtask subtask;
 
-  const SubtaskInfo({Key? key, required this.subtaskBloc, required this.subtask})
+  const SubtaskInfo(
+      {Key? key, required this.subtaskBloc, required this.subtask})
       : super(key: key);
 
   @override
@@ -19,7 +22,9 @@ class SubtaskInfo extends StatefulWidget {
 }
 
 class _SubtaskInfoState extends State<SubtaskInfo> {
-  DateTime _chosenDateTime = DateTime.now();
+  late final SubtaskViewModel viewmodel;
+  TextEditingController notesController = new TextEditingController();
+
   List<GroupMember> members = [
     GroupMember(
         firstname: "Jemal",
@@ -38,38 +43,57 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    viewmodel = SubtaskViewModel(
+        subtask: widget.subtask, subtaskBloc: widget.subtaskBloc);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BackgroundColorContainer(
-        startColor: lightGreenBlue,
-        endColor: darkGreenBlue,
-        widget: Scaffold(
-          appBar: CustomAppBar(
-            widget.subtask.title,
-            /* actions: <Widget>[
-              TextButton(
-                onPressed: updateSubtask,
-                child: Text(
-                  "Update",
-                  style: TextStyle(
-                      color: Colors.lightBlue,
-                      fontFamily: "Segoe UI",
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: BackgroundColorContainer(
+          startColor: lightGreenBlue,
+          endColor: darkGreenBlue,
+          widget: Scaffold(
+            appBar: CustomAppBar(
+              widget.subtask.title,
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    viewmodel.note = notesController.text;
+                    viewmodel.updateSubtaskInfo();
+                  },
+                  child: Text(
+                    "Update",
+                    style: TextStyle(
+                        color: Colors.lightBlue,
+                        fontFamily: "Segoe UI",
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-            ], */
-            fontSize: 24,
-          ),
-          backgroundColor: Colors.transparent,
-          body: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: _subtaskInfoColumn(context),
-              ),
-              _buildExpandedCard()
-            ],
+              ],
+              fontSize: 24,
+            ),
+            backgroundColor: Colors.transparent,
+            body: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: _subtaskInfoColumn(),
+                ),
+                _buildExpandedCard()
+              ],
+            ),
           ),
         ),
       ),
@@ -77,7 +101,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
   }
 
   /// Column containing pertinent Subtask Info
-  Column _subtaskInfoColumn(BuildContext context) {
+  Column _subtaskInfoColumn() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -85,7 +109,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         SizedBox(height: 10.0),
         _notesContainer(),
         SizedBox(height: 20),
-        _dueDateRow(context),
+        DueDateRow(viewmodel),
         SizedBox(height: 15),
       ],
     );
@@ -105,30 +129,15 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: TextField(
+        controller: notesController..text = viewmodel.note,
+        onChanged: (val) {
+          viewmodel.note = val;
+        },
         keyboardType: TextInputType.multiline,
         maxLines: null,
         minLines: 4,
         decoration: InputDecoration(border: InputBorder.none),
       ),
-    );
-  }
-
-  /// Row displaying the due date
-  ///
-  /// Contains
-  /// * Text of the Due Date
-  /// * Icon Button to display Calendar
-  Row _dueDateRow(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-            "Due Date: ${_chosenDateTime.month}/${_chosenDateTime.day}/${_chosenDateTime.year}",
-            style: labelStyle),
-        SizedBox(width: 5),
-        IconButton(
-            onPressed: () => _showDatePicker(context),
-            icon: Icon(Icons.calendar_today, color: lightBlue))
-      ],
     );
   }
 
@@ -206,48 +215,6 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
           ),
         ),
         itemCount: members.length,
-      ),
-    );
-  }
-
-  void _showDatePicker(context) {
-    // showCupertinoModalPopup is a built-in function of the cupertino library
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-        height: 250,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: 200,
-              child: CupertinoDatePicker(
-                  initialDateTime: _chosenDateTime,
-                  mode: CupertinoDatePickerMode.date,
-                  onDateTimeChanged: (val) {
-                    setState(() {
-                      _chosenDateTime = val;
-                    });
-                  }),
-            ),
-            // Close the modal
-            TextButton(
-              child: Text(
-                'Done',
-                style: TextStyle(
-                    color: darkGreenBlue,
-                    fontSize: 20,
-                    fontFamily: 'Segoe UI',
-                    fontWeight: FontWeight.w600),
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            )
-          ],
-        ),
       ),
     );
   }

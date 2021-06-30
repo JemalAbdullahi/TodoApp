@@ -62,8 +62,8 @@ class Repository {
   Future getTasks(String groupKey) => apiProvider.getTasks(groupKey);
 
   Future<Null> addTask(
-      String taskName, String groupKey, int index, bool completed) async {
-    apiProvider.addTask(taskName, groupKey, index, completed);
+      String taskName, String groupKey) async {
+    apiProvider.addTask(taskName, groupKey);
   }
 
   Future<Null> updateTask(Task task) async {
@@ -75,11 +75,11 @@ class Repository {
   }
 
   //Subtasks
-  Future getSubtasks(String taskKey) => apiProvider.getSubtasks(taskKey);
+  Future getSubtasks(Task task) => apiProvider.getSubtasks(task);
 
   Future<Null> addSubtask(
-      String taskKey, String subtaskName, int index, bool completed) async {
-    apiProvider.addSubtask(taskKey, subtaskName, index, completed);
+      String taskKey, String subtaskName) async {
+    apiProvider.addSubtask(taskKey, subtaskName);
   }
 
   Future<Null> updateSubtask(Subtask subtask) async {

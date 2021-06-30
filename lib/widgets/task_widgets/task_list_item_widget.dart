@@ -20,7 +20,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
 
   @override
   void initState() {
-    subtaskBloc = SubtaskBloc(widget.task.taskKey);
+    subtaskBloc = SubtaskBloc(widget.task);
     super.initState();
   }
 

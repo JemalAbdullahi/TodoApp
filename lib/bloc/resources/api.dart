@@ -25,18 +25,12 @@ class ApiProvider {
       Uri(scheme: 'http', host: stageHost, path: '/api/groupmember');
   Uri searchURL = Uri(scheme: 'http', host: stageHost, path: '/api/search');
 
-  String apiKey='';
+  String apiKey = '';
 
   // User CRUD Functions
   /// Sign Up
-  Future<User> registerUser(
-      String username,
-      String password,
-      String email,
-      String firstname,
-      String lastname,
-      String phonenumber,
-      avatar) async {
+  Future<User> registerUser(String username, String password, String email,
+      String firstname, String lastname, String phonenumber, avatar) async {
     final response = await client.post(userURL,
         // headers: "",
         body: jsonEncode({
@@ -130,7 +124,7 @@ class ApiProvider {
             //print("Get User Groups: ${group.groupKey}");
             group.members = await getGroupMembers(group.groupKey);
             //print("--------------End members-------------");
-            group.tasks = await getTasks(group.groupKey);
+            //group.tasks = await getTasks(group.groupKey);
             //print("--------------End tasks-------------");
             groups.add(group);
           } catch (Exception) {
@@ -272,7 +266,7 @@ class ApiProvider {
       for (Map<String, dynamic> json_ in result["data"]) {
         try {
           Task task = Task.fromJson(json_);
-          task.subtasks = await getSubtasks(task.taskKey);
+          //task.subtasks = await getSubtasks(task.taskKey);
           tasks.add(task);
         } catch (Exception) {
           print(Exception);
@@ -292,16 +286,10 @@ class ApiProvider {
   /// * GroupKey: Unique Group Identifier
   /// * Index: Position within Group's task list
   /// * Completed: True or False, Has the task been completed
-  Future addTask(
-      String taskName, String groupKey, int index, bool completed) async {
+  Future addTask(String taskName, String groupKey) async {
     final response = await client.post(taskURL,
         headers: {"Authorization": apiKey},
-        body: jsonEncode({
-          "title": taskName,
-          "group_key": groupKey,
-          "index": index,
-          "completed": completed
-        }));
+        body: jsonEncode({"title": taskName, "group_key": groupKey}));
     if (response.statusCode == 201) {
       //print("Task " + taskName + " added @" + DateTime.now().toString());
     } else {
@@ -316,14 +304,7 @@ class ApiProvider {
   Future updateTask(Task task) async {
     final response = await client.put(taskURL,
         headers: {"Authorization": task.taskKey},
-        body: jsonEncode({
-          "title": task.title,
-          "note": task.note,
-          "repeats": '',
-          "completed": task.completed,
-          "reminders": '',
-          "index": task.index
-        }));
+        body: jsonEncode({"completed": task.completed}));
     if (response.statusCode == 200) {
       //print("Task ${task.title} Updated");
     } else {
@@ -352,10 +333,10 @@ class ApiProvider {
 
 //Subtask CRUD Functions
   //Get Subtasks
-  Future<List<Subtask>> getSubtasks(String taskKey) async {
+  Future<List<Subtask>> getSubtasks(Task task) async {
     final response = await client.get(
       subtaskURL,
-      headers: {"Authorization": taskKey},
+      headers: {"Authorization": task.taskKey},
     );
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -363,7 +344,11 @@ class ApiProvider {
       List<Subtask> subtasks = [];
       for (Map<String, dynamic> json_ in result["data"]) {
         try {
-          subtasks.add(Subtask.fromJson(json_));
+          Subtask subtask = Subtask.fromJson(json_);
+          subtasks.add(subtask);
+          subtask.deadline = json_['due_date'] == null
+              ? DateTime.now()
+              : DateTime.parse(json_['due_date']);
         } catch (Exception) {
           print(Exception);
         }
@@ -376,18 +361,11 @@ class ApiProvider {
   }
 
   //Add Subtask
-  Future addSubtask(
-      String taskKey, String subtaskName, int index, bool completed) async {
+  Future addSubtask(String taskKey, String subtaskName) async {
     final response = await client.post(subtaskURL,
         headers: {"Authorization": taskKey},
         body: jsonEncode({
           "title": subtaskName,
-          "note": "",
-          "completed": completed,
-          "repeats": "",
-          "group": "",
-          "reminders": "",
-          "index": index
         }));
     if (response.statusCode == 201) {
       //print("Subtask " + subtaskName + " added @" + DateTime.now().toString());
@@ -404,16 +382,12 @@ class ApiProvider {
     final response = await client.put(subtaskURL,
         headers: {"Authorization": subtask.subtaskKey},
         body: jsonEncode({
-          "title": subtask.title,
           "note": subtask.note,
-          "repeats": '',
           "completed": subtask.completed,
-          "group": subtask.group,
-          "reminders": '',
-          "index": subtask.index
+          "due_date": subtask.deadline!.toIso8601String()
         }));
     if (response.statusCode == 200) {
-      //print("Subtask " + subtask.title + " Updated");
+      print("Subtask " + subtask.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);

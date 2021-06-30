@@ -29,13 +29,13 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer(), primary_key=True)
-    firstname = db.Column(db.String())
-    lastname = db.Column(db.String())
-    phonenumber = db.Column(db.String(15), unique=True)
-    username = db.Column(db.String(64), unique=True)
-    password = db.Column(db.String(128))
-    emailaddress = db.Column(db.String(120))
-    api_key = db.Column(db.String())
+    firstname = db.Column(db.String(), nullable=False)
+    lastname = db.Column(db.String(), nullable=False)
+    phonenumber = db.Column(db.String(15), unique=True, nullable=False)
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+    emailaddress = db.Column(db.String(120), nullable=False)
+    api_key = db.Column(db.String(), unique=True)
     avatar = db.Column(db.LargeBinary)
     time_created = db.Column(db.DateTime(
         timezone=False), server_default=db.func.now())
@@ -46,15 +46,14 @@ class User(db.Model):
                              backref="members")
 
     def __init__(self, api_key, emailaddress, password, username, firstname,
-                 lastname, phonenumber, avatar):
+                 lastname, phonenumber):
         self.api_key = api_key
-        self.emailaddress = emailaddress
-        self.password = generate_password_hash(password)
-        self.username = username
         self.firstname = firstname
         self.lastname = lastname
+        self.username = username
+        self.password = generate_password_hash(password)
+        self.emailaddress = emailaddress
         self.phonenumber = phonenumber
-        self.avatar = avatar
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -109,10 +108,10 @@ class Task(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(),
                         db.ForeignKey('users.id', ondelete="CASCADE"))
-    index = db.Column(db.Integer())
-    title = db.Column(db.String())
+    title = db.Column(db.String(), nullable=False)
     note = db.Column(db.String(), default="")
-    completed = db.Column(db.Boolean(), default=False, nullable=False)
+    completed = db.Column(db.Boolean(), default=False)
+
     repeats = db.Column(db.String(), default="")
     reminders = db.Column(db.String(), default="")
     time_created = db.Column(db.DateTime(
@@ -123,13 +122,11 @@ class Task(db.Model):
                          db.ForeignKey('groups.id', ondelete="CASCADE"))
     task_key = db.Column(db.String(), unique=True)
 
-    def __init__(self, title, user_id, group_id, task_key, index, completed):
+    def __init__(self, title, user_id, group_id, task_key):
         self.title = title
         self.user_id = user_id
         self.group_id = group_id
         self.task_key = task_key
-        self.completed = completed
-        self.index = index
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -143,7 +140,6 @@ class Task(db.Model):
             'id': self.id,
             'title': self.title,
             'user_id': self.user_id,
-            'index': self.index,
             'group_key': self.get_group_key(),
             'group_name': self.get_group_name(),
             'repeats': self.repeats,
@@ -168,34 +164,25 @@ class SubTask(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     task_id = db.Column(db.Integer(),
                         db.ForeignKey('tasks.id', ondelete="CASCADE"))
-    title = db.Column(db.String())
-    note = db.Column(db.String())
-    completed = db.Column(db.Boolean(), default=False, nullable=False)
+    subtask_key = db.Column(db.String(), unique=True)
+    title = db.Column(db.String(), nullable=False)
+    completed = db.Column(db.Boolean(), default=False)
+    note = db.Column(db.String(), default="")
     repeats = db.Column(db.String())
     due_date = db.Column(db.DateTime(timezone=False))
     reminders = db.Column(db.String())
-    group = db.Column(db.String())
-    index = db.Column(db.Integer())
     time_created = db.Column(db.DateTime(
         timezone=False), server_default=db.func.now())
     time_updated = db.Column(db.DateTime(
         timezone=False), onupdate=db.func.now())
-    subtask_key = db.Column(db.String(), unique=True)
+
     assigned_to_user = db.relationship("User",
                                        secondary=user_assigned_to_subtask_table,
                                        backref="subtask")
 
-    def __init__(self, title, task_id, due_date, note, completed, repeats, group,
-                 reminders, index, subtask_key):
+    def __init__(self, title, task_id, subtask_key):
         self.title = title
         self.task_id = task_id
-        self.due_date = due_date
-        self.reminders = reminders
-        self.completed = completed
-        self.note = note
-        self.group = group
-        self.repeats = repeats
-        self.index = index
         self.subtask_key = subtask_key
 
     def __repr__(self):
@@ -207,18 +194,18 @@ class SubTask(db.Model):
         else:
             time_updated = self.time_updated.isoformat()
         return {
-            'title': self.title,
-            'task_id': self.task_id,
             'id': self.id,
-            'repeats': self.repeats,
-            'due_date': self.due_date,
-            'reminders': self.reminders,
+            'task_id': self.task_id,
+            'subtask_key': self.subtask_key,
+            'title': self.title,
             'completed': self.completed,
             'note': self.note,
-            'index': self.index,
-            'subtask_key': self.subtask_key,
+            'repeats': self.repeats,
+            'due_date': self.due_date.isoformat(),
+            'reminders': self.reminders,
             'time_created': self.time_created.isoformat(),
-            'time_updated': time_updated
+            'time_updated': time_updated,
+            'assigned_to': self.get_users_assigned_to()
         }
 
     def get_users_assigned_to(self):

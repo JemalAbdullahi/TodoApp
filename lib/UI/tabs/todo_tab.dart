@@ -28,7 +28,9 @@ class _ToDoTabState extends State<ToDoTab> {
   int orderBy;
   bool reorder;
 
-  _ToDoTabState(): orderBy = 1, reorder = false;
+  _ToDoTabState()
+      : orderBy = 1,
+        reorder = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,25 +97,16 @@ class _ToDoTabState extends State<ToDoTab> {
                 snapshot.data.toString() +
                 " @" +
                 DateTime.now().toString());
-            print("Active Task List: " + group.tasks.toString());
-            if (snapshot.hasData) {
+            if (snapshot.hasData && !listEquals(group.tasks, snapshot.data)) {
               group.tasks = snapshot.data!;
-              return _buildList();
             }
             if (reorder) {
               reorder = false;
-              return _buildList();
             }
-            return SizedBox.shrink();
+            return _buildList();
           case ConnectionState.waiting:
-            print("Waiting Data: " +
-                snapshot.data.toString() +
-                " @" +
-                DateTime.now().toString());
-            if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
-            }
-            break;
+            return Center(
+                child: CircularProgressIndicator(color: Colors.black54));
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
             break;
@@ -183,7 +176,7 @@ class _ToDoTabState extends State<ToDoTab> {
 
   void reAddTask(Task task) async {
     await taskBloc
-        .addTask(task.title, task.index, task.completed)
+        .addTask(task.title)
         .then((value) {
       setState(() {});
     });
@@ -258,19 +251,17 @@ class _ToDoTabState extends State<ToDoTab> {
             (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
         break;
       case 1:
-        group.tasks
-            .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
+        group.tasks.sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
         break;
       case 2:
-        group.tasks
-            .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
+        group.tasks.sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
         break;
       default:
     }
   }
 }
 
-class ToDoTabArguments{
+class ToDoTabArguments {
   final Group group;
 
   ToDoTabArguments(this.group);

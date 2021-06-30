@@ -102,7 +102,7 @@ class _AddTaskState extends State<AddTask> {
       String title = controller.text;
       controller.clear();
       textfieldFocus.unfocus();
-      await widget.taskbloc.addTask(title, widget.length, false);
+      await widget.taskbloc.addTask(title);
       //widget.taskbloc.updateTasks();
     }
   }

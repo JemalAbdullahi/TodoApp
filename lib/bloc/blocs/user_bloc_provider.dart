@@ -46,7 +46,7 @@ class UserBloc {
     _userGetter.sink.add(_user);
   }
 
-  updateUserProfile(
+  Future<void> updateUserProfile(
       String currentPassword,
       String newPassword,
       String email,
@@ -140,8 +140,8 @@ class TaskBloc {
 
   Stream<List<Task>> get getTasks => _taskSubject.stream;
 
-  Future<void> addTask(String taskName, int index, bool completed) async {
-    await repository.addTask(taskName, this._groupKey, index, completed);
+  Future<void> addTask(String taskName) async {
+    await repository.addTask(taskName, this._groupKey);
     await updateTasks();
   }
 
@@ -159,16 +159,17 @@ class TaskBloc {
 
 class SubtaskBloc {
   final _subtaskSubject = BehaviorSubject<List<Subtask>>();
-  String _taskKey;
+  Task _task;
 
-  SubtaskBloc(String taskKey) : this._taskKey = taskKey {
+
+  SubtaskBloc(Task task) : this._task = task {
     _updateSubtasks();
   }
 
   Stream<List<Subtask>> get getSubtasks => _subtaskSubject.stream;
 
-  Future<void> addSubtask(String subtaskName, int index, bool completed) async {
-    await repository.addSubtask(_taskKey, subtaskName, index, completed);
+  Future<void> addSubtask(String subtaskName) async {
+    await repository.addSubtask(_task.taskKey, subtaskName);
     await _updateSubtasks();
   }
 
@@ -177,9 +178,15 @@ class SubtaskBloc {
     await _updateSubtasks();
   }
 
+  Future<void> updateSubtaskInfo(
+      Subtask subtask) async {
+    await repository.updateSubtask(subtask);
+    await _updateSubtasks();
+  }
+
   Future<void> _updateSubtasks() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    List<Subtask> subtasks = await repository.getSubtasks(_taskKey);
+    List<Subtask> subtasks = await repository.getSubtasks(_task);
     _subtaskSubject.add(subtasks);
   }
 }
