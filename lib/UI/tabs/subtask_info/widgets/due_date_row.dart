@@ -2,17 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/models/global.dart';
 
-class DueDateRow extends StatelessWidget {
-
+class DueDateRow extends StatefulWidget {
   final viewmodel;
 
   DueDateRow(this.viewmodel);
+
+  @override
+  _DueDateRowState createState() => _DueDateRowState();
+}
+
+class _DueDateRowState extends State<DueDateRow> {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Text(
-            "Due Date: ${viewmodel.deadline.month}/${viewmodel.deadline.day}/${viewmodel.deadline.year}",
+            "Due Date: ${widget.viewmodel.deadline.month}/${widget.viewmodel.deadline.day}/${widget.viewmodel.deadline.year}",
             style: labelStyle),
         SizedBox(width: 5),
         IconButton(
@@ -38,9 +43,10 @@ class DueDateRow extends StatelessWidget {
             Container(
               height: 200,
               child: CupertinoDatePicker(
-                  initialDateTime: viewmodel.deadline,
+                  initialDateTime: widget.viewmodel.deadline,
                   mode: CupertinoDatePickerMode.date,
-                  onDateTimeChanged: (date) => viewmodel.deadline = date),
+                  onDateTimeChanged: (date) =>
+                      widget.viewmodel.deadline = date),
             ),
             // Close the modal
             TextButton(
@@ -52,7 +58,10 @@ class DueDateRow extends StatelessWidget {
                     fontFamily: 'Segoe UI',
                     fontWeight: FontWeight.w600),
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {});
+              },
             )
           ],
         ),

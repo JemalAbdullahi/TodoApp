@@ -22,6 +22,9 @@ class GroupMember extends Equatable {
   /// Avatar Image
   final avatar;
 
+  bool selectedForAssignment = false;
+
+
   GroupMember(
       {required this.firstname,
       required this.lastname,
@@ -55,15 +58,17 @@ class GroupMember extends Equatable {
     return CircleAvatar(
       //backgroundImage: member.avatar,
       backgroundColor: color,
-      child: Text(
-        this.initials(),
-        style: TextStyle(
-          fontFamily: "Segoe UI",
-          fontWeight: FontWeight.bold,
-          fontSize: radius + 2,
-          color: Colors.white,
-        ),
-      ),
+      child: selectedForAssignment
+          ? Icon(Icons.check, size: radius + 8, color: Colors.white)
+          : Text(
+              this.initials(),
+              style: TextStyle(
+                fontFamily: "Segoe UI",
+                fontWeight: FontWeight.bold,
+                fontSize: radius + 2,
+                color: Colors.white,
+              ),
+            ),
       radius: radius,
     );
   }

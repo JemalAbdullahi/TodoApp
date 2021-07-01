@@ -4,6 +4,7 @@ import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/group.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
 import 'package:todolist/widgets/global_widgets/background_color_container.dart';
@@ -19,6 +20,7 @@ class SubtaskListTab extends StatefulWidget {
 class _SubtaskListTabState extends State<SubtaskListTab> {
   //List<Subtask> subtasks;
   late SubtaskBloc subtaskBloc;
+  late Group group;
   late Task task;
   int orderBy;
   bool reorder;
@@ -32,6 +34,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     final args =
         ModalRoute.of(context)!.settings.arguments as SubtaskListTabArguments;
     task = args.task;
+    group = args.group;
     subtaskBloc = SubtaskBloc(task);
     return KeyboardSizeProvider(
       child: SafeArea(
@@ -127,6 +130,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         title: SubtaskListItemWidget(
           subtask: subtask,
           subtaskBloc: subtaskBloc,
+          group: group,
         ),
       ),
       background: Container(
@@ -245,6 +249,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
 }
 
 class SubtaskListTabArguments {
+  final Group group;
   final Task task;
-  SubtaskListTabArguments(this.task);
+  SubtaskListTabArguments(this.group, this.task);
 }

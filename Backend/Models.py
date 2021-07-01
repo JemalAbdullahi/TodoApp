@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
 db = SQLAlchemy()
 
@@ -201,7 +202,7 @@ class SubTask(db.Model):
             'completed': self.completed,
             'note': self.note,
             'repeats': self.repeats,
-            'due_date': self.due_date.isoformat(),
+            'due_date': datetime.date.today().isoformat() if self.due_date is None else self.due_date.isoformat(),
             'reminders': self.reminders,
             'time_created': self.time_created.isoformat(),
             'time_updated': time_updated,

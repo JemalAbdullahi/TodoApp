@@ -137,6 +137,7 @@ class _ToDoTabState extends State<ToDoTab> {
       child: ListTile(
         key: Key(item.title),
         title: TaskListItemWidget(
+          group: group,
           task: item,
         ),
       ),

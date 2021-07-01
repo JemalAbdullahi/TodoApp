@@ -120,7 +120,7 @@ class _SignupPageState extends State<SignupPage> {
             phoneController.text.trim(),
             null)
         .then((_) {
-      Navigator.pushNamed(context, Splash.routeName);
+      Navigator.pushReplacementNamed(context, Splash.routeName);
     }).catchError((e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

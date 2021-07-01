@@ -3,13 +3,15 @@ import 'package:todolist/UI/tabs/subtask_info/subtask_info_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/group.dart';
 import 'package:todolist/models/subtasks.dart';
 
 class SubtaskListItemWidget extends StatefulWidget {
   final Subtask subtask;
   final SubtaskBloc subtaskBloc;
+  final Group group;
 
-  SubtaskListItemWidget({required this.subtask, required this.subtaskBloc});
+  SubtaskListItemWidget({required this.subtask, required this.subtaskBloc, required this.group});
   @override
   _SubtaskListItemWidgetState createState() => _SubtaskListItemWidgetState();
 }
@@ -21,13 +23,11 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
       key: UniqueKey(),
       onTap: () => Navigator.push(context,
           MaterialPageRoute(builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-          return SubtaskInfo(
-            subtask: widget.subtask,
-            subtaskBloc: widget.subtaskBloc,
-          );
-        });
+        return SubtaskInfo(
+          subtask: widget.subtask,
+          subtaskBloc: widget.subtaskBloc,
+          members: widget.group.members,
+        );
       })),
       child: Container(
         height: 90,

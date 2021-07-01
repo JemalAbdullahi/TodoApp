@@ -12,9 +12,12 @@ import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 class SubtaskInfo extends StatefulWidget {
   final SubtaskBloc subtaskBloc;
   final Subtask subtask;
-
+  final List<GroupMember> members;
   const SubtaskInfo(
-      {Key? key, required this.subtaskBloc, required this.subtask})
+      {Key? key,
+      required this.subtaskBloc,
+      required this.subtask,
+      required this.members})
       : super(key: key);
 
   @override
@@ -25,28 +28,13 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
   late final SubtaskViewModel viewmodel;
   TextEditingController notesController = new TextEditingController();
 
-  List<GroupMember> members = [
-    GroupMember(
-        firstname: "Jemal",
-        lastname: "Abdullahi",
-        emailaddress: "jebdi12@gmail.com",
-        username: "jebdi12",
-        phonenumber: "123",
-        avatar: null),
-    GroupMember(
-        firstname: "Jack",
-        lastname: "Nicholson",
-        emailaddress: "jebdi12@gmail.com",
-        username: "jebdi12",
-        phonenumber: "123",
-        avatar: null)
-  ];
-
   @override
   void initState() {
     super.initState();
     viewmodel = SubtaskViewModel(
-        subtask: widget.subtask, subtaskBloc: widget.subtaskBloc);
+        subtask: widget.subtask,
+        subtaskBloc: widget.subtaskBloc,
+        members: widget.members);
   }
 
   @override
@@ -67,18 +55,30 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
             appBar: CustomAppBar(
               widget.subtask.title,
               actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    viewmodel.note = notesController.text;
-                    viewmodel.updateSubtaskInfo();
-                  },
-                  child: Text(
-                    "Update",
-                    style: TextStyle(
-                        color: Colors.lightBlue,
-                        fontFamily: "Segoe UI",
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 26.0, bottom: 20.0, right: 8.0),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.white,
+                      elevation: 9.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                    ),
+                    onPressed: () {
+                      viewmodel.note = notesController.text;
+                      viewmodel.updateSubtaskInfo();
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Update",
+                      style: TextStyle(
+                          color: lightGreenBlue,
+                          fontFamily: "Segoe UI",
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -178,7 +178,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         radius: 16,
         backgroundColor: darkerGreenBlue,
         child: Text(
-          "${members.length}",
+          "${viewmodel.members.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -194,27 +194,42 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
       padding: EdgeInsets.only(top: 44.0, right: 24.0),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 110,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10.0),
-        itemBuilder: (context, index) => GestureDetector(
-          onTap: () => print(members[index].firstname),
-          child: Column(
-            children: [
-              members[index].cAvatar(radius: 34, color: darkerGreenBlue),
-              Text(
-                members[index].firstname,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Segoe UI',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+          maxCrossAxisExtent: 110,
+          childAspectRatio: 0.75,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10.0,
         ),
-        itemCount: members.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              print(viewmodel.members[index].firstname);
+              setState(
+                () {
+                  if (viewmodel.members[index].selectedForAssignment) {
+                    viewmodel.unassignSubtaskToUser(index);
+                  } else if (!viewmodel.members[index].selectedForAssignment) {
+                    viewmodel.assignSubtaskToUser(index);
+                  }
+                },
+              );
+            },
+            child: Column(
+              children: [
+                viewmodel.members[index]
+                    .cAvatar(radius: 34, color: darkerGreenBlue),
+                Text(
+                  viewmodel.members[index].firstname,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Segoe UI',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        itemCount: viewmodel.members.length,
       ),
     );
   }

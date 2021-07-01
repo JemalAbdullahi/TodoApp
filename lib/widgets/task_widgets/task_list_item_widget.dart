@@ -4,12 +4,14 @@ import 'package:todolist/UI/tabs/subtask_list_tab.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
+import 'package:todolist/models/group.dart';
 import 'package:todolist/models/tasks.dart';
 
 class TaskListItemWidget extends StatefulWidget {
   final Task task;
+  final Group group;
 
-  TaskListItemWidget({required this.task});
+  TaskListItemWidget({required this.group, required this.task});
 
   @override
   _TaskListItemWidgetState createState() => _TaskListItemWidgetState();
@@ -29,7 +31,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
     return GestureDetector(
       key: UniqueKey(),
       onTap: () => Navigator.pushNamed(context, SubtaskListTab.routeName,
-          arguments: SubtaskListTabArguments(widget.task)),
+          arguments: SubtaskListTabArguments(widget.group, widget.task)),
       child: Container(
         height: 90,
         decoration: BoxDecoration(

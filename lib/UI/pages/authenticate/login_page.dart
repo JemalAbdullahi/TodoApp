@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
       await userBloc.signinUser(
           usernameController.text.trim(), passwordController.text.trim(), "");
       await groupBloc.updateGroups();
-      Navigator.pushNamed(context, HomePage.routeName);
+      Navigator.pushReplacementNamed(context, HomePage.routeName);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -24,6 +24,8 @@ class ApiProvider {
   Uri groupmemberURL =
       Uri(scheme: 'http', host: stageHost, path: '/api/groupmember');
   Uri searchURL = Uri(scheme: 'http', host: stageHost, path: '/api/search');
+  Uri assignedtouserhURL =
+      Uri(scheme: 'http', host: stageHost, path: '/api/assignedtouser');
 
   String apiKey = '';
 
@@ -217,7 +219,6 @@ class ApiProvider {
           "username": username,
         }));
     final Map result = json.decode(response.body);
-    print(result.toString());
     if (response.statusCode == 201) {
       GroupMember addedGroupMember = GroupMember.fromJson(result["data"]);
       print("User ${addedGroupMember.username} added to GroupKey: $groupKey");
@@ -433,6 +434,76 @@ class ApiProvider {
       return searchResults;
     } else {
       // If that call was not successful, throw an error.
+      throw Exception(result["Message"]);
+    }
+  }
+
+  ///AssignedToUser API Calls
+  ///GET
+  Future<List<GroupMember>> getUsersAssignedToSubtask(String subtaskKey) async {
+    final response = await client.get(
+      assignedtouserhURL,
+      headers: {"Authorization": subtaskKey},
+    );
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      List<GroupMember> groupMembers = [];
+      for (Map<String, dynamic> json_ in result["data"]) {
+        try {
+          groupMembers.add(GroupMember.fromJson(json_));
+        } catch (Exception) {
+          print(Exception);
+          //throw Exception;
+        }
+      }
+      //print("getGroupMembers: " +groupMembers.toString() +" @" +DateTime.now().toString());
+      return groupMembers;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception(result["Message"]);
+    }
+  }
+
+  /// Post: Assign a Group Member to Subtask
+  /// * SubtaskKey: Unique Subtask Identifier
+  /// * Username: Group Member's Username to be added
+  Future assignSubtaskToUser(String subtaskKey, String username) async {
+    Uri assignURLQuery =
+        assignedtouserhURL.replace(query: "username=$username");
+    final response = await client.post(
+      assignURLQuery,
+      headers: {"Authorization": subtaskKey},
+    );
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 201) {
+      print(
+          "User ${GroupMember.fromJson(result["data"]).username} assigned to SubtaskKey: $subtaskKey");
+    } else {
+      // If that call was not successful, throw an error.
+      print(result["Message"]);
+      throw Exception(result["Message"]);
+    }
+  }
+
+  /// Delete: Unssign a Group Member to Subtask
+  /// * SubtaskKey: Unique Subtask Identifier
+  /// * Username: Group Member's Username to be added
+  Future unassignSubtaskToUser(String subtaskKey, String username) async {
+    Uri assignURLQuery =
+        assignedtouserhURL.replace(query: "username=$username");
+    final response = await client.delete(
+      assignURLQuery,
+      headers: {"Authorization": subtaskKey},
+    );
+    if (response.statusCode == 200) {
+      // If the call to the server was successful
+      //print("Group Member $username deleted");
+    } else if (response.statusCode == 400 ||
+        response.statusCode == 401 ||
+        response.statusCode == 404) {
+      // If that call was not successful, throw an error.
+      final Map result = json.decode(response.body);
       throw Exception(result["Message"]);
     }
   }

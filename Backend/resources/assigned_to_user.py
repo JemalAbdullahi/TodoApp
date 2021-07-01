@@ -5,6 +5,21 @@ from Models import db, SubTask, Task, User
 
 class AssignedToUser(Resource):
 
+    # List Members of a Group
+    def get(self):
+        result = []
+        header = request.headers["Authorization"]
+
+        if not header:
+            return {"Messege": "No subtask key!"}, 401
+        else:
+            subtask = SubTask.query.filter_by(subtask_key=header).first()
+            if subtask:
+                result = subtask.get_users_assigned_to()
+                return {"status": 'success', 'data': result}, 200
+            else:
+                return {"status": "Subtask Not Found"}, 404
+
     # Add Members to a Group, only if Group is public
     def post(self):
         header = request.headers["Authorization"]

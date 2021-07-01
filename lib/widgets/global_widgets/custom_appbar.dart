@@ -9,11 +9,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final List<Widget> actions;
   final double fontSize;
+  final Widget? leading;
 
   CustomAppBar(
     this.title, {
     Key? key,
     this.actions = const [],
+    this.leading,
     this.fontSize = 32.0,
   })  : preferredSize = Size.fromHeight(100.0),
         super(key: key);
@@ -30,6 +32,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           fontSize: fontSize,
         ),
       ),
+      leading: leading,
       backgroundColor: Colors.transparent,
       centerTitle: true,
       elevation: 0.0,

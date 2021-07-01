@@ -1,6 +1,7 @@
 import 'package:todolist/models/groupmember.dart';
 //import 'package:todolist/models/group.dart';
 
+// ignore: must_be_immutable
 class User extends GroupMember {
   final int? id;
   final String? password;

@@ -89,8 +89,18 @@ class Repository {
   FutureOr<dynamic> deleteSubtask(String subtaskKey) async {
     apiProvider.deleteSubtask(subtaskKey);
   }
-
+  ///Search For User
   Future searchUser(String searchTerm) => apiProvider.searchUser(searchTerm);
+
+  ///Group Members: Get, Post, Delete
+  Future getUsersAssignedToSubtask(String subtaskKey) =>
+      apiProvider.getUsersAssignedToSubtask(subtaskKey);
+
+  Future assignSubtaskToUser(String subtaskKey, String username) =>
+      apiProvider.assignSubtaskToUser(subtaskKey, username);
+
+  Future<void> unassignSubtaskToUser(String subtaskKey, String username) =>
+      apiProvider.assignSubtaskToUser(subtaskKey, username);
 }
 
 final repository = Repository();
