@@ -62,15 +62,15 @@ TextStyle cardTitleStyle = new TextStyle(
 
 TextStyle toDoListTileStyle = new TextStyle(
     fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.bold,
     color: Colors.white,
-    fontSize: 30);
+    fontSize: 25);
 
 TextStyle toDoListSubtitleStyle = new TextStyle(
     fontFamily: 'Segoe UI',
     fontWeight: FontWeight.w300,
     color: Colors.white,
-    fontSize: 18);
+    fontSize: 17);
 
 TextStyle taskListTitleStyle = new TextStyle(
     fontFamily: 'Segoe UI',

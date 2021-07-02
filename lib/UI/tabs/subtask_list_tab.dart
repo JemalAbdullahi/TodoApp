@@ -166,8 +166,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   }
 
   void reAddSubtask(Subtask subtask) async {
-    await subtaskBloc.addSubtask(
-        subtask.title);
+    await subtaskBloc.addSubtask(subtask.title);
     setState(() {});
   }
 

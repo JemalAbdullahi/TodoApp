@@ -23,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
       title: "Sign In",
       form: Form(
         key: _signInFormKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

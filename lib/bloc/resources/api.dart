@@ -350,6 +350,7 @@ class ApiProvider {
           subtask.deadline = json_['due_date'] == null
               ? DateTime.now()
               : DateTime.parse(json_['due_date']);
+          subtask.assignedTo = await getUsersAssignedToSubtask(subtask.subtaskKey);
         } catch (Exception) {
           print(Exception);
         }

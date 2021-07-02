@@ -28,7 +28,7 @@ class Subtask extends Equatable {
   /// Not Implemented
   String note;
 
-  late List<GroupMember> assignedTo;
+  List<GroupMember> assignedTo = [];
 
   late List<GroupMember> allGroupMembers;
 
