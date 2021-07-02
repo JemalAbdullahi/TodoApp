@@ -3,8 +3,6 @@ import 'package:todolist/UI/pages/authenticate/authentication.dart';
 import 'package:todolist/UI/pages/authenticate/forgot_password_dialog_box.dart';
 import 'package:todolist/UI/pages/authenticate/signup_page.dart';
 import 'package:todolist/UI/pages/authenticate/widgets/textformfield_column.dart';
-import 'package:todolist/UI/pages/home_page.dart';
-import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,9 +12,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final usernameController = new TextEditingController();
-  final passwordController = new TextEditingController();
+  final Map<String, TextEditingController> controllers = {
+    "username": new TextEditingController(),
+    "password": new TextEditingController(),
+  };
   final _signInFormKey = GlobalKey<FormState>();
+
+  /*  @override
+  void initState() {
+    super.initState();
+    controllers = {
+      "username": new TextEditingController(),
+      "password": new TextEditingController(),
+    };
+  } */
 
   Widget build(BuildContext context) {
     return AuthenticationView(
@@ -28,14 +37,14 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextFormFieldColumn(
               label: 'Username',
-              controller: usernameController,
+              controller: controllers["username"]!,
               iconData: Icons.account_circle,
               hintText: 'Enter Username',
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Password',
-              controller: passwordController,
+              controller: controllers["password"]!,
               iconData: Icons.lock,
               hintText: 'Enter a Password',
               obscureText: true,
@@ -45,12 +54,10 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-      onMainButtonTapped: () {
-        print('Login');
-        _handleLoginInput;
-      },
+      formKey: _signInFormKey,
       mainButtonTitle: 'Login',
       bottomBtn: _signupBtn,
+      controllers: controllers,
     );
   }
 
@@ -102,36 +109,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-  Future get _handleLoginInput async {
-    if (_signInFormKey.currentState!.validate()) {
-      _signInFormKey.currentState!.save();
-      await _attemptLogin;
-    } else {
-      _displayInvalidFormError();
-    }
-  }
-
-  Future get _attemptLogin async {
-    try {
-      await userBloc.signinUser(
-          usernameController.text.trim(), passwordController.text.trim(), "");
-      await groupBloc.updateGroups();
-      Navigator.pushReplacementNamed(context, HomePage.routeName);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("$e"),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  void _displayInvalidFormError() => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Fill the Form Completely'),
-          backgroundColor: Colors.red,
-        ),
-      );
 }

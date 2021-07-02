@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/pages/home_page.dart';
+import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
+import 'package:todolist/main.dart';
 
 class AuthenticationView extends StatefulWidget {
   //final _scaffoldKey = GlobalKey<ScaffoldState>();
   final String title;
   final String mainButtonTitle;
   final Widget form;
-  final Function onMainButtonTapped;
   final Function? onForgotPasswordTapped;
   final String? validationMessage;
   final Function? onBackPressed;
   final Widget? bottomBtn;
+  final Map controllers;
+  final GlobalKey<FormState> formKey;
 
   const AuthenticationView(
       {required this.title,
       required this.form,
-      required this.onMainButtonTapped,
       required this.mainButtonTitle,
+      required this.controllers,
+      required this.formKey,
       this.validationMessage,
       this.onForgotPasswordTapped,
       this.onBackPressed,
@@ -90,8 +95,7 @@ class _AuthenticationViewState extends State<AuthenticationView> {
         ),
         autofocus: false,
         onPressed: () {
-          //print("Login");
-          widget.onMainButtonTapped();
+          _handleInput;
         },
         child: Text(
           widget.mainButtonTitle,
@@ -105,4 +109,66 @@ class _AuthenticationViewState extends State<AuthenticationView> {
       ),
     );
   }
+
+  Future get _handleInput async {
+    if (widget.formKey.currentState!.validate()) {
+      widget.formKey.currentState!.save();
+      switch (widget.mainButtonTitle) {
+        case "Login":
+          print("Login");
+          await _attemptLogin;
+          break;
+        case "Sign Up":
+          print("Sign Up");
+          await _attemptSignUp;
+      }
+    } else {
+      _displayInvalidFormError();
+    }
+  }
+
+  Future get _attemptLogin async {
+    try {
+      await userBloc.signinUser(widget.controllers["username"].text.trim(),
+          widget.controllers["password"].text.trim(), "");
+      await groupBloc.updateGroups();
+      Navigator.pushReplacementNamed(context, HomePage.routeName);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future get _attemptSignUp async {
+    userBloc
+        .registerUser(
+            widget.controllers["username"].text.trim(),
+            widget.controllers["password"].text.trim(),
+            widget.controllers["email"].text.trim(),
+            widget.controllers["firstname"].text.trim(),
+            widget.controllers["lastname"].text.trim(),
+            widget.controllers["phone"].text.trim(),
+            null)
+        .then((_) {
+      Navigator.pushReplacementNamed(context, Splash.routeName);
+    }).catchError((e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    });
+  }
+
+  void _displayInvalidFormError() => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Fill the Form Completely'),
+          backgroundColor: Colors.red,
+        ),
+      );
 }

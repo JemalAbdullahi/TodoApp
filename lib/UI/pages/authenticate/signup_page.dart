@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/authenticate/authentication.dart';
 import 'package:todolist/UI/pages/authenticate/widgets/textformfield_column.dart';
-import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
-import 'package:todolist/main.dart';
+
 import 'package:todolist/models/global.dart';
 
 class SignupPage extends StatefulWidget {
@@ -14,12 +13,14 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final _signupFormKey = GlobalKey<FormState>();
 
-  final usernameController = new TextEditingController();
-  final passwordController = new TextEditingController();
-  final firstnameController = new TextEditingController();
-  final lastnameController = new TextEditingController();
-  final emailController = new TextEditingController();
-  final phoneController = new TextEditingController();
+  final Map<String, TextEditingController> controllers = {
+    "username": new TextEditingController(),
+    "password": new TextEditingController(),
+    "firstname": new TextEditingController(),
+    "lastname": new TextEditingController(),
+    "email": new TextEditingController(),
+    "phone": new TextEditingController(),
+  };
 
   Widget build(BuildContext context) {
     return AuthenticationView(
@@ -32,7 +33,7 @@ class _SignupPageState extends State<SignupPage> {
           children: [
             TextFormFieldColumn(
               label: 'Firstname',
-              controller: firstnameController,
+              controller: controllers["firstname"]!,
               iconData: Icons.person,
               hintText: 'Enter a firstname',
               keyboardType: TextInputType.name,
@@ -40,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Lastname',
-              controller: lastnameController,
+              controller: controllers["lastname"]!,
               iconData: Icons.person,
               hintText: 'Enter a lastname',
               keyboardType: TextInputType.name,
@@ -48,14 +49,14 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Username',
-              controller: usernameController,
+              controller: controllers["username"]!,
               iconData: Icons.account_circle,
               hintText: 'Enter Username',
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Phone Number',
-              controller: phoneController,
+              controller: controllers["phone"]!,
               iconData: Icons.phone,
               hintText: 'Enter a phone number',
               keyboardType: TextInputType.phone,
@@ -63,7 +64,7 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Email Address',
-              controller: emailController,
+              controller: controllers["email"]!,
               iconData: Icons.email,
               hintText: 'Enter an email address',
               keyboardType: TextInputType.emailAddress,
@@ -71,7 +72,7 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Password',
-              controller: passwordController,
+              controller: controllers["password"]!,
               iconData: Icons.lock,
               hintText: 'Enter a Password',
               obscureText: true,
@@ -80,10 +81,8 @@ class _SignupPageState extends State<SignupPage> {
           ],
         ),
       ),
-      onMainButtonTapped: () {
-        print('Sign Up!');
-        _handleSignUpInput;
-      },
+      formKey: _signupFormKey,
+      controllers: controllers,
       mainButtonTitle: 'Sign Up',
       bottomBtn: _returnToLogin,
     );
@@ -99,42 +98,4 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
   }
-
-  get _handleSignUpInput async {
-    if (_signupFormKey.currentState!.validate()) {
-      _signupFormKey.currentState!.save();
-      await _attemptSignUp;
-    } else {
-      _displayInvalidFormError();
-    }
-  }
-
-  Future get _attemptSignUp async {
-    userBloc
-        .registerUser(
-            usernameController.text.trim(),
-            passwordController.text.trim(),
-            emailController.text.trim(),
-            firstnameController.text.trim(),
-            lastnameController.text.trim(),
-            phoneController.text.trim(),
-            null)
-        .then((_) {
-      Navigator.pushReplacementNamed(context, Splash.routeName);
-    }).catchError((e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("$e"),
-          backgroundColor: Colors.red,
-        ),
-      );
-    });
-  }
-
-  void _displayInvalidFormError() => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Fill the Form Completely'),
-          backgroundColor: Colors.red,
-        ),
-      );
 }
