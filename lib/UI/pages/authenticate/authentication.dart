@@ -131,12 +131,24 @@ class _AuthenticationViewState extends State<AuthenticationView> {
     try {
       await userBloc.signinUser(widget.controllers["username"]!.text.trim(),
           widget.controllers["password"]!.text.trim(), "");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Successful Login: " +
+              widget.controllers["username"]!.text +
+              " " +
+              widget.controllers["password"]!.text),
+          backgroundColor: Colors.green,
+        ),
+      );
       await groupBloc.updateGroups();
       Navigator.pushReplacementNamed(context, HomePage.routeName);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("$e : " + widget.controllers["username"]!.text),
+          content: Text("$e : " +
+              widget.controllers["username"]!.text +
+              " " +
+              widget.controllers["password"]!.text),
           backgroundColor: Colors.red,
         ),
       );
@@ -154,6 +166,13 @@ class _AuthenticationViewState extends State<AuthenticationView> {
             widget.controllers["phone"]!.text.trim(),
             null)
         .then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              "Successful Sign Up: " + widget.controllers["username"]!.text),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pushReplacementNamed(context, Splash.routeName);
     }).catchError((e) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -46,10 +46,7 @@ class TextFormFieldColumn extends StatelessWidget {
               errorStyle: TextStyle(fontSize: 14.0),
             ),
             validator: (value) {
-              if (value!.isEmpty) {
-                return '\t\tPlease Enter some text';
-              }
-              return null;
+              return (value != null && value.isEmpty) ? 'Fill the Form Completely.' : null;
             },
             obscureText: obscureText,
           ),
