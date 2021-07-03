@@ -12,7 +12,7 @@ class AuthenticationView extends StatefulWidget {
   final String? validationMessage;
   final Function? onBackPressed;
   final Widget? bottomBtn;
-  final Map controllers;
+  final Map<String, TextEditingController> controllers;
   final GlobalKey<FormState> formKey;
 
   const AuthenticationView(
@@ -129,14 +129,14 @@ class _AuthenticationViewState extends State<AuthenticationView> {
 
   Future get _attemptLogin async {
     try {
-      await userBloc.signinUser(widget.controllers["username"].text.trim(),
-          widget.controllers["password"].text.trim(), "");
+      await userBloc.signinUser(widget.controllers["username"]!.text.trim(),
+          widget.controllers["password"]!.text.trim(), "");
       await groupBloc.updateGroups();
       Navigator.pushReplacementNamed(context, HomePage.routeName);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("$e"),
+          content: Text("$e : " + widget.controllers["username"]!.text),
           backgroundColor: Colors.red,
         ),
       );
@@ -146,19 +146,19 @@ class _AuthenticationViewState extends State<AuthenticationView> {
   Future get _attemptSignUp async {
     userBloc
         .registerUser(
-            widget.controllers["username"].text.trim(),
-            widget.controllers["password"].text.trim(),
-            widget.controllers["email"].text.trim(),
-            widget.controllers["firstname"].text.trim(),
-            widget.controllers["lastname"].text.trim(),
-            widget.controllers["phone"].text.trim(),
+            widget.controllers["username"]!.text.trim(),
+            widget.controllers["password"]!.text.trim(),
+            widget.controllers["email"]!.text.trim(),
+            widget.controllers["firstname"]!.text.trim(),
+            widget.controllers["lastname"]!.text.trim(),
+            widget.controllers["phone"]!.text.trim(),
             null)
         .then((_) {
       Navigator.pushReplacementNamed(context, Splash.routeName);
     }).catchError((e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("$e"),
+          content: Text("$e : " + widget.controllers["username"]!.text),
           backgroundColor: Colors.red,
         ),
       );
