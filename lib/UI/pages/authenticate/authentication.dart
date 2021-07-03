@@ -129,19 +129,19 @@ class _AuthenticationViewState extends State<AuthenticationView> {
 
   Future get _attemptLogin async {
     try {
-      await userBloc.signinUser(widget.controllers["username"]!.text.trim(),
-          widget.controllers["password"]!.text.trim(), "");
+      await userBloc.signinUser(widget.controllers["username"]!.text,
+          widget.controllers["password"]!.text, "");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Successful Login: " +
-              widget.controllers["username"]!.text +
+              widget.controllers["username"]!.text.trim() +
               " " +
-              widget.controllers["password"]!.text),
+              widget.controllers["password"]!.text.trim()),
           backgroundColor: Colors.green,
         ),
       );
       await groupBloc.updateGroups();
-      Navigator.pushReplacementNamed(context, HomePage.routeName);
+      Navigator.pushReplacementNamed(context, "/home");
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
