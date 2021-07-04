@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:todolist/models/group.dart';
+import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/models/subtasks.dart';
 import 'package:todolist/models/tasks.dart';
 
@@ -9,14 +10,8 @@ import 'package:todolist/models/user.dart';
 class Repository {
   final apiProvider = ApiProvider();
 
-  Future<User> registerUser(
-          String username,
-          String password,
-          String email,
-          String firstname,
-          String lastname,
-          String phonenumber,
-          avatar) =>
+  Future<User> registerUser(String username, String password, String email,
+          String firstname, String lastname, String phonenumber, avatar) =>
       apiProvider.registerUser(
           username, password, email, firstname, lastname, phonenumber, avatar);
 
@@ -45,6 +40,8 @@ class Repository {
   Future addGroup(String groupName, bool isPublic) =>
       apiProvider.addGroup(groupName, isPublic);
 
+   Future<bool> updateGroup(Group group) => apiProvider.updateGroup(group);
+
   Future<dynamic> deleteGroup(String groupKey) =>
       apiProvider.deleteGroup(groupKey);
 
@@ -61,8 +58,7 @@ class Repository {
   //Tasks
   Future getTasks(String groupKey) => apiProvider.getTasks(groupKey);
 
-  Future<Null> addTask(
-      String taskName, String groupKey) async {
+  Future<Null> addTask(String taskName, String groupKey) async {
     apiProvider.addTask(taskName, groupKey);
   }
 
@@ -77,8 +73,7 @@ class Repository {
   //Subtasks
   Future getSubtasks(Task task) => apiProvider.getSubtasks(task);
 
-  Future<Null> addSubtask(
-      String taskKey, String subtaskName) async {
+  Future<Null> addSubtask(String taskKey, String subtaskName) async {
     apiProvider.addSubtask(taskKey, subtaskName);
   }
 
@@ -89,18 +84,20 @@ class Repository {
   FutureOr<dynamic> deleteSubtask(String subtaskKey) async {
     apiProvider.deleteSubtask(subtaskKey);
   }
+
   ///Search For User
   Future searchUser(String searchTerm) => apiProvider.searchUser(searchTerm);
 
   ///Group Members: Get, Post, Delete
-  Future getUsersAssignedToSubtask(String subtaskKey) =>
-      apiProvider.getUsersAssignedToSubtask(subtaskKey);
+  Future<List<GroupMember>> getUsersAssignedToSubtask(
+          String subtaskKey) async =>
+      await apiProvider.getUsersAssignedToSubtask(subtaskKey);
 
   Future assignSubtaskToUser(String subtaskKey, String username) =>
       apiProvider.assignSubtaskToUser(subtaskKey, username);
 
   Future<void> unassignSubtaskToUser(String subtaskKey, String username) =>
-      apiProvider.assignSubtaskToUser(subtaskKey, username);
+      apiProvider.unassignSubtaskToUser(subtaskKey, username);
 }
 
 final repository = Repository();

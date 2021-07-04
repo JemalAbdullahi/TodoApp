@@ -19,21 +19,21 @@ class Users(Resource):
         json_data = request.get_json(force=True)
 
         if not json_data:
-            return {'Message': 'No input data provided'}, 400
+            return {'status': 'No input data provided'}, 400
 
         user = User.query.filter_by(username=json_data['username']).first()
         if user:
-            return {'Message': 'Username is already taken'}, 409
+            return {'status': 'Username is already taken'}, 409
 
         user = User.query.filter_by(
             emailaddress=json_data['emailaddress']).first()
         if user:
-            return {'Message': 'Email address already exists'}, 409
+            return {'status': 'Email address already exists'}, 409
 
         user = User.query.filter_by(
             phonenumber=json_data['phonenumber']).first()
         if user:
-            return {'Message': 'Phone Number already exists'}, 409
+            return {'status': 'Phone Number already exists'}, 409
 
         api_key = self.generate_key()
         user = User.query.filter_by(api_key=api_key).first()
@@ -62,12 +62,12 @@ class Users(Resource):
         header = request.headers["Authorization"]
         json_data = request.get_json(force=True)
         if not header:
-            return {'Messege': "No API key!"}, 401
+            return {'status': "No API key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
                 if user.password != json_data["currentPassword"]:
-                    return {"Message": "Incorrect Current Password"}
+                    return {"status": "Incorrect Current Password"}
                 else:
                     if (user.username != json_data['username']):
                         user.username = json_data['username']
@@ -90,7 +90,7 @@ class Users(Resource):
                 return {"status": 'success', 'data': result}, 200
 
             else:
-                return {'Messege': "No User found with that api key"}, 404
+                return {'status': "No User found with that api key"}, 404
 
     # Generate new api key
     def generate_key(self):

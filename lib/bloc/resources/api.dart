@@ -33,17 +33,19 @@ class ApiProvider {
   /// Sign Up
   Future<User> registerUser(String username, String password, String email,
       String firstname, String lastname, String phonenumber, avatar) async {
-    final response = await client.post(userURL,
-        // headers: "",
-        body: jsonEncode({
-          "emailaddress": email,
-          "username": username,
-          "password": password,
-          "firstname": firstname,
-          "lastname": lastname,
-          "phonenumber": phonenumber,
-          "avatar": avatar,
-        }));
+    final response = await client.post(
+      userURL,
+      // headers: "",
+      body: jsonEncode({
+        "emailaddress": email,
+        "username": username,
+        "password": password,
+        "firstname": firstname,
+        "lastname": lastname,
+        "phonenumber": phonenumber,
+        "avatar": avatar,
+      }),
+    );
     final Map result = json.decode(response.body);
     if (response.statusCode == 201) {
       // If the call to the server was successful, parse the JSON
@@ -51,18 +53,20 @@ class ApiProvider {
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
   /// Sign User In using username and password or API_Key
   Future signinUser(String username, String password, String apiKey) async {
-    final response = await client.post(signinURL,
-        headers: {"Authorization": apiKey},
-        body: jsonEncode({
-          "username": username,
-          "password": password,
-        }));
+    final response = await client.post(
+      signinURL,
+      headers: {"Authorization": apiKey},
+      body: jsonEncode({
+        "username": username,
+        "password": password,
+      }),
+    );
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -70,7 +74,7 @@ class ApiProvider {
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -84,18 +88,20 @@ class ApiProvider {
       String lastname,
       String phonenumber,
       avatar) async {
-    final response = await client.put(userURL,
-        headers: {"Authorization": apiKey},
-        body: jsonEncode({
-          "currentPassword": currentPassword,
-          "newPassword": newPassword,
-          "email": email,
-          "username": username,
-          "firstname": firstname,
-          "lastname": lastname,
-          "phonenumber": phonenumber,
-          "avatar": avatar,
-        }));
+    final response = await client.put(
+      userURL,
+      headers: {"Authorization": apiKey},
+      body: jsonEncode({
+        "currentPassword": currentPassword,
+        "newPassword": newPassword,
+        "email": email,
+        "username": username,
+        "firstname": firstname,
+        "lastname": lastname,
+        "phonenumber": phonenumber,
+        "avatar": avatar,
+      }),
+    );
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
       //print("User Profile Updated");
@@ -103,7 +109,7 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       print(json.decode(response.body));
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -136,7 +142,7 @@ class ApiProvider {
         return groups;
       } else {
         // If that call was not successful, throw an error.
-        throw Exception(result["Message"]);
+        throw Exception(result["status"]);
       }
     }
     return groups;
@@ -145,12 +151,14 @@ class ApiProvider {
   /// Add a Group
   Future addGroup(String groupName, bool isPublic) async {
     print(groupURL.toString());
-    final response = await client.post(groupURL,
-        headers: {"Authorization": apiKey},
-        body: jsonEncode({
-          "name": groupName,
-          "is_public": isPublic,
-        }));
+    final response = await client.post(
+      groupURL,
+      headers: {"Authorization": apiKey},
+      body: jsonEncode({
+        "name": groupName,
+        "is_public": isPublic,
+      }),
+    );
     if (response.statusCode == 201) {
       final Map result = json.decode(response.body);
       Group addedGroup = Group.fromJson(result["data"]);
@@ -159,8 +167,25 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      print(result["Message"]);
-      throw Exception(result["Message"]);
+      print(result["status"]);
+      throw Exception(result["status"]);
+    }
+  }
+
+  /// Update Group Info
+  Future<bool> updateGroup(Group group) async {
+    final response = await client.patch(
+      groupURL,
+      headers: {"Authorization": group.groupKey},
+      body: jsonEncode({"name": group.name, "is_public": group.isPublic}),
+    );
+    final Map result = json.decode(response.body);
+    if (response.statusCode == 200) {
+      return true;
+      //print("Task ${task.title} Updated");
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception(result["status"]);
     }
   }
 
@@ -176,7 +201,7 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -204,7 +229,7 @@ class ApiProvider {
       return groupMembers;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -213,19 +238,21 @@ class ApiProvider {
   /// * Username: Group Member's Username to be added
   Future addGroupMember(String groupKey, String username) async {
     print(groupmemberURL.toString());
-    final response = await client.post(groupmemberURL,
-        headers: {"Authorization": groupKey},
-        body: jsonEncode({
-          "username": username,
-        }));
+    final response = await client.post(
+      groupmemberURL,
+      headers: {"Authorization": groupKey},
+      body: jsonEncode({
+        "username": username,
+      }),
+    );
     final Map result = json.decode(response.body);
     if (response.statusCode == 201) {
       GroupMember addedGroupMember = GroupMember.fromJson(result["data"]);
       print("User ${addedGroupMember.username} added to GroupKey: $groupKey");
     } else {
       // If that call was not successful, throw an error.
-      print(result["Message"]);
-      throw Exception(result["Message"]);
+      print(result["status"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -247,7 +274,7 @@ class ApiProvider {
         response.statusCode == 404) {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -277,7 +304,7 @@ class ApiProvider {
       return tasks;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -288,24 +315,28 @@ class ApiProvider {
   /// * Index: Position within Group's task list
   /// * Completed: True or False, Has the task been completed
   Future addTask(String taskName, String groupKey) async {
-    final response = await client.post(taskURL,
-        headers: {"Authorization": apiKey},
-        body: jsonEncode({"title": taskName, "group_key": groupKey}));
+    final response = await client.post(
+      taskURL,
+      headers: {"Authorization": apiKey},
+      body: jsonEncode({"title": taskName, "group_key": groupKey}),
+    );
     if (response.statusCode == 201) {
       //print("Task " + taskName + " added @" + DateTime.now().toString());
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      print(result["Message"]);
-      throw Exception(result["Message"]);
+      print(result["status"]);
+      throw Exception(result["status"]);
     }
   }
 
   /// Update Task Info
   Future updateTask(Task task) async {
-    final response = await client.put(taskURL,
-        headers: {"Authorization": task.taskKey},
-        body: jsonEncode({"completed": task.completed}));
+    final response = await client.put(
+      taskURL,
+      headers: {"Authorization": task.taskKey},
+      body: jsonEncode({"completed": task.completed}),
+    );
     if (response.statusCode == 200) {
       //print("Task ${task.title} Updated");
     } else {
@@ -328,7 +359,7 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -350,7 +381,8 @@ class ApiProvider {
           subtask.deadline = json_['due_date'] == null
               ? DateTime.now()
               : DateTime.parse(json_['due_date']);
-          subtask.assignedTo = await getUsersAssignedToSubtask(subtask.subtaskKey);
+          subtask.assignedTo =
+              await getUsersAssignedToSubtask(subtask.subtaskKey);
         } catch (Exception) {
           print(Exception);
         }
@@ -358,42 +390,47 @@ class ApiProvider {
       return subtasks;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
   //Add Subtask
   Future addSubtask(String taskKey, String subtaskName) async {
-    final response = await client.post(subtaskURL,
-        headers: {"Authorization": taskKey},
-        body: jsonEncode({
-          "title": subtaskName,
-        }));
+    final response = await client.post(
+      subtaskURL,
+      headers: {"Authorization": taskKey},
+      body: jsonEncode({
+        "title": subtaskName,
+      }),
+    );
     if (response.statusCode == 201) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
       //print("Subtask " + subtaskName + " added @" + DateTime.now().toString());
     } else {
       print(response.statusCode);
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
   //Update Subtask
   Future updateSubtask(Subtask subtask) async {
-    final response = await client.put(subtaskURL,
-        headers: {"Authorization": subtask.subtaskKey},
-        body: jsonEncode({
-          "note": subtask.note,
-          "completed": subtask.completed,
-          "due_date": subtask.deadline!.toIso8601String()
-        }));
+    final response = await client.put(
+      subtaskURL,
+      headers: {"Authorization": subtask.subtaskKey},
+      body: jsonEncode({
+        "note": subtask.note,
+        "completed": subtask.completed,
+        "due_date": subtask.deadline!.toIso8601String()
+      }),
+    );
     if (response.statusCode == 200) {
       print("Subtask " + subtask.title + " Updated");
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -409,17 +446,19 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
   //Search API Calls
   Future<List<GroupMember>> searchUser(String searchTerm) async {
-    final response = await client.post(searchURL,
-        headers: {"Authorization": apiKey},
-        body: jsonEncode({
-          "search_term": searchTerm,
-        }));
+    final response = await client.post(
+      searchURL,
+      headers: {"Authorization": apiKey},
+      body: jsonEncode({
+        "search_term": searchTerm,
+      }),
+    );
     final Map result = json.decode(response.body);
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -435,7 +474,7 @@ class ApiProvider {
       return searchResults;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -462,7 +501,7 @@ class ApiProvider {
       return groupMembers;
     } else {
       // If that call was not successful, throw an error.
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -482,8 +521,8 @@ class ApiProvider {
           "User ${GroupMember.fromJson(result["data"]).username} assigned to SubtaskKey: $subtaskKey");
     } else {
       // If that call was not successful, throw an error.
-      print(result["Message"]);
-      throw Exception(result["Message"]);
+      print(result["status"]);
+      throw Exception(result["status"]);
     }
   }
 
@@ -505,7 +544,7 @@ class ApiProvider {
         response.statusCode == 404) {
       // If that call was not successful, throw an error.
       final Map result = json.decode(response.body);
-      throw Exception(result["Message"]);
+      throw Exception(result["status"]);
     }
   }
 

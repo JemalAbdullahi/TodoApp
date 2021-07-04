@@ -11,7 +11,7 @@ class AssignedToUser(Resource):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No subtask key!"}, 401
+            return {"status": "No subtask key!"}, 401
         else:
             subtask = SubTask.query.filter_by(subtask_key=header).first()
             if subtask:
@@ -26,15 +26,15 @@ class AssignedToUser(Resource):
         username = request.args.get('username')
 
         if not header:
-            return {"Messege": "No subtask key!"}, 401
+            return {"status": "No subtask key!"}, 401
         if not username:
-            return {'Message': 'No username provided'}, 400
+            return {'status': 'No username provided'}, 400
         else:
             # Obtain subtask associated to the unique key
             subtask = SubTask.query.filter_by(subtask_key=header).first()
             if subtask:
                 user = User.query.filter_by(
-                        username=username).first()
+                    username=username).first()
                 if user:
                     # Check each member the subtask is assigned to, if a match with the provided username, then remove assignment
                     for m in subtask.assigned_to_user:
@@ -55,9 +55,9 @@ class AssignedToUser(Resource):
         username = request.args.get('username')
 
         if not header:
-            return {"Messege": "No subtask key!"}, 401
+            return {"status": "No subtask key!"}, 401
         if not username:
-            return {'Message': 'No username provided'}, 400
+            return {'status': 'No username provided'}, 400
         else:
             # Obtain subtask associated to the unique key
             subtask = SubTask.query.filter_by(subtask_key=header).first()

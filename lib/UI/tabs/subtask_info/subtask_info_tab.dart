@@ -27,14 +27,16 @@ class SubtaskInfo extends StatefulWidget {
 class _SubtaskInfoState extends State<SubtaskInfo> {
   late final SubtaskViewModel viewmodel;
   TextEditingController notesController = new TextEditingController();
+  bool buffering = true;
+  bool updating = false;
 
   @override
   void initState() {
-    super.initState();
     viewmodel = SubtaskViewModel(
         subtask: widget.subtask,
         subtaskBloc: widget.subtaskBloc,
         members: widget.members);
+    super.initState();
   }
 
   @override
@@ -67,36 +69,61 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
                           borderRadius: BorderRadius.circular(25)),
                     ),
                     onPressed: () {
+                      setState(() {
+                        updating = true;
+                      });
                       viewmodel.note = notesController.text;
-                      viewmodel.updateSubtaskInfo();
-                      Navigator.pop(context);
+                      viewmodel
+                          .updateSubtaskInfo()
+                          .then((_) => Navigator.pop(context));
                     },
-                    child: Text(
-                      "Update",
-                      style: TextStyle(
-                          color: lightGreenBlue,
-                          fontFamily: "Segoe UI",
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    child: updating
+                        ? _buildProgressIndicator()
+                        : Text(
+                            "Update",
+                            style: TextStyle(
+                                color: lightGreenBlue,
+                                fontFamily: "Segoe UI",
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
                   ),
                 ),
               ],
               fontSize: 24,
             ),
             backgroundColor: Colors.transparent,
-            body: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: _subtaskInfoColumn(),
-                ),
-                _buildExpandedCard()
-              ],
+            body: FutureBuilder(
+              future: viewmodel.getUsersAssignedtoSubtask(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  buffering = true;
+                else
+                  buffering = false;
+                return _buildBody();
+              },
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Center _buildProgressIndicator() {
+    return Center(
+      child: CircularProgressIndicator(color: lightGreenBlue),
+    );
+  }
+
+  Column _buildBody() {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: _subtaskInfoColumn(),
+        ),
+        _buildExpandedCard()
+      ],
     );
   }
 
@@ -158,7 +185,10 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         ),
       ),
       child: Stack(
-        children: [_buildMembersLabelRow(), _buildMembersList()],
+        children: [
+          _buildMembersLabelRow(),
+          buffering ? _buildProgressIndicator() : _buildMembersList(),
+        ],
       ),
     );
   }
@@ -178,7 +208,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         radius: 16,
         backgroundColor: darkerGreenBlue,
         child: Text(
-          "${viewmodel.members.length}",
+          "${viewmodel.subtask.assignedTo.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -201,17 +231,20 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         ),
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              print(viewmodel.members[index].firstname);
-              setState(
-                () {
-                  if (viewmodel.members[index].selectedForAssignment) {
-                    viewmodel.unassignSubtaskToUser(index);
-                  } else if (!viewmodel.members[index].selectedForAssignment) {
-                    viewmodel.assignSubtaskToUser(index);
-                  }
-                },
-              );
+            onTap: () async {
+              try {
+                viewmodel.alreadySelected(index)
+                    ? await viewmodel.unassignSubtaskToUser(index)
+                    : await viewmodel.assignSubtaskToUser(index);
+                setState(() {});
+                print(viewmodel.members[index].firstname +
+                    " " +
+                    viewmodel.members[index].selectedForAssignment.toString());
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("$e"), backgroundColor: Colors.red),
+                );
+              }
             },
             child: Column(
               children: [

@@ -75,6 +75,6 @@ class GroupMember extends Equatable {
 
   @override
   String toString() {
-    return "Member: $username";
+    return "Member: $username Assigned: $selectedForAssignment";
   }
 }

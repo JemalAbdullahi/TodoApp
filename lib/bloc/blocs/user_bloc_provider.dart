@@ -161,7 +161,6 @@ class SubtaskBloc {
   final _subtaskSubject = BehaviorSubject<List<Subtask>>();
   Task _task;
 
-
   SubtaskBloc(Task task) : this._task = task {
     _updateSubtasks();
   }
@@ -178,14 +177,18 @@ class SubtaskBloc {
     await _updateSubtasks();
   }
 
-  Future<void> updateSubtaskInfo(
-      Subtask subtask) async {
-    await repository.updateSubtask(subtask);
-    await _updateSubtasks();
+  Future<void> updateSubtaskInfo(Subtask subtask) async {
+    Future.wait(
+      [
+        repository.updateSubtask(subtask),
+        _updateSubtasks(),
+      ],
+    );
+    //await repository.updateSubtask(subtask);
+    //await _updateSubtasks();
   }
 
   Future<void> _updateSubtasks() async {
-    await Future<void>.delayed(const Duration(milliseconds: 300));
     List<Subtask> subtasks = await repository.getSubtasks(_task);
     _subtaskSubject.add(subtasks);
   }

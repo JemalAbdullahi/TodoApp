@@ -28,7 +28,7 @@ class _AddSubtaskState extends State<AddSubtask> {
   late Size size;
 
   FocusNode textfieldFocus = new FocusNode();
-  
+
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -81,11 +81,9 @@ class _AddSubtaskState extends State<AddSubtask> {
                     suffixIcon: textfieldFocus.hasPrimaryFocus
                         ? IconButton(
                             icon: Icon(Icons.add),
-                            onPressed: () {
-                              setState(() {
-                                addSubtask();
-                                textfieldFocus.unfocus();
-                              });
+                            onPressed: () async {
+                              await addSubtask();
+                              setState(() {});
                             })
                         : SizedBox.shrink(),
                     border: InputBorder.none,
@@ -101,12 +99,12 @@ class _AddSubtaskState extends State<AddSubtask> {
     });
   }
 
-  void addSubtask() async {
+  Future<void> addSubtask() async {
     if (controller.text.isNotEmpty) {
-      await widget.subtaskBloc
-          .addSubtask(controller.text);
+      String title = controller.text;
       controller.clear();
       textfieldFocus.unfocus();
+      await widget.subtaskBloc.addSubtask(title);
     }
   }
 }

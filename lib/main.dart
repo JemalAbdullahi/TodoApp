@@ -4,6 +4,7 @@ import 'package:todolist/UI/pages/home_page.dart';
 import 'package:flutter/services.dart';
 import 'package:todolist/UI/pages/authenticate/login_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/create_new_group_page.dart';
+import 'package:todolist/UI/pages/sidebar_pages/group_info_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/group_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
 import 'package:todolist/UI/tabs/list_groups_tab.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         CreateGroupPage.routeName: (BuildContext context) => CreateGroupPage(),
         ProfilePage.routeName: (BuildContext context) => ProfilePage(),
         GroupPage.routeName: (BuildContext context) => GroupPage(),
+        GroupInfoPage.routeName: (BuildContext context) => GroupInfoPage(),
       },
     );
   }
