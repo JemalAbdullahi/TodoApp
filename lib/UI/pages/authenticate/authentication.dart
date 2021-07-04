@@ -133,10 +133,10 @@ class _AuthenticationViewState extends State<AuthenticationView> {
           widget.controllers["password"]!.text, "");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Successful Login: " +
-              widget.controllers["username"]!.text.trim() +
-              " " +
-              widget.controllers["password"]!.text.trim()),
+          content: Text(
+            "Successful Login",
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.green,
         ),
       );
@@ -169,7 +169,9 @@ class _AuthenticationViewState extends State<AuthenticationView> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              "Successful Sign Up: " + widget.controllers["username"]!.text),
+            "Successful Sign Up",
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.green,
         ),
       );
