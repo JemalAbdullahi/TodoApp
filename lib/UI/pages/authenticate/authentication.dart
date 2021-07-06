@@ -94,8 +94,8 @@ class _AuthenticationViewState extends State<AuthenticationView> {
           primary: Colors.white,
         ),
         autofocus: false,
-        onPressed: () {
-          _handleInput;
+        onPressed: () async {
+          await _handleInput;
         },
         child: Text(
           widget.mainButtonTitle,
