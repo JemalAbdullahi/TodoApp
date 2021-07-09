@@ -27,7 +27,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
   Widget build(BuildContext context) {
     mediaQuery = MediaQuery.of(context).size;
     listItemWidth = mediaQuery.width * 0.85;
-    listItemHeight = mediaQuery.height * 0.2;
+    listItemHeight = mediaQuery.height * 0.15;
 
     return GestureDetector(
       key: UniqueKey(),
@@ -39,7 +39,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
           members: widget.group.members,
         );
       })),
-      child: primaryTile(),
+      child: altTile(),
     );
   }
 
@@ -120,47 +120,76 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
               blurRadius: 15.0,
             ),
           ]),
-      child: Padding(
-        padding: EdgeInsets.only(left: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              flex: 1,
-              child: Checkbox(
-                  value: widget.subtask.completed,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      widget.subtask.completed = newValue!;
-                      repository.updateSubtask(widget.subtask);
-                    });
-                  }),
-            ),
-            Flexible(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.subtask.title,
-                    style: toDoListTileStyle,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: listItemHeight,
+            width: listItemWidth * 0.8,
+            padding: EdgeInsets.only(left: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Checkbox(
+                      value: widget.subtask.completed,
+                      onChanged: (bool? newValue) {
+                        setState(() {
+                          widget.subtask.completed = newValue!;
+                          repository.updateSubtask(widget.subtask);
+                        });
+                      }),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.subtask.title,
+                        style: toDoListTileStyle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                      ),
+                      widget.subtask.note.isNotEmpty
+                          ? Text(
+                              widget.subtask.note,
+                              style: toDoListSubtitleStyle,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              maxLines: 2,
+                            )
+                          : Text(
+                              "No Notes",
+                              style: TextStyle(
+                                  fontFamily: 'Segoe UI',
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white,
+                                  fontSize: 17),
+                            ),
+                      widget.subtask.assignedTo.length > 0
+                          ? _buildAssignedMemberAvatars()
+                          : Text(
+                              "No Assigned Members",
+                              style: TextStyle(
+                                  fontFamily: 'Segoe UI',
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white,
+                                  fontSize: 17),
+                            ),
+                    ],
                   ),
-                  Text(
-                    widget.subtask.note,
-                    style: toDoListSubtitleStyle,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    maxLines: 2,
-                  ),
-                  widget.subtask.assignedTo.length > 0
-                      ? _buildAssignedMemberAvatars()
-                      : SizedBox.shrink(),
-                ],
-              ),
+                ),
+              ],
             ),
-            Column(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -168,9 +197,9 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                   color: Colors.grey,
                 ),
               ],
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -180,7 +209,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
       for (GroupMember member in widget.subtask.assignedTo)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: member.cAvatar(color: Colors.white),
+          child: member.cAvatar(),
         ),
     ]);
   }

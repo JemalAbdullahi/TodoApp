@@ -28,12 +28,14 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Size mediaQuery = MediaQuery.of(context).size;
+    double height = mediaQuery.height * 0.1;
     return GestureDetector(
       key: UniqueKey(),
       onTap: () => Navigator.pushNamed(context, SubtaskListTab.routeName,
           arguments: SubtaskListTabArguments(widget.group, widget.task)),
       child: Container(
-        height: 90,
+        height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           color: darkGreenBlue,

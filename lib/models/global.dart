@@ -28,6 +28,7 @@ final labelStyle = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
   fontFamily: 'Segoe UI',
+  fontSize: 18,
 );
 
 final boxDecorationStyle = BoxDecoration(
@@ -64,7 +65,8 @@ TextStyle toDoListTileStyle = new TextStyle(
     fontFamily: 'Segoe UI',
     fontWeight: FontWeight.bold,
     color: Colors.white,
-    fontSize: 25);
+    fontSize: 25,
+    );
 
 TextStyle toDoListSubtitleStyle = new TextStyle(
     fontFamily: 'Segoe UI',

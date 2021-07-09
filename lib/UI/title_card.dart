@@ -11,17 +11,19 @@ class TitleCard extends StatelessWidget {
   TitleCard({required this.title, required this.child});
   @override
   Widget build(BuildContext context) {
+    Size mediaQuery = MediaQuery.of(context).size;
+    double height = mediaQuery.height * 0.13;
     return Stack(
       children: <Widget>[
         child,
-        _titleCardBackground(),
+        _titleCardBackground(height),
       ],
     );
   }
 
-  Container _titleCardBackground() {
+  Container _titleCardBackground(double height) {
     return Container(
-      height: 120,
+      height: height,
       width: double.infinity,
       decoration: new BoxDecoration(
         color: Colors.white,

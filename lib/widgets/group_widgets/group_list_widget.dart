@@ -52,7 +52,7 @@ class _GroupListState extends State<GroupList> {
   Widget build(BuildContext context) {
     mediaQuery = MediaQuery.of(context).size;
     groupListItemWidth = mediaQuery.width * 0.85;
-    groupListItemHeight = mediaQuery.height * 0.2;
+    groupListItemHeight = mediaQuery.height * 0.17;
     return _buildStreamBuilder();
   }
 

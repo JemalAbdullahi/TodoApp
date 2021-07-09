@@ -27,6 +27,7 @@ class _ToDoTabState extends State<ToDoTab> {
   late Group group;
   int orderBy;
   bool reorder;
+  double height = 175;
 
   _ToDoTabState()
       : orderBy = 1,
@@ -37,6 +38,8 @@ class _ToDoTabState extends State<ToDoTab> {
     final args = ModalRoute.of(context)!.settings.arguments as ToDoTabArguments;
     group = args.group;
     taskBloc = TaskBloc(group.groupKey);
+    Size mediaQuery = MediaQuery.of(context).size;
+    height = mediaQuery.height * 0.13;
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
@@ -123,7 +126,7 @@ class _ToDoTabState extends State<ToDoTab> {
       key: UniqueKey(),
       child: ListView(
         key: UniqueKey(),
-        padding: EdgeInsets.only(top: 175, bottom: 90),
+        padding: EdgeInsets.only(top: height + 40, bottom: 90),
         children: group.tasks.map<Dismissible>((Task item) {
           return _buildListTile(item);
         }).toList(),
@@ -176,9 +179,7 @@ class _ToDoTabState extends State<ToDoTab> {
   } */
 
   void reAddTask(Task task) async {
-    await taskBloc
-        .addTask(task.title)
-        .then((value) {
+    await taskBloc.addTask(task.title).then((value) {
       setState(() {});
     });
   }
