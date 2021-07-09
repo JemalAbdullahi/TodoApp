@@ -146,7 +146,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         widget.subtask.title,
@@ -205,7 +205,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
   }
 
   Row _buildAssignedMemberAvatars() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
       for (GroupMember member in widget.subtask.assignedTo)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),

@@ -168,8 +168,12 @@ class SubtaskBloc {
   Stream<List<Subtask>> get getSubtasks => _subtaskSubject.stream;
 
   Future<void> addSubtask(String subtaskName) async {
-    await repository.addSubtask(_task.taskKey, subtaskName);
-    await _updateSubtasks();
+    Future.wait(
+      [
+        repository.addSubtask(_task.taskKey, subtaskName),
+        _updateSubtasks(),
+      ],
+    );
   }
 
   Future<void> deleteSubtask(String subtaskKey) async {

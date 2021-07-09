@@ -231,7 +231,7 @@ class _GroupListState extends State<GroupList> {
 
   ///Build Member Avatar
   Row _buildMemberAvatars(List<GroupMember> members) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
       for (GroupMember member in members)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),

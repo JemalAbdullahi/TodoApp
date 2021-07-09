@@ -140,15 +140,13 @@ class _AuthenticationViewState extends State<AuthenticationView> {
           backgroundColor: Colors.green,
         ),
       );
-      await groupBloc.updateGroups();
-      Navigator.pushReplacementNamed(context, "/home");
+      await groupBloc
+          .updateGroups()
+          .then((_) => Navigator.pushReplacementNamed(context, "/home"));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("$e : " +
-              widget.controllers["username"]!.text +
-              " " +
-              widget.controllers["password"]!.text),
+          content: Text("$e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -179,7 +177,7 @@ class _AuthenticationViewState extends State<AuthenticationView> {
     }).catchError((e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("$e : " + widget.controllers["username"]!.text),
+          content: Text("$e"),
           backgroundColor: Colors.red,
         ),
       );

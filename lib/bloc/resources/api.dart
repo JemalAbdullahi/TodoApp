@@ -71,6 +71,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       await saveApiKey(result["data"]["api_key"]);
+      await Future<void>.delayed(const Duration(milliseconds: 200));
       return User.fromJson(result["data"]);
     } else {
       // If that call was not successful, throw an error.
@@ -377,12 +378,12 @@ class ApiProvider {
       for (Map<String, dynamic> json_ in result["data"]) {
         try {
           Subtask subtask = Subtask.fromJson(json_);
-          subtasks.add(subtask);
           subtask.deadline = json_['due_date'] == null
               ? DateTime.now()
               : DateTime.parse(json_['due_date']);
           subtask.assignedTo =
               await getUsersAssignedToSubtask(subtask.subtaskKey);
+          subtasks.add(subtask);
         } catch (Exception) {
           print(Exception);
         }
