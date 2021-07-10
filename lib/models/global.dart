@@ -56,17 +56,18 @@ final profileBoxDecorationStyle = BoxDecoration(
 );
 
 TextStyle cardTitleStyle = new TextStyle(
-    fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.bold,
-    color: darkRed,
-    fontSize: 50);
+  fontFamily: 'Segoe UI',
+  fontWeight: FontWeight.bold,
+  color: darkRed,
+  fontSize: 50,
+);
 
 TextStyle toDoListTileStyle = new TextStyle(
-    fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-    fontSize: 25,
-    );
+  fontFamily: 'Segoe UI',
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
+  fontSize: 25,
+);
 
 TextStyle toDoListSubtitleStyle = new TextStyle(
     fontFamily: 'Segoe UI',

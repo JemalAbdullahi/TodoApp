@@ -10,13 +10,15 @@ class ListGroupsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size mediaQuery = MediaQuery.of(context).size;
+    double height = mediaQuery.height * 0.17;
     return Stack(children: [
       BackgroundColorContainer(
         startColor: lightBlue,
         endColor: lightBlueGradient,
         widget: TitleCard(
             title: "Groups",
-            child: GroupList(tileNavigatesTo: ToDoTab.routeName, top: 175)),
+            child: GroupList(tileNavigatesTo: ToDoTab.routeName, top: height)),
       )
     ]);
   }

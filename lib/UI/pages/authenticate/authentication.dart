@@ -32,6 +32,7 @@ class AuthenticationView extends StatefulWidget {
 
 class _AuthenticationViewState extends State<AuthenticationView> {
   final submitFocusNode = new FocusNode();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,19 +52,31 @@ class _AuthenticationViewState extends State<AuthenticationView> {
             ],
           ),
         ),
-        child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _signText(),
-                SizedBox(height: 30),
-                widget.form,
-                _buildMainBtn(),
-                widget.bottomBtn!,
-              ],
-            )),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _signText(),
+                  SizedBox(height: 30),
+                  widget.form,
+                  _buildMainBtn(),
+                  widget.bottomBtn!,
+                ],
+              ),
+            ),
+            isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black54,
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }
@@ -113,6 +126,9 @@ class _AuthenticationViewState extends State<AuthenticationView> {
   Future get _handleInput async {
     if (widget.formKey.currentState!.validate()) {
       widget.formKey.currentState!.save();
+      setState(() {
+        isLoading = true;
+      });
       switch (widget.mainButtonTitle) {
         case "Login":
           print("Login");
@@ -129,8 +145,9 @@ class _AuthenticationViewState extends State<AuthenticationView> {
 
   Future get _attemptLogin async {
     try {
-      await userBloc.signinUser(widget.controllers["username"]!.text,
-          widget.controllers["password"]!.text, "");
+      String username = widget.controllers["username"]!.text;
+      String password = widget.controllers["password"]!.text;
+      await userBloc.signinUser(username, password, "");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
