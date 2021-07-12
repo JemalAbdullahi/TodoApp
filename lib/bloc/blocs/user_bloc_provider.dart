@@ -9,7 +9,7 @@ import 'package:todolist/models/tasks.dart';
 
 class UserBloc {
   final PublishSubject<User> _userGetter = PublishSubject<User>();
-  User _user = new User();
+  User _user = new User.blank();
 
   UserBloc._privateConstructor();
 
@@ -30,20 +30,20 @@ class UserBloc {
     try {
       _user = await repository.registerUser(
           username, password, email, firstname, lastname, phonenumber, avatar);
+      _userGetter.sink.add(_user);
     } catch (e) {
       throw e;
     }
-    _userGetter.sink.add(_user);
   }
 
   Future<void> signinUser(
       String username, String password, String apiKey) async {
     try {
       _user = await repository.signinUser(username, password, apiKey);
+      _userGetter.sink.add(_user);
     } catch (e) {
       throw e;
     }
-    _userGetter.sink.add(_user);
   }
 
   Future<void> updateUserProfile(
@@ -58,6 +58,7 @@ class UserBloc {
     try {
       _user = await repository.updateUserProfile(currentPassword, newPassword,
           email, username, firstname, lastname, phonenumber, avatar);
+      _userGetter.sink.add(_user);
     } catch (e) {
       throw e;
     }

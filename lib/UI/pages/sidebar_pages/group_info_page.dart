@@ -16,9 +16,9 @@ class GroupInfoPage extends StatefulWidget {
 
 class _GroupInfoPageState extends State<GroupInfoPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  Group? group;
-  List<GroupMember>? initialMembers;
-  int? membersLength;
+  late Group group;
+  late List<GroupMember> initialMembers;
+  late int membersLength;
   bool groupUpdated = false;
 
   @override
@@ -26,8 +26,8 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
     final args =
         ModalRoute.of(context)!.settings.arguments as GroupInfoPageArguments;
     group = args.group;
-    initialMembers = group!.members;
-    membersLength = initialMembers!.length;
+    initialMembers = group.members;
+    membersLength = initialMembers.length;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -35,7 +35,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         widget: Scaffold(
           key: _scaffoldKey,
           appBar: CustomAppBar(
-            group!.name,
+            group.name,
             /* actions: <Widget>[
               TextButton(
                 onPressed: updateGroup,
@@ -126,7 +126,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       width: double.infinity,
       alignment: Alignment.topCenter,
       child: Text(
-        group!.name,
+        group.name,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: 'Segoe UI',
@@ -200,7 +200,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         radius: 16,
         backgroundColor: darkBlue,
         child: Text(
-          "${group!.members.length}",
+          "${group.members.length}",
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Segoe UI',
@@ -218,13 +218,13 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             fontSize: 20),
       ),
       Switch(
-          value: !group!.isPublic,
+          value: !group.isPublic,
           onChanged: (newValue) {
-            if (!group!.isPublic || group!.members.length == 1) {
+            if (!group.isPublic || group.members.length == 1) {
               setState(
                 () {
-                  group!.isPublic = !newValue;
-                  repository.updateGroup(group!).catchError(
+                  group.isPublic = !newValue;
+                  repository.updateGroup(group).catchError(
                     (e) {
                       ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text("$e")));
@@ -233,7 +233,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
                 },
               );
             }
-            if (group!.members.length > 1) {
+            if (group.members.length > 1) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Personal Groups are Limited to 1 Member Only"),
@@ -245,7 +245,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
   }
 
   Padding _buildMembersList() {
-    group!.addListener(() {
+    group.addListener(() {
       setState(() {});
     });
     return Padding(
@@ -258,9 +258,9 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             mainAxisSpacing: 10.0),
         itemBuilder: (context, index) => Column(
           children: [
-            group!.members[index].cAvatar(radius: 34),
+            group.members[index].cAvatar(radius: 34),
             Text(
-              group!.members[index].firstname,
+              group.members[index].firstname,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: 'Segoe UI',
@@ -269,13 +269,13 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             ),
           ],
         ),
-        itemCount: group!.members.length,
+        itemCount: group.members.length,
       ),
     );
   }
 
   Widget _addMembers() {
-    return this.group!.isPublic
+    return this.group.isPublic
         ? Align(
             alignment: Alignment(0.9, 0.9),
             child: FloatingActionButton(
@@ -285,7 +285,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AddMembersPage(
-                      group: group!,
+                      group: group,
                     ),
                   ),
                 );

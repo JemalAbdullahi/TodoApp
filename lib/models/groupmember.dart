@@ -5,26 +5,26 @@ import 'package:todolist/models/global.dart';
 // ignore: must_be_immutable
 class GroupMember extends Equatable {
   /// Member's First name
-  final String firstname;
+  late String firstname;
 
   /// Member's Last name
-  final String lastname;
+  late String lastname;
 
   /// Member's Username
-  final String username;
+  late String username;
 
   /// Member's Email Address
-  final String emailaddress;
+  late String emailaddress;
 
   /// Member's Phone Number
-  final String phonenumber;
+  late String phonenumber;
 
   /// Avatar Image
-  final avatar;
+  late var avatar;
 
   bool selectedForAssignment = false;
 
-
+  GroupMember.blank();
   GroupMember(
       {required this.firstname,
       required this.lastname,

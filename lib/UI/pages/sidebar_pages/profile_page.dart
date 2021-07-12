@@ -298,8 +298,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _newPasswordField() {
-    _newPasswordController.text = _user.password!;
-    _newPassword = _user.password!;
+    _newPasswordController.text = _user.password;
+    _newPassword = _user.password;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -330,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _confirmPasswordField() {
-    _confirmPasswordController.text = _user.password!;
+    _confirmPasswordController.text = _user.password;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

@@ -16,7 +16,7 @@ class AddMembersPage extends StatefulWidget {
 }
 
 class _AddMembersPageState extends State<AddMembersPage> {
-  Size? size;
+  late Size size;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
   String searchQuery = "Search query";
@@ -159,8 +159,8 @@ class _AddMembersPageState extends State<AddMembersPage> {
   Column _buildColumnCard() {
     return Column(children: [
       Container(
-          height: size!.height * 0.12,
-          width: size!.width,
+          height: size.height * 0.12,
+          width: size.width,
           child: _addedMembersListView()),
       _expandedCard(),
     ]);
@@ -208,10 +208,10 @@ class _AddMembersPageState extends State<AddMembersPage> {
   }
 
   Container _containerMembers() {
-    double containerHeight = size!.height * 0.6;
+    double containerHeight = size.height * 0.6;
     return Container(
       height: containerHeight,
-      width: size!.width,
+      width: size.width,
       padding: EdgeInsets.only(left: 24.0, top: 18.0),
       decoration: BoxDecoration(
         color: Colors.white,
