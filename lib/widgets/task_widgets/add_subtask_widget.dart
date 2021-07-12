@@ -37,8 +37,8 @@ class _AddSubtaskState extends State<AddSubtask> {
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
       //bottom = (isFocused && !_res.isOpen) ? 100 : 0;
-      return Align(
-        alignment: Alignment.bottomCenter,
+      return Positioned(
+        bottom: bottom,
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: marginH, vertical: 25),
           decoration: BoxDecoration(
@@ -81,9 +81,10 @@ class _AddSubtaskState extends State<AddSubtask> {
                     suffixIcon: textfieldFocus.hasPrimaryFocus
                         ? IconButton(
                             icon: Icon(Icons.add),
-                            onPressed: () async {
-                              await addSubtask();
-                              setState(() {});
+                            onPressed: () {
+                              setState(() {
+                                addSubtask();
+                              });
                             })
                         : SizedBox.shrink(),
                     border: InputBorder.none,

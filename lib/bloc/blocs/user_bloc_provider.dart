@@ -172,14 +172,14 @@ class SubtaskBloc {
     Future.wait(
       [
         repository.addSubtask(_task.taskKey, subtaskName),
-        _updateSubtasks(),
+        _updateSubtasks(wait: true),
       ],
     );
   }
 
   Future<void> deleteSubtask(String subtaskKey) async {
     await repository.deleteSubtask(subtaskKey);
-    await _updateSubtasks();
+    await _updateSubtasks(wait: true);
   }
 
   Future<void> updateSubtaskInfo(Subtask subtask) async {
@@ -193,7 +193,9 @@ class SubtaskBloc {
     //await _updateSubtasks();
   }
 
-  Future<void> _updateSubtasks() async {
+  Future<void> _updateSubtasks({bool wait = false}) async {
+    if (wait) await Future<void>.delayed(const Duration(milliseconds: 400));
+
     List<Subtask> subtasks = await repository.getSubtasks(_task);
     _subtaskSubject.add(subtasks);
   }
