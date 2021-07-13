@@ -19,6 +19,8 @@ class TaskListItemWidget extends StatefulWidget {
 
 class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   late SubtaskBloc subtaskBloc;
+  late final double unitHeightValue;
+  late final double height;
 
   @override
   void initState() {
@@ -29,7 +31,9 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   @override
   Widget build(BuildContext context) {
     Size mediaQuery = MediaQuery.of(context).size;
-    double height = mediaQuery.height * 0.1;
+    unitHeightValue = mediaQuery.height * 0.01;
+    height = mediaQuery.height * 0.1;
+
     return GestureDetector(
       key: UniqueKey(),
       onTap: () => Navigator.pushNamed(context, SubtaskListTab.routeName,
@@ -65,7 +69,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                 fit: FlexFit.tight,
                 child: Text(
                   widget.task.title,
-                  style: toDoListTileStyle,
+                  style: toDoListTileStyle(unitHeightValue),
                   maxLines: 3,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
@@ -80,13 +84,13 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                     widget.task.groupName.isNotEmpty
                         ? Text(
                             widget.task.groupName,
-                            style: toDoListSubtitleStyle,
+                            style: toDoListSubtitleStyle(unitHeightValue),
                             textAlign: TextAlign.right,
                             overflow: TextOverflow.ellipsis,
                           )
                         : Text(
                             'group',
-                            style: toDoListSubtitleStyle,
+                            style: toDoListSubtitleStyle(unitHeightValue),
                             textAlign: TextAlign.right,
                           ),
                     SizedBox(height: 20),

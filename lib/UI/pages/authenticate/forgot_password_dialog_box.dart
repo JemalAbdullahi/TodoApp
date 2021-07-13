@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:todolist/models/global.dart';
 
 class ForgotPasswordDialogBox extends StatelessWidget {
+  late final double unitHeightValue;
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -121,7 +123,7 @@ class ForgotPasswordDialogBox extends StatelessWidget {
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: 'Enter an Email',
-              hintStyle: hintTextStyle,
+              hintStyle: hintTextStyle(unitHeightValue),
               prefixIcon: Icon(Icons.person, color: Colors.white),
               contentPadding: EdgeInsets.only(top: 8.0),
             ),

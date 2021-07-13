@@ -18,7 +18,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  User _user = userBloc.getUserObject();
+  late final double unitHeightValue;
+  final User _user = userBloc.getUserObject();
 
   late String _currentPassword,
       _newPassword,
@@ -65,6 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -116,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Current Password", style: labelStyle),
+        Text("Current Password", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -131,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
               contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
               prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
               hintText: 'Current Password',
-              hintStyle: hintTextStyle,
+              hintStyle: hintTextStyle(unitHeightValue),
               errorMaxLines: 2,
               errorStyle: TextStyle(fontSize: 16, color: Colors.red),
             ),
@@ -156,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Username", style: labelStyle),
+        Text("Username", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -170,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.person, color: Colors.white),
                 hintText: 'Username',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             onSaved: (newValue) => _username = newValue!.trim(),
@@ -185,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("First Name", style: labelStyle),
+        Text("First Name", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -199,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.person_outline, color: Colors.white),
                 hintText: 'Firstname',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             onSaved: (newValue) => _firstname = newValue!.trim(),
@@ -214,7 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Last Name", style: labelStyle),
+        Text("Last Name", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -228,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.person_outline, color: Colors.white),
                 hintText: 'Lastname',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             onSaved: (newValue) => _lastname = newValue!.trim(),
@@ -243,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Phone Number", style: labelStyle),
+        Text("Phone Number", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -257,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.phone, color: Colors.white),
                 hintText: 'Phone Number',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             onSaved: (newValue) => _phonenumber = newValue!.trim(),
@@ -272,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Email Address", style: labelStyle),
+        Text("Email Address", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -286,7 +288,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.email, color: Colors.white),
                 hintText: 'Email Address',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             validator: EmailValidator(errorText: 'Enter a Valid Email'),
@@ -303,7 +305,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("New Password", style: labelStyle),
+        Text("New Password", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -318,7 +320,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.lock, color: Colors.white),
                 hintText: 'New Password',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             validator: passwordValidator,
@@ -334,7 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Confirm Password", style: labelStyle),
+        Text("Confirm Password", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -349,7 +351,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.lock, color: Colors.white),
                 hintText: 'Re-Enter New Password',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
                 errorStyle: TextStyle(fontSize: 16)),
             validator: (val) =>

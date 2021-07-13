@@ -1,45 +1,45 @@
 import 'package:flutter/material.dart';
-
 import 'package:todolist/models/global.dart';
-//import 'package:todolist/widgets/create_task_overlay.dart';
 
 class TitleCard extends StatelessWidget {
   final String title;
   final Widget child;
-  //final VoidCallback addTask;
+  late final double unitHeightValue;
+  late final double height;
 
   TitleCard({required this.title, required this.child});
   @override
   Widget build(BuildContext context) {
     Size mediaQuery = MediaQuery.of(context).size;
-    double height = mediaQuery.height * 0.13;
+    unitHeightValue = mediaQuery.height * 0.01;
+    height = unitHeightValue * 13;
     return Stack(
       children: <Widget>[
         child,
-        _titleCardBackground(height),
+        _titleCardBackground(),
       ],
     );
   }
 
-  Container _titleCardBackground(double height) {
+  Container _titleCardBackground() {
     return Container(
       height: height,
       width: double.infinity,
       decoration: new BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
+          bottomLeft: Radius.circular(40*unitHeightValue),
+          bottomRight: Radius.circular(40*unitHeightValue),
         ),
         boxShadow: [
           new BoxShadow(
             color: Colors.black.withOpacity(0.7),
-            blurRadius: 25.0,
+            blurRadius: 25.0*unitHeightValue,
           ),
         ],
       ),
       child: _titleCardTitle(),
-      padding: EdgeInsets.only(bottom: 20, left: 15.0),
+      padding: EdgeInsets.only(bottom: 20*unitHeightValue, left: 15.0*unitHeightValue),
     );
   }
 
@@ -48,7 +48,7 @@ class TitleCard extends StatelessWidget {
       alignment: Alignment.bottomLeft,
       child: Text(
         title,
-        style: cardTitleStyle,
+        style: cardTitleStyle(unitHeightValue),
       ),
     );
   }

@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
     "password": new TextEditingController(),
   };
   final _signInFormKey = GlobalKey<FormState>();
+  late final double unitHeightValue;
 
   /*  @override
   void initState() {
@@ -28,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   } */
 
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return AuthenticationView(
       title: "Sign In",
       form: Form(
@@ -40,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
               controller: controllers["username"]!,
               iconData: Icons.account_circle,
               hintText: 'Enter Username',
+              unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -49,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               hintText: 'Enter a Password',
               obscureText: true,
               textInputAction: TextInputAction.done,
+              unitHeightValue: unitHeightValue,
             ),
             _buildForgotPasswordBtn,
           ],
@@ -105,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                 return ForgotPasswordDialogBox();
               });
         },
-        child: Text('Forgot Password?', style: labelStyle),
+        child: Text('Forgot Password?', style: labelStyle(unitHeightValue)),
       ),
     );
   }

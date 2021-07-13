@@ -12,6 +12,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final _signupFormKey = GlobalKey<FormState>();
+  late final double unitHeightValue;
 
   final Map<String, TextEditingController> controllers = {
     "username": new TextEditingController(),
@@ -23,6 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   };
 
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return AuthenticationView(
       title: "Sign Up",
       form: Form(
@@ -37,6 +39,7 @@ class _SignupPageState extends State<SignupPage> {
               iconData: Icons.person,
               hintText: 'Enter a firstname',
               keyboardType: TextInputType.name,
+              unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -44,14 +47,14 @@ class _SignupPageState extends State<SignupPage> {
               controller: controllers["lastname"]!,
               iconData: Icons.person,
               hintText: 'Enter a lastname',
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.name,unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Username',
               controller: controllers["username"]!,
               iconData: Icons.account_circle,
-              hintText: 'Enter Username',
+              hintText: 'Enter Username',unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -59,7 +62,7 @@ class _SignupPageState extends State<SignupPage> {
               controller: controllers["phone"]!,
               iconData: Icons.phone,
               hintText: 'Enter a phone number',
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.phone,unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -67,7 +70,7 @@ class _SignupPageState extends State<SignupPage> {
               controller: controllers["email"]!,
               iconData: Icons.email,
               hintText: 'Enter an email address',
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.emailAddress,unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -76,7 +79,7 @@ class _SignupPageState extends State<SignupPage> {
               iconData: Icons.lock,
               hintText: 'Enter a Password',
               obscureText: true,
-              textInputAction: TextInputAction.done,
+              textInputAction: TextInputAction.done,unitHeightValue: unitHeightValue,
             ),
           ],
         ),
@@ -94,7 +97,7 @@ class _SignupPageState extends State<SignupPage> {
       padding: EdgeInsets.only(right: 0.0),
       child: TextButton(
         onPressed: () => Navigator.pop(context),
-        child: Text('Back to Sign In', style: labelStyle),
+        child: Text('Back to Sign In', style: labelStyle(unitHeightValue)),
       ),
     );
   }

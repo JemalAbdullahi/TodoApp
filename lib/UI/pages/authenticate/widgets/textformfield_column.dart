@@ -10,7 +10,8 @@ class TextFormFieldColumn extends StatelessWidget {
     required this.iconData,
     required this.hintText,
     this.obscureText = false,
-    this.textInputAction = TextInputAction.next,
+    this.textInputAction = TextInputAction.next, 
+    required this.unitHeightValue,
   }) : super(key: key);
 
   final String label;
@@ -20,33 +21,36 @@ class TextFormFieldColumn extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final TextInputAction textInputAction;
+  final double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: labelStyle),
+        Text(label, style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: boxDecorationStyle,
+          decoration: boxDecorationStyle() ,
           height: 60,
           child: TextFormField(
             controller: controller,
             keyboardType: keyboardType,
-            textInputAction: textInputAction,            
+            textInputAction: textInputAction,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(iconData, color: Colors.white),
               hintText: hintText,
-              hintStyle: hintTextStyle,
+              hintStyle: hintTextStyle(unitHeightValue),
               errorStyle: TextStyle(fontSize: 14.0),
             ),
             validator: (value) {
-              return (value != null && value.isEmpty) ? 'Fill the Form Completely.' : null;
+              return (value != null && value.isEmpty)
+                  ? 'Fill the Form Completely.'
+                  : null;
             },
             obscureText: obscureText,
           ),

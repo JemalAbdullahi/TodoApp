@@ -12,88 +12,93 @@ const Color red = Color(0xfff20f38);
 const Color darkRed = Color(0xffc70000);
 const Color brownRed = Color(0xff590209);
 
-final appTitleStyle = TextStyle(
-  color: darkBlueGradient,
-  fontWeight: FontWeight.bold,
-  fontFamily: "Segoe UI",
-  fontSize: 28.0,
-);
+TextStyle appTitleStyle(double unitHeightValue) => TextStyle(
+      color: darkBlueGradient,
+      fontWeight: FontWeight.bold,
+      fontFamily: "Segoe UI",
+      fontSize: 28.0 * unitHeightValue,
+    );
 
-final hintTextStyle = TextStyle(
-  color: Colors.white70,
-  fontFamily: 'Segoe UI',
-);
+TextStyle hintTextStyle(double unitHeightValue) => TextStyle(
+      color: Colors.white70,
+      fontFamily: 'Segoe UI',
+    );
 
-final labelStyle = TextStyle(
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
-  fontFamily: 'Segoe UI',
-  fontSize: 18,
-);
+TextStyle labelStyle(double unitHeightValue) => TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontFamily: 'Segoe UI',
+      fontSize: 18 * unitHeightValue,
+    );
 
-final boxDecorationStyle = BoxDecoration(
-  color: Color(0xff57CBF2),
-  borderRadius: BorderRadius.circular(10.0),
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black12,
-      blurRadius: 6.0,
-      offset: Offset(0, 2),
-    ),
-  ],
-);
+BoxDecoration boxDecorationStyle() => BoxDecoration(
+      color: Color(0xff57CBF2),
+      borderRadius: BorderRadius.circular(10.0),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 6.0,
+          offset: Offset(0, 2),
+        ),
+      ],
+    );
 
-final profileBoxDecorationStyle = BoxDecoration(
-  color: Color(0xff57CBF2),
-  borderRadius: BorderRadius.circular(10.0),
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black12,
-      blurRadius: 6.0,
-      offset: Offset(0, 2),
-    ),
-  ],
-);
+BoxDecoration profileBoxDecorationStyle() => BoxDecoration(
+      color: Color(0xff57CBF2),
+      borderRadius: BorderRadius.circular(10.0),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 6.0,
+          offset: Offset(0, 2),
+        ),
+      ],
+    );
 
-TextStyle cardTitleStyle = new TextStyle(
-  fontFamily: 'Segoe UI',
-  fontWeight: FontWeight.bold,
-  color: darkRed,
-  fontSize: 50,
-);
+TextStyle cardTitleStyle(double unitHeightValue) => new TextStyle(
+      fontFamily: 'Segoe UI',
+      fontWeight: FontWeight.bold,
+      color: darkRed,
+      fontSize: 50 * unitHeightValue,
+    );
 
-TextStyle toDoListTileStyle = new TextStyle(
-  fontFamily: 'Segoe UI',
-  fontWeight: FontWeight.bold,
-  color: Colors.white,
-  fontSize: 25,
-);
+TextStyle toDoListTileStyle(double unitHeightValue) => new TextStyle(
+      fontFamily: 'Segoe UI',
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+      fontSize: 25 * unitHeightValue,
+    );
 
-TextStyle toDoListSubtitleStyle = new TextStyle(
-    fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.w300,
-    color: Colors.white,
-    fontSize: 17);
+TextStyle toDoListSubtitleStyle(double unitHeightValue) => new TextStyle(
+      fontFamily: 'Segoe UI',
+      fontWeight: FontWeight.w300,
+      color: Colors.white,
+      fontSize: 17,
+    );
 
-TextStyle taskListTitleStyle = new TextStyle(
-    fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.bold,
-    color: darkBlue,
-    fontSize: 50);
+TextStyle taskListTitleStyle(double unitHeightValue) => new TextStyle(
+      fontFamily: 'Segoe UI',
+      fontWeight: FontWeight.bold,
+      color: darkBlue,
+      fontSize: 50,
+    );
 
-TextStyle loginTitleStyle = new TextStyle(
-    fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.bold,
-    color: darkBlueGradient,
-    fontSize: 36);
-TextStyle loginButtonStyle = new TextStyle(
-    fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.w700,
-    color: lightBlue,
-    fontSize: 24);
+TextStyle loginTitleStyle(double unitHeightValue) => new TextStyle(
+      fontFamily: 'Segoe UI',
+      fontWeight: FontWeight.bold,
+      color: darkBlueGradient,
+      fontSize: 36 * unitHeightValue,
+    );
+TextStyle loginButtonStyle(double unitHeightValue) => new TextStyle(
+      fontFamily: 'Segoe UI',
+      fontWeight: FontWeight.w700,
+      color: lightBlue,
+      fontSize: 24 * unitHeightValue,
+    );
 
-TextStyle registerButtonStyle = new TextStyle(
-    fontFamily: 'Segoe UI',
-    fontWeight: FontWeight.bold,
-    color: red,
-    fontSize: 24);
+TextStyle registerButtonStyle(double unitHeightValue) => new TextStyle(
+      fontFamily: 'Segoe UI',
+      fontWeight: FontWeight.bold,
+      color: red,
+      fontSize: 24 * unitHeightValue,
+    );

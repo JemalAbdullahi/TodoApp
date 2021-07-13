@@ -22,6 +22,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   late SubtaskBloc subtaskBloc;
   late Group group;
   late Task task;
+  late final double unitHeightValue;
   int orderBy;
   bool reorder;
 
@@ -35,6 +36,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         ModalRoute.of(context)!.settings.arguments as SubtaskListTabArguments;
     task = args.task;
     group = args.group;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     subtaskBloc = SubtaskBloc(task);
     return KeyboardSizeProvider(
       child: SafeArea(
@@ -42,7 +44,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
           appBar: AppBar(
             title: Text(
               task.title,
-              style: appTitleStyle,
+              style: appTitleStyle(unitHeightValue),
             ),
             centerTitle: true,
             backgroundColor: Colors.white,

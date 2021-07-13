@@ -25,6 +25,7 @@ class _ToDoTabState extends State<ToDoTab> {
   late TaskBloc taskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   late Group group;
+  late final double unitHeightValue;
   int orderBy;
   bool reorder;
   double height = 175;
@@ -40,6 +41,7 @@ class _ToDoTabState extends State<ToDoTab> {
     taskBloc = TaskBloc(group.groupKey);
     Size mediaQuery = MediaQuery.of(context).size;
     height = mediaQuery.height * 0.13;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return KeyboardSizeProvider(
       child: SafeArea(
         child: Scaffold(
@@ -47,7 +49,7 @@ class _ToDoTabState extends State<ToDoTab> {
           appBar: AppBar(
             title: Text(
               group.name,
-              style: appTitleStyle,
+              style: appTitleStyle(unitHeightValue),
             ),
             centerTitle: true,
             backgroundColor: Colors.white,

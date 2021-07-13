@@ -22,13 +22,14 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
   late double listItemWidth;
   late Size mediaQuery;
   late double listItemHeight;
+  late final double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
     mediaQuery = MediaQuery.of(context).size;
+    unitHeightValue = mediaQuery.height * 0.01;
     listItemWidth = mediaQuery.width * 0.85;
-    listItemHeight = mediaQuery.height * 0.15;
-
+    listItemHeight = unitHeightValue * 15;
     return GestureDetector(
       key: UniqueKey(),
       onTap: () => Navigator.push(context,
@@ -74,7 +75,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
               fit: FlexFit.tight,
               child: Text(
                 widget.subtask.title,
-                style: toDoListTileStyle,
+                style: toDoListTileStyle(unitHeightValue),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -89,7 +90,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                   child: widget.subtask.note.isNotEmpty
                       ? Text(
                           widget.subtask.note,
-                          style: toDoListSubtitleStyle,
+                          style: toDoListSubtitleStyle(unitHeightValue),
                           textAlign: TextAlign.right,
                           maxLines: 4,
                           softWrap: true,
@@ -150,7 +151,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                     children: [
                       Text(
                         widget.subtask.title,
-                        style: toDoListTileStyle,
+                        style: toDoListTileStyle(unitHeightValue),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -158,7 +159,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                       widget.subtask.note.isNotEmpty
                           ? Text(
                               widget.subtask.note,
-                              style: toDoListSubtitleStyle,
+                              style: toDoListSubtitleStyle(unitHeightValue),
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               maxLines: 2,

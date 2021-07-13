@@ -13,12 +13,13 @@ class SubtaskInfo extends StatefulWidget {
   final SubtaskBloc subtaskBloc;
   final Subtask subtask;
   final List<GroupMember> members;
-  const SubtaskInfo(
-      {Key? key,
-      required this.subtaskBloc,
-      required this.subtask,
-      required this.members})
-      : super(key: key);
+
+  const SubtaskInfo({
+    Key? key,
+    required this.subtaskBloc,
+    required this.subtask,
+    required this.members,
+  }) : super(key: key);
 
   @override
   _SubtaskInfoState createState() => _SubtaskInfoState();
@@ -26,6 +27,7 @@ class SubtaskInfo extends StatefulWidget {
 
 class _SubtaskInfoState extends State<SubtaskInfo> {
   late final SubtaskViewModel viewmodel;
+  late final double unitHeightValue;
   TextEditingController notesController = new TextEditingController();
   bool buffering = true;
   bool updating = false;
@@ -41,6 +43,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return SafeArea(
       child: GestureDetector(
         onTap: () {
@@ -132,7 +135,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Notes/Description", style: labelStyle),
+        Text("Notes/Description", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10.0),
         _notesContainer(),
         SizedBox(height: 20),

@@ -13,13 +13,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isMenuOpen = false;
+  late final double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("TODO List", style: appTitleStyle),
+          title: Text("TODO List", style: appTitleStyle(unitHeightValue)),
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,

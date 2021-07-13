@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:todolist/models/global.dart';
 
 class HowToPage extends StatelessWidget {
+  late final double unitHeightValue;
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
       backgroundColor: lightBlueGradient,
       appBar: AppBar(
@@ -28,7 +30,7 @@ class HowToPage extends StatelessWidget {
         child: RichText(
           text: TextSpan(
             text: 'How to Use:',
-            style: cardTitleStyle,
+            style: cardTitleStyle(unitHeightValue),
             children: <TextSpan>[
               TextSpan(
                 text: '\nAdd: ',
