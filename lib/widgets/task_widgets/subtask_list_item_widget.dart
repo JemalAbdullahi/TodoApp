@@ -196,6 +196,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                 Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.grey,
+                  size: 24 * unitHeightValue,
                 ),
               ],
             ),

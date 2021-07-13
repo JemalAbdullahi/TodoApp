@@ -71,14 +71,23 @@ class _ProfilePageState extends State<ProfilePage> {
       child: BackgroundColorContainer(
         startColor: lightBlue,
         endColor: lightBlueGradient,
-        widget: Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: Colors.transparent,
-          appBar: CustomAppBar('Edit Profile'),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 40),
-            physics: AlwaysScrollableScrollPhysics(),
-            child: _buildForm(context),
+        widget: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: Colors.transparent,
+            appBar: CustomAppBar('Edit Profile'),
+            body: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              physics: AlwaysScrollableScrollPhysics(),
+              child: _buildForm(context),
+            ),
           ),
         ),
       ),
@@ -90,7 +99,9 @@ class _ProfilePageState extends State<ProfilePage> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          Center(child: _user.cAvatar(radius: 56.0, unitHeightValue: unitHeightValue)),
+          Center(
+              child: _user.cAvatar(
+                  radius: 56.0, unitHeightValue: unitHeightValue)),
           SizedBox(height: 20),
           _firstnameField(),
           SizedBox(height: 20),

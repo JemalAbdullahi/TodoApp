@@ -23,7 +23,7 @@ class MyButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Icon(iconData, color: Colors.black45),
+          Icon(iconData, color: Colors.black45, size: 32 * unitHeightValue),
           SizedBox(width: 10),
           Text(
             text,

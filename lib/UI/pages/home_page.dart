@@ -25,13 +25,13 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
           leading: IconButton(
             icon: isMenuOpen
-                ? Icon(Icons.arrow_back, color: darkBlueGradient, size: 32.0)
+                ? Icon(Icons.arrow_back,
+                    color: darkBlueGradient, size: 32.0 * unitHeightValue)
                 : Icon(
                     Icons.settings,
-                    size: 32.0,
+                    size: 32.0 * unitHeightValue,
                     color: darkBlueGradient,
                   ),
             onPressed: () {
@@ -45,11 +45,14 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(
                 Icons.group_add,
                 color: darkBlueGradient,
-                size: 32.0,
+                size: 32 * unitHeightValue,
               ),
               onPressed: () {
                 Navigator.pushNamed(context, CreateGroupPage.routeName);
               }, //will go to Create a group Page
+            ),
+            SizedBox(
+              width: 10,
             )
           ],
         ),

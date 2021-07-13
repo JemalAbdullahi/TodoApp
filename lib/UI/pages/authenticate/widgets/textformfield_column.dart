@@ -10,7 +10,7 @@ class TextFormFieldColumn extends StatelessWidget {
     required this.iconData,
     required this.hintText,
     this.obscureText = false,
-    this.textInputAction = TextInputAction.next, 
+    this.textInputAction = TextInputAction.next,
     required this.unitHeightValue,
   }) : super(key: key);
 
@@ -29,23 +29,25 @@ class TextFormFieldColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: boxDecorationStyle() ,
-          height: 60,
+          decoration: boxDecorationStyle(),
+          height: 60 * unitHeightValue,
           child: TextFormField(
             controller: controller,
             keyboardType: keyboardType,
             textInputAction: textInputAction,
-            style: TextStyle(color: Colors.white),
+            style:
+                TextStyle(color: Colors.white, fontSize: 16 * unitHeightValue),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(iconData, color: Colors.white),
+              prefixIcon: Icon(iconData,
+                  color: Colors.white, size: 24 * unitHeightValue),
               hintText: hintText,
               hintStyle: hintTextStyle(unitHeightValue),
-              errorStyle: TextStyle(fontSize: 14.0*unitHeightValue),
+              errorStyle: TextStyle(fontSize: 14.0 * unitHeightValue),
             ),
             validator: (value) {
               return (value != null && value.isEmpty)

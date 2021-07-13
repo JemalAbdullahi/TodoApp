@@ -44,42 +44,53 @@ class _ToDoTabState extends State<ToDoTab> {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return KeyboardSizeProvider(
       child: SafeArea(
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(
-              group.name,
-              style: appTitleStyle(unitHeightValue),
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              title: Text(
+                group.name,
+                style: appTitleStyle(unitHeightValue),
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back,
+                    size: 32.0 * unitHeightValue, color: darkBlueGradient),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Colors.blueGrey,
+              ),
+              actions: [
+                _popupMenuButton(),
+                SizedBox(width: 10),
+              ],
             ),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, size: 32.0, color: darkBlueGradient),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              color: Colors.blueGrey,
-            ),
-            actions: [
-              _popupMenuButton(),
-            ],
-          ),
-          body: Stack(
-            children: <Widget>[
-              BackgroundColorContainer(
-                startColor: lightBlue,
-                endColor: lightBlueGradient,
-                widget: TitleCard(
-                  title: 'Projects/Tasks',
-                  child: _buildStreamBuilder(),
+            body: Stack(
+              children: <Widget>[
+                BackgroundColorContainer(
+                  startColor: lightBlue,
+                  endColor: lightBlueGradient,
+                  widget: TitleCard(
+                    title: 'Projects/Tasks',
+                    child: _buildStreamBuilder(),
+                  ),
                 ),
-              ),
-              AddTask(
-                length: group.tasks.length,
-                taskbloc: taskBloc,
-              ),
-            ],
+                AddTask(
+                  length: group.tasks.length,
+                  taskbloc: taskBloc,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -152,6 +163,7 @@ class _ToDoTabState extends State<ToDoTab> {
         child: Icon(
           Icons.delete,
           color: lightBlueGradient,
+          size: 28 * unitHeightValue,
         ),
       ),
       onDismissed: (direction) async {
@@ -186,8 +198,8 @@ class _ToDoTabState extends State<ToDoTab> {
 
   PopupMenuButton _popupMenuButton() {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.sort, size: 32.0, color: darkBlueGradient),
-      iconSize: 24.0,
+      icon: Icon(Icons.sort,
+          size: 32.0 * unitHeightValue, color: darkBlueGradient),
       color: darkGreenBlue,
       offset: Offset(0, 50),
       shape: RoundedRectangleBorder(
@@ -205,33 +217,36 @@ class _ToDoTabState extends State<ToDoTab> {
         PopupMenuItem<String>(
           value: "Alphabetical",
           child: Row(children: [
-            Icon(Icons.sort_by_alpha),
+            Icon(Icons.sort_by_alpha, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Alphabetical",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
         PopupMenuItem<String>(
           value: "Recent-Oldest",
           child: Row(children: [
-            Icon(Icons.date_range),
+            Icon(Icons.date_range, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Recent-Oldest",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
         PopupMenuItem<String>(
           value: "Oldest-Recent",
           child: Row(children: [
-            Icon(Icons.date_range),
+            Icon(Icons.date_range, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Oldest-Recent",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),

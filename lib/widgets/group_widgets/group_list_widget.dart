@@ -127,7 +127,8 @@ class _GroupListState extends State<GroupList> {
       background: Container(
         alignment: AlignmentDirectional.centerEnd,
         color: darkRed,
-        child: Icon(Icons.delete, color: lightBlueGradient),
+        child: Icon(Icons.delete,
+            color: lightBlueGradient, size: 28 * unitHeightValue),
       ),
       onDismissed: (direction) async {
         if (group.members.length == 1) {
@@ -194,6 +195,7 @@ class _GroupListState extends State<GroupList> {
       Icon(
         Icons.arrow_forward_ios,
         color: Colors.grey,
+        size: 24 * unitHeightValue,
       )
     ]);
   }

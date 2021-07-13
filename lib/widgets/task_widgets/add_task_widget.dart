@@ -19,9 +19,12 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   TextEditingController controller = new TextEditingController();
   FocusNode textfieldFocus = new FocusNode();
-
-  double bottom = 0;
-  late double unitValueHeight, unitValueWidth, height, defaultWidth, focusWidth, marginH;
+  late double unitValueHeight,
+      unitValueWidth,
+      height,
+      defaultWidth,
+      focusWidth,
+      marginH;
   late Size size;
 
   @override
@@ -36,7 +39,7 @@ class _AddTaskState extends State<AddTask> {
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
       return Positioned(
-        bottom: bottom,
+        bottom: 0,
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: marginH, vertical: 25),
           decoration: BoxDecoration(
@@ -63,12 +66,9 @@ class _AddTaskState extends State<AddTask> {
                   textAlignVertical: TextAlignVertical.center,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.go,
+                  style: TextStyle(fontSize: 16 * unitValueHeight),
                   onTap: () {
-                    if (width != focusWidth) {
-                      setState(() {
-                        width = focusWidth;
-                      });
-                    }
+                    setState(() {});
                   },
                   onSubmitted: (_) {
                     setState(() {
@@ -88,7 +88,8 @@ class _AddTaskState extends State<AddTask> {
                     //contentPadding: EdgeInsets.only(left: 12.0,),
                     border: InputBorder.none,
                     hintText: "Write a Task",
-                    hintStyle: TextStyle(color: Colors.black54),
+                    hintStyle: TextStyle(
+                        color: Colors.black54, fontSize: 16 * unitValueHeight),
                   ),
                 ),
               ),

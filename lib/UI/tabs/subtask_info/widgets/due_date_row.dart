@@ -26,7 +26,8 @@ class _DueDateRowState extends State<DueDateRow> {
         SizedBox(width: 5),
         IconButton(
             onPressed: () => _showDatePicker(context),
-            icon: Icon(Icons.calendar_today, color: lightBlue))
+            icon: Icon(Icons.calendar_today,
+                color: lightBlue, size: 20 * unitHeightValue))
       ],
     );
   }
@@ -36,7 +37,7 @@ class _DueDateRowState extends State<DueDateRow> {
     showCupertinoModalPopup(
       context: context,
       builder: (_) => Container(
-        height: 250,
+        height: 250 * unitHeightValue,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -45,7 +46,7 @@ class _DueDateRowState extends State<DueDateRow> {
         child: Column(
           children: [
             Container(
-              height: 200,
+              height: 200 * unitHeightValue,
               child: CupertinoDatePicker(
                   initialDateTime: widget.viewmodel.deadline,
                   mode: CupertinoDatePickerMode.date,

@@ -41,36 +41,47 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     subtaskBloc = SubtaskBloc(task);
     return KeyboardSizeProvider(
       child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              task.title,
-              style: appTitleStyle(unitHeightValue),
-            ),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, size: 32.0, color: darkBlueGradient),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              color: Colors.blueGrey,
-            ),
-            actions: [_popupMenuButton()],
-          ),
-          body: Stack(
-            children: <Widget>[
-              BackgroundColorContainer(
-                startColor: lightGreenBlue,
-                endColor: darkGreenBlue,
-                widget: TitleCard(title: 'To Do', child: _buildStreamBuilder()),
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                task.title,
+                style: appTitleStyle(unitHeightValue),
               ),
-              AddSubtask(
-                length: task.subtasks.length,
-                subtaskBloc: subtaskBloc,
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back,
+                    size: 32.0 * unitHeightValue, color: darkBlueGradient),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Colors.blueGrey,
               ),
-            ],
+              actions: [_popupMenuButton(), SizedBox(width: 10)],
+            ),
+            body: Stack(
+              children: <Widget>[
+                BackgroundColorContainer(
+                  startColor: lightGreenBlue,
+                  endColor: darkGreenBlue,
+                  widget:
+                      TitleCard(title: 'To Do', child: _buildStreamBuilder()),
+                ),
+                AddSubtask(
+                  length: task.subtasks.length,
+                  subtaskBloc: subtaskBloc,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -142,6 +153,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         child: Icon(
           Icons.delete,
           color: lightGreenBlue,
+          size: 28 * unitHeightValue,
         ),
       ),
       onDismissed: (direction) {
@@ -180,8 +192,8 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
 
   PopupMenuButton _popupMenuButton() {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.sort, size: 32.0, color: darkBlueGradient),
-      iconSize: 24.0,
+      icon: Icon(Icons.sort,
+          size: 32.0 * unitHeightValue, color: darkBlueGradient),
       color: darkGreenBlue,
       offset: Offset(0, 50),
       shape: RoundedRectangleBorder(
@@ -199,44 +211,48 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         PopupMenuItem<String>(
           value: "Alphabetical",
           child: Row(children: [
-            Icon(Icons.sort_by_alpha),
+            Icon(Icons.sort_by_alpha, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Alphabetical",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
         PopupMenuItem<String>(
           value: "Recent-Oldest",
           child: Row(children: [
-            Icon(Icons.date_range),
+            Icon(Icons.date_range, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Recent-Oldest",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
         PopupMenuItem<String>(
           value: "Oldest-Recent",
           child: Row(children: [
-            Icon(Icons.date_range),
+            Icon(Icons.date_range, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Oldest-Recent",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
         PopupMenuItem<String>(
           value: "Due Date",
           child: Row(children: [
-            Icon(Icons.date_range),
+            Icon(Icons.date_range, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Due Date",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),

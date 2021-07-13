@@ -38,46 +38,55 @@ class _AuthenticationViewState extends State<AuthenticationView> {
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
-    return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff5CD6FF),
-              Color(0xff57CBF2),
-              Color(0xff4EB6D9),
-              Color(0xff2F80ED),
+    return GestureDetector(
+      onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+      child: Scaffold(
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xff5CD6FF),
+                Color(0xff57CBF2),
+                Color(0xff4EB6D9),
+                Color(0xff2F80ED),
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _signText(),
+                    SizedBox(height: 30),
+                    widget.form,
+                    _buildMainBtn(),
+                    widget.bottomBtn!,
+                  ],
+                ),
+              ),
+              isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black54,
+                      ),
+                    )
+                  : Container(),
             ],
           ),
-        ),
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _signText(),
-                  SizedBox(height: 30),
-                  widget.form,
-                  _buildMainBtn(),
-                  widget.bottomBtn!,
-                ],
-              ),
-            ),
-            isLoading
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.black54,
-                    ),
-                  )
-                : Container(),
-          ],
         ),
       ),
     );

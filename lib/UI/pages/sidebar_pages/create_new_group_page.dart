@@ -21,7 +21,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   int membersLength = 0;
   bool isPrivate = true;
   TextEditingController groupName = new TextEditingController();
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
 
   @override
   void initState() {
@@ -35,32 +35,43 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
+
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
         endColor: lightBlueGradient,
-        widget: Scaffold(
-          appBar: CustomAppBar(
-            "New Group/Project",
-            actions: <Widget>[
-              TextButton(
-                onPressed: saveGroup,
-                child: Text(
-                  "Save",
-                  style: TextStyle(
-                      color: Colors.lightBlue,
-                      fontFamily: "Segoe UI",
-                      fontSize: 20 * unitHeightValue,
-                      fontWeight: FontWeight.bold),
+        widget: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            appBar: CustomAppBar(
+              "New Group/Project",
+              actions: <Widget>[
+                TextButton(
+                  onPressed: saveGroup,
+                  child: Text(
+                    "Save",
+                    style: TextStyle(
+                        color: Colors.lightBlue,
+                        fontFamily: "Segoe UI",
+                        fontSize: 20 * unitHeightValue,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-            ],
-            fontSize: 24 * unitHeightValue,
-          ),
-          backgroundColor: Colors.transparent,
-          body: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: _buildStack(),
+              ],
+              fontSize: 24 * unitHeightValue,
+            ),
+            backgroundColor: Colors.transparent,
+            body: Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: _buildStack(),
+            ),
           ),
         ),
       ),
@@ -105,10 +116,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
   CircleAvatar _buildAvatar() {
     return CircleAvatar(
-      radius: 50.0,
+      radius: 50.0 * unitHeightValue,
       child: Icon(
         Icons.group,
-        size: 62.0,
+        size: 62.0 * unitHeightValue,
       ),
     );
   }
@@ -116,7 +127,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   Container _buildGroupNameContainer() {
     return Container(
       //margin: const EdgeInsets.only(left: 100.0, right: 45.0, bottom: 20.0),
-      width: 250,
+      width: 250 * unitWidthValue,
       padding: EdgeInsets.only(left: 20),
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -142,6 +153,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         suffixIcon: Icon(
           Icons.edit,
           color: lightBlue,
+          size: 24 * unitHeightValue,
         ),
         isDense: true,
       ),
@@ -187,9 +199,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
           fontSize: 22 * unitHeightValue,
         ),
       ),
-      SizedBox(width: 15),
+      SizedBox(width: 15 * unitWidthValue),
       CircleAvatar(
-        radius: 16,
+        radius: 16 * unitHeightValue,
         backgroundColor: darkBlue,
         child: Text(
           "${newGroup.members.length}",
@@ -228,16 +240,18 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       });
     });
     return Padding(
-      padding: EdgeInsets.only(top: 44.0, right: 24.0),
+      padding: EdgeInsets.only(
+          top: 44.0 * unitHeightValue, right: 24.0 * unitWidthValue),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 110,
+            maxCrossAxisExtent: 110 * unitWidthValue,
             childAspectRatio: 0.75,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10.0),
+            crossAxisSpacing: 10 * unitWidthValue,
+            mainAxisSpacing: 10.0 * unitHeightValue),
         itemBuilder: (context, index) => Column(
           children: [
-            newGroup.members[index].cAvatar(radius: 34, unitHeightValue: unitHeightValue),
+            newGroup.members[index]
+                .cAvatar(radius: 34, unitHeightValue: unitHeightValue),
             Text(
               newGroup.members[index].firstname,
               overflow: TextOverflow.ellipsis,
@@ -270,7 +284,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   ),
                 );
               },
-              child: Icon(Icons.arrow_forward, size: 36),
+              child: Icon(Icons.arrow_forward, size: 36 * unitHeightValue),
             ),
           );
   }

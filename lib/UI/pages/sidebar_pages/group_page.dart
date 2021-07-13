@@ -14,8 +14,10 @@ class GroupPage extends StatefulWidget {
 }
 
 class _GroupPageState extends State<GroupPage> {
+  late double unitHeightValue;
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -23,10 +25,12 @@ class _GroupPageState extends State<GroupPage> {
         widget: Scaffold(
           appBar: CustomAppBar("Groups", actions: [
             IconButton(
-                icon: Icon(Icons.group_add, color: Colors.black, size: 32.0),
+                icon: Icon(Icons.group_add,
+                    color: Colors.black, size: 32.0 * unitHeightValue),
                 onPressed: () {
                   Navigator.pushNamed(context, CreateGroupPage.routeName);
-                })
+                }),
+            SizedBox(width: 10),
           ]),
           backgroundColor: Colors.transparent,
           body: GroupList(tileNavigatesTo: GroupInfoPage.routeName),

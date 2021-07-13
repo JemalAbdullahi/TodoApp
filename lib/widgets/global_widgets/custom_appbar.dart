@@ -39,7 +39,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       elevation: 0.0,
       toolbarHeight: 100.0,
       actions: actions,
-      iconTheme: IconThemeData(color: Colors.black, size: 32.0, opacity: 1.0),
+      iconTheme: IconThemeData(color: Colors.black, size: 32.0 * unitHeightValue, opacity: 1.0),
       automaticallyImplyLeading: true,
     );
   }

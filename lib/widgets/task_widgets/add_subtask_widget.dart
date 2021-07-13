@@ -20,25 +20,28 @@ class AddSubtask extends StatefulWidget {
 
 class _AddSubtaskState extends State<AddSubtask> {
   TextEditingController controller = new TextEditingController();
-
-  double height = 60.0;
-  double width = 250.0;
-  double bottom = 0;
-  late double focusWidth, marginH;
-  late Size size;
-
   FocusNode textfieldFocus = new FocusNode();
+  late double unitValueHeight,
+      unitValueWidth,
+      height,
+      defaultWidth,
+      focusWidth,
+      marginH;
+  late Size size;
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    focusWidth = size.width * 0.9;
-    width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : 250;
+    unitValueHeight = size.height * 0.001;
+    unitValueWidth = size.width * 0.001;
+    focusWidth = unitValueWidth * 900;
+    defaultWidth = unitValueWidth * 250;
+    height = unitValueHeight * 60;
+    double width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : defaultWidth;
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
-      //bottom = (isFocused && !_res.isOpen) ? 100 : 0;
       return Positioned(
-        bottom: bottom,
+        bottom: 0,
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: marginH, vertical: 25),
           decoration: BoxDecoration(
@@ -65,12 +68,9 @@ class _AddSubtaskState extends State<AddSubtask> {
                   textAlignVertical: TextAlignVertical.center,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.go,
+                  style: TextStyle(fontSize: 16 * unitValueHeight),
                   onTap: () {
-                    if (width != focusWidth) {
-                      setState(() {
-                        width = focusWidth;
-                      });
-                    }
+                    setState(() {});
                   },
                   onSubmitted: (_) {
                     setState(() {
@@ -89,7 +89,8 @@ class _AddSubtaskState extends State<AddSubtask> {
                         : SizedBox.shrink(),
                     border: InputBorder.none,
                     hintText: "Write a Subtask",
-                    hintStyle: TextStyle(color: Colors.black54),
+                    hintStyle: TextStyle(
+                        color: Colors.black54, fontSize: 16 * unitValueHeight),
                   ),
                 ),
               ),
