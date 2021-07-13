@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/models/global.dart';
 
+// ignore: must_be_immutable
 class ForgotPasswordDialogBox extends StatelessWidget {
-  late final double unitHeightValue;
+  late double unitHeightValue;
+
   @override
   Widget build(BuildContext context) {
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -86,7 +88,7 @@ class ForgotPasswordDialogBox extends StatelessWidget {
           child: Text(
             "Reset Password",
             style: TextStyle(
-                fontSize: 18,
+                fontSize: 18 * unitHeightValue,
                 color: Color(0xff4EB6D9),
                 fontWeight: FontWeight.bold),
           )),
@@ -100,7 +102,7 @@ class ForgotPasswordDialogBox extends StatelessWidget {
         Text("Email Address",
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 16 * unitHeightValue,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Segoe UI')),
         SizedBox(height: 10),
@@ -137,7 +139,10 @@ class ForgotPasswordDialogBox extends StatelessWidget {
     return Text(
       "Enter your email address below, a link will be sent to reset your password.",
       style: TextStyle(
-          fontSize: 14, fontFamily: 'Segoe UI', color: Colors.black54),
+        fontSize: 14 * unitHeightValue,
+        fontFamily: 'Segoe UI',
+        color: Colors.black54,
+      ),
       textAlign: TextAlign.center,
     );
   }
@@ -146,7 +151,7 @@ class ForgotPasswordDialogBox extends StatelessWidget {
     return Text(
       "Reset Password",
       style: TextStyle(
-          fontSize: 22,
+          fontSize: 22 * unitHeightValue,
           fontWeight: FontWeight.w700,
           fontFamily: 'Segoe UI',
           color: Colors.white),

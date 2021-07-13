@@ -73,14 +73,14 @@ TextStyle toDoListSubtitleStyle(double unitHeightValue) => new TextStyle(
       fontFamily: 'Segoe UI',
       fontWeight: FontWeight.w300,
       color: Colors.white,
-      fontSize: 17,
+      fontSize: 17 * unitHeightValue,
     );
 
 TextStyle taskListTitleStyle(double unitHeightValue) => new TextStyle(
       fontFamily: 'Segoe UI',
       fontWeight: FontWeight.bold,
       color: darkBlue,
-      fontSize: 50,
+      fontSize: 50 * unitHeightValue,
     );
 
 TextStyle loginTitleStyle(double unitHeightValue) => new TextStyle(

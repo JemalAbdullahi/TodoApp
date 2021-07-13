@@ -21,6 +21,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   int membersLength = 0;
   bool isPrivate = true;
   TextEditingController groupName = new TextEditingController();
+  late double unitHeightValue;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -48,12 +50,12 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   style: TextStyle(
                       color: Colors.lightBlue,
                       fontFamily: "Segoe UI",
-                      fontSize: 20,
+                      fontSize: 20 * unitHeightValue,
                       fontWeight: FontWeight.bold),
                 ),
               ),
             ],
-            fontSize: 24,
+            fontSize: 24 * unitHeightValue,
           ),
           backgroundColor: Colors.transparent,
           body: Padding(
@@ -135,7 +137,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
           fontFamily: 'Segoe UI',
           fontWeight: FontWeight.bold,
           color: lightBlue,
-          fontSize: 30,
+          fontSize: 30 * unitHeightValue,
         ),
         suffixIcon: Icon(
           Icons.edit,
@@ -144,11 +146,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         isDense: true,
       ),
       style: TextStyle(
-        fontFamily: 'Segoe UI',
-        fontWeight: FontWeight.bold,
-        color: lightBlue,
-        fontSize: 30,
-      ),
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: lightBlue,
+          fontSize: 30 * unitHeightValue),
       onChanged: (groupName) => newGroup.name = groupName,
     );
   }
@@ -180,10 +181,11 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       Text(
         "MEMBERS",
         style: TextStyle(
-            fontFamily: 'Segoe UI',
-            fontWeight: FontWeight.bold,
-            color: darkBlue,
-            fontSize: 22),
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: darkBlue,
+          fontSize: 22 * unitHeightValue,
+        ),
       ),
       SizedBox(width: 15),
       CircleAvatar(
@@ -192,20 +194,22 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         child: Text(
           "${newGroup.members.length}",
           style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Segoe UI',
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
+            color: Colors.white,
+            fontFamily: 'Segoe UI',
+            fontWeight: FontWeight.bold,
+            fontSize: 16 * unitHeightValue,
+          ),
         ),
       ),
       Spacer(),
       Text(
         "Personal",
         style: TextStyle(
-            fontFamily: 'Segoe UI',
-            fontWeight: FontWeight.bold,
-            color: Colors.black54,
-            fontSize: 20),
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: Colors.black54,
+          fontSize: 20 * unitHeightValue,
+        ),
       ),
       Switch(
           value: isPrivate,
@@ -233,7 +237,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             mainAxisSpacing: 10.0),
         itemBuilder: (context, index) => Column(
           children: [
-            newGroup.members[index].cAvatar(radius: 34),
+            newGroup.members[index].cAvatar(radius: 34, unitHeightValue: unitHeightValue),
             Text(
               newGroup.members[index].firstname,
               overflow: TextOverflow.ellipsis,

@@ -22,8 +22,10 @@ class Subtask extends Equatable {
   /// Time Updated
   DateTime timeUpdated;
 
+  DateTime now = DateTime.now();
+
   /// Deadline
-  late DateTime? deadline;
+  late DateTime deadline;
 
   /// Not Implemented
   String note;
@@ -33,7 +35,9 @@ class Subtask extends Equatable {
   late List<GroupMember> allGroupMembers;
 
   Subtask(this.title, this.completed, this.subtaskId, this.note,
-      this.subtaskKey, this.timeCreated, this.timeUpdated);
+      this.subtaskKey, this.timeCreated, this.timeUpdated) {
+    deadline = DateTime(now.year, 12, 31);
+  }
 
   factory Subtask.fromJson(Map<String, dynamic> parsedJson) {
     return Subtask(

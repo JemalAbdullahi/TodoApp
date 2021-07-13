@@ -16,14 +16,14 @@ import 'package:todolist/models/global.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       title: 'To Do List',
       debugShowCheckedModeBanner: false,
@@ -60,6 +60,7 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   late final String apiKey;
+  late double unitHeightValue;
 
   @override
   void initState() {
@@ -86,6 +87,7 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -106,8 +108,9 @@ class _SplashState extends State<Splash> {
                 child: Center(
                   child: Text(
                     "ToDo",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0 * unitHeightValue),
                   ),
                 ),
               ),

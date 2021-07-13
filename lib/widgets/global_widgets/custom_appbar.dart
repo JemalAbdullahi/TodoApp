@@ -22,6 +22,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return AppBar(
       title: Text(
         title,
@@ -29,7 +30,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           color: Colors.white,
           fontWeight: FontWeight.bold,
           fontFamily: "Segoe UI",
-          fontSize: fontSize,
+          fontSize: fontSize * unitHeightValue,
         ),
       ),
       leading: leading,

@@ -19,8 +19,8 @@ class TaskListItemWidget extends StatefulWidget {
 
 class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   late SubtaskBloc subtaskBloc;
-  late final double unitHeightValue;
-  late final double height;
+  late double unitHeightValue;
+  late double height;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
   @override
   Widget build(BuildContext context) {
     Size mediaQuery = MediaQuery.of(context).size;
-    unitHeightValue = mediaQuery.height * 0.01;
+    unitHeightValue = mediaQuery.height * 0.001;
     height = mediaQuery.height * 0.1;
 
     return GestureDetector(
@@ -40,6 +40,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
           arguments: SubtaskListTabArguments(widget.group, widget.task)),
       child: Container(
         height: height,
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           color: darkGreenBlue,
@@ -50,55 +51,51 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Checkbox(
-                  value: widget.task.completed,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      widget.task.completed = newValue!;
-                      repository.updateTask(widget.task);
-                    });
-                  }),
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Text(
-                  widget.task.title,
-                  style: toDoListTileStyle(unitHeightValue),
-                  maxLines: 3,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  Checkbox(
+                      value: widget.task.completed,
+                      onChanged: (bool? newValue) {
+                        setState(() {
+                          widget.task.completed = newValue!;
+                          repository.updateTask(widget.task);
+                        });
+                      }),
+                  Text(
+                    widget.task.title,
+                    style: toDoListTileStyle(unitHeightValue),
+                    maxLines: 3,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              Flexible(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  textDirection: TextDirection.ltr,
-                  children: <Widget>[
-                    widget.task.groupName.isNotEmpty
-                        ? Text(
-                            widget.task.groupName,
-                            style: toDoListSubtitleStyle(unitHeightValue),
-                            textAlign: TextAlign.right,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                        : Text(
-                            'group',
-                            style: toDoListSubtitleStyle(unitHeightValue),
-                            textAlign: TextAlign.right,
-                          ),
-                    SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              textDirection: TextDirection.ltr,
+              children: <Widget>[
+                widget.task.groupName.isNotEmpty
+                    ? Text(
+                        widget.task.groupName,
+                        style: toDoListSubtitleStyle(unitHeightValue),
+                        textAlign: TextAlign.right,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    : Text(
+                        'group',
+                        style: toDoListSubtitleStyle(unitHeightValue),
+                        textAlign: TextAlign.right,
+                      ),
+                SizedBox(height: 20),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -27,7 +27,7 @@ class SubtaskInfo extends StatefulWidget {
 
 class _SubtaskInfoState extends State<SubtaskInfo> {
   late final SubtaskViewModel viewmodel;
-  late final double unitHeightValue;
+  late double unitHeightValue;
   TextEditingController notesController = new TextEditingController();
   bool buffering = true;
   bool updating = false;
@@ -43,7 +43,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
 
   @override
   Widget build(BuildContext context) {
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return SafeArea(
       child: GestureDetector(
         onTap: () {
@@ -87,13 +87,12 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
                             style: TextStyle(
                                 color: lightGreenBlue,
                                 fontFamily: "Segoe UI",
-                                fontSize: 20,
+                                fontSize: 18 * unitHeightValue,
                                 fontWeight: FontWeight.bold),
                           ),
                   ),
                 ),
               ],
-              fontSize: 24,
             ),
             backgroundColor: Colors.transparent,
             body: FutureBuilder(
@@ -167,6 +166,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
         maxLines: null,
         minLines: 4,
         decoration: InputDecoration(border: InputBorder.none),
+        style: TextStyle(fontSize: 16 * unitHeightValue),
       ),
     );
   }
@@ -204,7 +204,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
             fontFamily: 'Segoe UI',
             fontWeight: FontWeight.bold,
             color: darkerGreenBlue,
-            fontSize: 22),
+            fontSize: 22 * unitHeightValue),
       ),
       SizedBox(width: 15),
       CircleAvatar(
@@ -216,7 +216,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
               color: Colors.white,
               fontFamily: 'Segoe UI',
               fontWeight: FontWeight.bold,
-              fontSize: 16),
+              fontSize: 16 * unitHeightValue),
         ),
       ),
     ]);
@@ -251,14 +251,17 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
             },
             child: Column(
               children: [
-                viewmodel.members[index]
-                    .cAvatar(radius: 34, color: darkerGreenBlue),
+                viewmodel.members[index].cAvatar(
+                    radius: 34,
+                    color: darkerGreenBlue,
+                    unitHeightValue: unitHeightValue),
                 Text(
                   viewmodel.members[index].firstname,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: 'Segoe UI',
                     fontWeight: FontWeight.bold,
+                    fontSize: 16 * unitHeightValue,
                   ),
                 ),
               ],

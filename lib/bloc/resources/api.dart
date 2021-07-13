@@ -423,7 +423,7 @@ class ApiProvider {
       body: jsonEncode({
         "note": subtask.note,
         "completed": subtask.completed,
-        "due_date": subtask.deadline!.toIso8601String()
+        "due_date": subtask.deadline.toIso8601String()
       }),
     );
     if (response.statusCode == 200) {

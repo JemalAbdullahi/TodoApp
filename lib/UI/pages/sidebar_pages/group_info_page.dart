@@ -19,10 +19,12 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
   late Group group;
   late List<GroupMember> initialMembers;
   late int membersLength;
+  late double unitHeightValue;
   bool groupUpdated = false;
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     final args =
         ModalRoute.of(context)!.settings.arguments as GroupInfoPageArguments;
     group = args.group;
@@ -36,20 +38,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           key: _scaffoldKey,
           appBar: CustomAppBar(
             group.name,
-            /* actions: <Widget>[
-              TextButton(
-                onPressed: updateGroup,
-                child: Text(
-                  "Update",
-                  style: TextStyle(
-                      color: Colors.lightBlue,
-                      fontFamily: "Segoe UI",
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ], */
-            fontSize: 24,
+            fontSize: 24 * unitHeightValue,
           ),
           backgroundColor: Colors.transparent,
           body: Padding(
@@ -132,36 +121,11 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           fontFamily: 'Segoe UI',
           fontWeight: FontWeight.bold,
           color: darkBlue,
-          fontSize: 30,
+          fontSize: 30 * unitHeightValue,
         ),
       ),
     );
   }
-
-  /* TextField _buildGroupNameTF() {
-    return TextField(
-      textAlign: TextAlign.center,
-      keyboardType: TextInputType.name,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: "Group Name",
-        hintStyle: TextStyle(
-          fontFamily: 'Segoe UI',
-          fontWeight: FontWeight.bold,
-          color: darkBlue,
-          fontSize: 30,
-        ),
-        suffixIcon: Icon(Icons.edit),
-      ),
-      style: TextStyle(
-        fontFamily: 'Segoe UI',
-        fontWeight: FontWeight.bold,
-        color: darkBlue,
-        fontSize: 30,
-      ),
-      onSubmitted: (groupName) => newGroup.name = groupName,
-    );
-  } */
 
   Expanded _buildExpandedCard() {
     return Expanded(
@@ -190,10 +154,11 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       Text(
         "MEMBERS",
         style: TextStyle(
-            fontFamily: 'Segoe UI',
-            fontWeight: FontWeight.bold,
-            color: darkBlue,
-            fontSize: 22),
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: darkBlue,
+          fontSize: 22 * unitHeightValue,
+        ),
       ),
       SizedBox(width: 15),
       CircleAvatar(
@@ -202,20 +167,22 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         child: Text(
           "${group.members.length}",
           style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Segoe UI',
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
+            color: Colors.white,
+            fontFamily: 'Segoe UI',
+            fontWeight: FontWeight.bold,
+            fontSize: 16 * unitHeightValue,
+          ),
         ),
       ),
       Spacer(),
       Text(
         "Personal",
         style: TextStyle(
-            fontFamily: 'Segoe UI',
-            fontWeight: FontWeight.bold,
-            color: Colors.black54,
-            fontSize: 20),
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: Colors.black54,
+          fontSize: 20 * unitHeightValue,
+        ),
       ),
       Switch(
           value: !group.isPublic,
@@ -258,7 +225,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             mainAxisSpacing: 10.0),
         itemBuilder: (context, index) => Column(
           children: [
-            group.members[index].cAvatar(radius: 34),
+            group.members[index].cAvatar(radius: 34, unitHeightValue: unitHeightValue),
             Text(
               group.members[index].firstname,
               overflow: TextOverflow.ellipsis,

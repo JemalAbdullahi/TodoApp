@@ -30,7 +30,7 @@ class SubtaskViewModel {
   }
 
   DateTime get deadline {
-    return this.subtask.deadline ?? DateTime.now();
+    return this.subtask.deadline;
   }
 
   set deadline(DateTime deadline) {

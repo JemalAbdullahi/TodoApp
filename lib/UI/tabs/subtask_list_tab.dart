@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
@@ -22,13 +23,13 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   late SubtaskBloc subtaskBloc;
   late Group group;
   late Task task;
-  late final double unitHeightValue;
-  int orderBy;
+  late double unitHeightValue;
+  late String orderBy;
   bool reorder;
 
-  _SubtaskListTabState()
-      : orderBy = 1,
-        reorder = false;
+  _SubtaskListTabState() : reorder = false {
+    getOrderBy();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         ModalRoute.of(context)!.settings.arguments as SubtaskListTabArguments;
     task = args.task;
     group = args.group;
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     subtaskBloc = SubtaskBloc(task);
     return KeyboardSizeProvider(
       child: SafeArea(
@@ -110,7 +111,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   }
 
   Widget _buildList() {
-    _orderBy(orderBy);
+    _orderBy();
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
@@ -178,7 +179,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   }
 
   PopupMenuButton _popupMenuButton() {
-    return PopupMenuButton<int>(
+    return PopupMenuButton<String>(
       icon: Icon(Icons.sort, size: 32.0, color: darkBlueGradient),
       iconSize: 24.0,
       color: darkGreenBlue,
@@ -189,13 +190,14 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
         ),
       ),
       onSelected: (value) {
+        saveOrderBy(value);
         setState(() {
-          orderBy = value;
+          reorder = true;
         });
       },
       itemBuilder: (context) => [
-        PopupMenuItem<int>(
-          value: 0,
+        PopupMenuItem<String>(
+          value: "Alphabetical",
           child: Row(children: [
             Icon(Icons.sort_by_alpha),
             SizedBox(width: 6.0),
@@ -205,8 +207,8 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             )
           ]),
         ),
-        PopupMenuItem<int>(
-          value: 1,
+        PopupMenuItem<String>(
+          value: "Recent-Oldest",
           child: Row(children: [
             Icon(Icons.date_range),
             SizedBox(width: 6.0),
@@ -216,8 +218,8 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             )
           ]),
         ),
-        PopupMenuItem<int>(
-          value: 2,
+        PopupMenuItem<String>(
+          value: "Oldest-Recent",
           child: Row(children: [
             Icon(Icons.date_range),
             SizedBox(width: 6.0),
@@ -227,25 +229,51 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
             )
           ]),
         ),
+        PopupMenuItem<String>(
+          value: "Due Date",
+          child: Row(children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 6.0),
+            Text(
+              "Due Date",
+              style: TextStyle(color: Colors.white),
+            )
+          ]),
+        ),
       ],
     );
   }
 
-  _orderBy(int value) {
-    orderBy = value;
-    switch (value) {
-      case 0:
+  _orderBy() {
+    switch (orderBy) {
+      case "Alphabetical":
         task.subtasks.sort(
             (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
         break;
-      case 1:
-        task.subtasks.sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
+      case "Recent-Oldest":
+        task.subtasks.sort((a, b) => b.timeCreated.compareTo(a.timeCreated));
         break;
-      case 2:
-        task.subtasks.sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
+      case "Oldest-Recent":
+        task.subtasks.sort((a, b) => a.timeCreated.compareTo(b.timeCreated));
+        break;
+      case "Due Date":
+        task.subtasks.sort((a, b) => a.deadline.compareTo(b.deadline));
         break;
       default:
     }
+  }
+
+  /// Get order list from persistant storage.
+  void getOrderBy() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    this.orderBy = prefs.getString('SUBTASK_ORDER_LIST') ?? "Recent-Oldest";
+  }
+
+  /// Save orderlist to Device's persistant storage
+  Future<void> saveOrderBy(String orderBy) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('SUBTASK_ORDER_LIST', orderBy);
+    this.orderBy = orderBy;
   }
 }
 

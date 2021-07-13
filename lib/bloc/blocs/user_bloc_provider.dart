@@ -82,11 +82,6 @@ class GroupBloc {
   factory GroupBloc() {
     return _instance;
   }
-  /* Testing GroupBloc 
-  Future<List<Group>> testGroupList() async{
-    return await repository.getUserGroups(_apiKey);
-  } 
-  */
 
   Stream<List<Group>> get getGroups {
     updateGroups();

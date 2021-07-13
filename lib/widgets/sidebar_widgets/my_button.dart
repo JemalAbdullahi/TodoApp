@@ -16,6 +16,7 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return MaterialButton(
       height: height,
       child: Row(
@@ -26,7 +27,8 @@ class MyButton extends StatelessWidget {
           SizedBox(width: 10),
           Text(
             text,
-            style: TextStyle(color: Colors.black45, fontSize: textSize),
+            style: TextStyle(
+                color: Colors.black45, fontSize: textSize * unitHeightValue),
           )
         ],
       ),

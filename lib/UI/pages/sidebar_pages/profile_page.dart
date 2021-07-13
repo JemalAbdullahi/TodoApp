@@ -18,7 +18,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  late final double unitHeightValue;
+  late double unitHeightValue;
   final User _user = userBloc.getUserObject();
 
   late String _currentPassword,
@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -90,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          Center(child: _user.cAvatar(radius: 56.0)),
+          Center(child: _user.cAvatar(radius: 56.0, unitHeightValue: unitHeightValue)),
           SizedBox(height: 20),
           _firstnameField(),
           SizedBox(height: 20),
@@ -135,14 +135,12 @@ class _ProfilePageState extends State<ProfilePage> {
               hintText: 'Current Password',
               hintStyle: hintTextStyle(unitHeightValue),
               errorMaxLines: 2,
-              errorStyle: TextStyle(fontSize: 16, color: Colors.red),
+              errorStyle:
+                  TextStyle(fontSize: 16 * unitHeightValue, color: Colors.red),
             ),
             validator: (String? value) {
               if (value!.isEmpty) {
                 return 'Current Password is Required';
-              }
-              if (value != _user.password) {
-                return 'Incorrect Password';
               }
               return null;
             },
@@ -174,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintText: 'Username',
                 hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             onSaved: (newValue) => _username = newValue!.trim(),
           ),
         ),
@@ -203,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintText: 'Firstname',
                 hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             onSaved: (newValue) => _firstname = newValue!.trim(),
           ),
         ),
@@ -232,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintText: 'Lastname',
                 hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             onSaved: (newValue) => _lastname = newValue!.trim(),
           ),
         ),
@@ -261,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintText: 'Phone Number',
                 hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             onSaved: (newValue) => _phonenumber = newValue!.trim(),
           ),
         ),
@@ -290,7 +288,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintText: 'Email Address',
                 hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             validator: EmailValidator(errorText: 'Enter a Valid Email'),
             onSaved: (newValue) => _emailAddress = newValue!.trim(),
           ),
@@ -300,8 +298,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _newPasswordField() {
-    _newPasswordController.text = _user.password;
-    _newPassword = _user.password;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -322,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintText: 'New Password',
                 hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             validator: passwordValidator,
             onSaved: (newValue) => _newPassword = newValue!.trim(),
           ),
@@ -332,7 +328,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _confirmPasswordField() {
-    _confirmPasswordController.text = _user.password;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -353,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 hintText: 'Re-Enter New Password',
                 hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             validator: (val) =>
                 MatchValidator(errorText: 'Passwords Do Not Match')
                     .validateMatch(val!, _newPassword),
@@ -421,7 +416,7 @@ class _ProfilePageState extends State<ProfilePage> {
               letterSpacing: 1.5,
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.bold,
-              fontSize: 18.0),
+              fontSize: 18 * unitHeightValue),
         ),
       ),
     );

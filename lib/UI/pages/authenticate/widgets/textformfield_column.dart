@@ -45,7 +45,7 @@ class TextFormFieldColumn extends StatelessWidget {
               prefixIcon: Icon(iconData, color: Colors.white),
               hintText: hintText,
               hintStyle: hintTextStyle(unitHeightValue),
-              errorStyle: TextStyle(fontSize: 14.0),
+              errorStyle: TextStyle(fontSize: 14.0*unitHeightValue),
             ),
             validator: (value) {
               return (value != null && value.isEmpty)

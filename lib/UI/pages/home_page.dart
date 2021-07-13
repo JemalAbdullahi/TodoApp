@@ -13,11 +13,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isMenuOpen = false;
-  late final double unitHeightValue;
+  late double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

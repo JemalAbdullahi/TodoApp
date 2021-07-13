@@ -17,6 +17,7 @@ class AddMembersPage extends StatefulWidget {
 
 class _AddMembersPageState extends State<AddMembersPage> {
   late Size size;
+  late double unitHeightValue;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
   String searchQuery = "Search query";
@@ -28,6 +29,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
+    unitHeightValue = size.height * 0.001;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -67,7 +69,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
         color: Colors.white,
         fontWeight: FontWeight.bold,
         fontFamily: "Segoe UI",
-        fontSize: 32.0,
+        fontSize: 32.0 * unitHeightValue,
       ),
     );
   }
@@ -80,13 +82,15 @@ class _AddMembersPageState extends State<AddMembersPage> {
         hintText: "Search Users...",
         border: InputBorder.none,
         hintStyle: TextStyle(
-          color: Colors.white,
-          fontFamily: "Segoe UI",
-          fontSize: 24.0,
-        ),
+            color: Colors.white,
+            fontFamily: "Segoe UI",
+            fontSize: 24.0 * unitHeightValue),
       ),
       style: TextStyle(
-          color: Colors.white, fontSize: 24.0, fontFamily: "Segoe UI"),
+        color: Colors.white,
+        fontSize: 24.0 * unitHeightValue,
+        fontFamily: "Segoe UI",
+      ),
       onChanged: (query) {
         if (query.length >= 2) {
           updateSearchQuery(query);
@@ -189,7 +193,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
             },
             child: Column(
               children: [
-                widget.group.members[index].cAvatar(radius: 25),
+                widget.group.members[index].cAvatar(radius: 25, unitHeightValue: unitHeightValue),
                 Text(
                   widget.group.members[index].firstname,
                   overflow: TextOverflow.ellipsis,
@@ -227,7 +231,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
               fontFamily: 'Segoe UI',
               fontWeight: FontWeight.bold,
               color: darkBlue,
-              fontSize: 30,
+              fontSize: 30 * unitHeightValue,
             ),
           ),
           paddingList()

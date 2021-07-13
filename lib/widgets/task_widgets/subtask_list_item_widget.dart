@@ -22,14 +22,14 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
   late double listItemWidth;
   late Size mediaQuery;
   late double listItemHeight;
-  late final double unitHeightValue;
+  late double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     mediaQuery = MediaQuery.of(context).size;
-    unitHeightValue = mediaQuery.height * 0.01;
     listItemWidth = mediaQuery.width * 0.85;
-    listItemHeight = unitHeightValue * 15;
+    listItemHeight = mediaQuery.height * 0.13;
     return GestureDetector(
       key: UniqueKey(),
       onTap: () => Navigator.push(context,
@@ -170,7 +170,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                                   fontFamily: 'Segoe UI',
                                   fontStyle: FontStyle.italic,
                                   color: Colors.white,
-                                  fontSize: 17),
+                                  fontSize: 20 * unitHeightValue),
                             ),
                       widget.subtask.assignedTo.length > 0
                           ? _buildAssignedMemberAvatars()
@@ -180,7 +180,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
                                   fontFamily: 'Segoe UI',
                                   fontStyle: FontStyle.italic,
                                   color: Colors.white,
-                                  fontSize: 17),
+                                  fontSize: 20 * unitHeightValue),
                             ),
                     ],
                   ),
@@ -210,7 +210,7 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
       for (GroupMember member in widget.subtask.assignedTo)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: member.cAvatar(),
+          child: member.cAvatar(unitHeightValue: unitHeightValue),
         ),
     ]);
   }

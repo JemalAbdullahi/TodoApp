@@ -20,17 +20,19 @@ class _AddTaskState extends State<AddTask> {
   TextEditingController controller = new TextEditingController();
   FocusNode textfieldFocus = new FocusNode();
 
-  double height = 60.0;
-  double width = 250.0;
   double bottom = 0;
-  late double focusWidth, marginH;
+  late double unitValueHeight, unitValueWidth, height, defaultWidth, focusWidth, marginH;
   late Size size;
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    focusWidth = size.width * 0.9;
-    width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : 250;
+    unitValueHeight = size.height * 0.001;
+    unitValueWidth = size.width * 0.001;
+    focusWidth = unitValueWidth * 900;
+    defaultWidth = unitValueWidth * 250;
+    height = unitValueHeight * 60;
+    double width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : defaultWidth;
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
       return Positioned(

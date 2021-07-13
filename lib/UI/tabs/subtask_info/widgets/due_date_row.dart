@@ -12,10 +12,11 @@ class DueDateRow extends StatefulWidget {
 }
 
 class _DueDateRowState extends State<DueDateRow> {
-  late final double unitHeightValue;
+  late double unitHeightValue;
+
   @override
   Widget build(BuildContext context) {
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return Row(
       children: [
         Text(
@@ -57,7 +58,7 @@ class _DueDateRowState extends State<DueDateRow> {
                 'Done',
                 style: TextStyle(
                     color: darkGreenBlue,
-                    fontSize: 20,
+                    fontSize: 20 * unitHeightValue,
                     fontFamily: 'Segoe UI',
                     fontWeight: FontWeight.w600),
               ),

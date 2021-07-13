@@ -12,7 +12,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final _signupFormKey = GlobalKey<FormState>();
-  late final double unitHeightValue;
+  late double unitHeightValue;
 
   final Map<String, TextEditingController> controllers = {
     "username": new TextEditingController(),
@@ -24,7 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   };
 
   Widget build(BuildContext context) {
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return AuthenticationView(
       title: "Sign Up",
       form: Form(
@@ -47,14 +47,16 @@ class _SignupPageState extends State<SignupPage> {
               controller: controllers["lastname"]!,
               iconData: Icons.person,
               hintText: 'Enter a lastname',
-              keyboardType: TextInputType.name,unitHeightValue: unitHeightValue,
+              keyboardType: TextInputType.name,
+              unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
               label: 'Username',
               controller: controllers["username"]!,
               iconData: Icons.account_circle,
-              hintText: 'Enter Username',unitHeightValue: unitHeightValue,
+              hintText: 'Enter Username',
+              unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -62,7 +64,8 @@ class _SignupPageState extends State<SignupPage> {
               controller: controllers["phone"]!,
               iconData: Icons.phone,
               hintText: 'Enter a phone number',
-              keyboardType: TextInputType.phone,unitHeightValue: unitHeightValue,
+              keyboardType: TextInputType.phone,
+              unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -70,7 +73,8 @@ class _SignupPageState extends State<SignupPage> {
               controller: controllers["email"]!,
               iconData: Icons.email,
               hintText: 'Enter an email address',
-              keyboardType: TextInputType.emailAddress,unitHeightValue: unitHeightValue,
+              keyboardType: TextInputType.emailAddress,
+              unitHeightValue: unitHeightValue,
             ),
             SizedBox(height: 30),
             TextFormFieldColumn(
@@ -79,7 +83,8 @@ class _SignupPageState extends State<SignupPage> {
               iconData: Icons.lock,
               hintText: 'Enter a Password',
               obscureText: true,
-              textInputAction: TextInputAction.done,unitHeightValue: unitHeightValue,
+              textInputAction: TextInputAction.done,
+              unitHeightValue: unitHeightValue,
             ),
           ],
         ),

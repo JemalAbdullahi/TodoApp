@@ -47,9 +47,11 @@ class _GroupListState extends State<GroupList> {
   late double groupListItemWidth;
 
   late double groupListItemHeight;
+  late double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     mediaQuery = MediaQuery.of(context).size;
     groupListItemWidth = mediaQuery.width * 0.85;
     groupListItemHeight = mediaQuery.height * 0.17;
@@ -155,7 +157,7 @@ class _GroupListState extends State<GroupList> {
         },
         child: Container(
           height: groupListItemHeight,
-          width: groupListItemWidth,
+          //width: groupListItemWidth,
           decoration: _tileDecoration(),
           child: _buildTilePadding(group),
         ),
@@ -216,7 +218,7 @@ class _GroupListState extends State<GroupList> {
   Text _buildGroupSize(int groupSize) {
     return Text(
       groupSize == 1 ? "Personal" : "$groupSize People",
-      style: TextStyle(fontSize: 20.0, color: Colors.blueGrey),
+      style: TextStyle(fontSize: 20 * unitHeightValue, color: Colors.blueGrey),
     );
   }
 
@@ -225,7 +227,9 @@ class _GroupListState extends State<GroupList> {
     return Text(
       group.name,
       style: TextStyle(
-          fontSize: 25.0, fontWeight: FontWeight.bold, color: darkBlueGradient),
+          fontSize: 25 * unitHeightValue,
+          fontWeight: FontWeight.bold,
+          color: darkBlueGradient),
     );
   }
 
@@ -235,7 +239,7 @@ class _GroupListState extends State<GroupList> {
       for (GroupMember member in members)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: member.cAvatar(),
+          child: member.cAvatar(unitHeightValue: unitHeightValue),
         ),
     ]);
   }

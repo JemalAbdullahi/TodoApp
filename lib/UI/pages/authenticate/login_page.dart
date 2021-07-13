@@ -17,19 +17,10 @@ class _LoginPageState extends State<LoginPage> {
     "password": new TextEditingController(),
   };
   final _signInFormKey = GlobalKey<FormState>();
-  late final double unitHeightValue;
-
-  /*  @override
-  void initState() {
-    super.initState();
-    controllers = {
-      "username": new TextEditingController(),
-      "password": new TextEditingController(),
-    };
-  } */
+  late double unitHeightValue;
 
   Widget build(BuildContext context) {
-    unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return AuthenticationView(
       title: "Sign In",
       form: Form(
@@ -78,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
               text: 'Don\'t have an Account? ',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.0,
+                fontSize: 18.0 * unitHeightValue,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -86,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
               text: 'Sign Up',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.0,
+                fontSize: 18.0 * unitHeightValue,
                 fontWeight: FontWeight.bold,
               ),
             ),

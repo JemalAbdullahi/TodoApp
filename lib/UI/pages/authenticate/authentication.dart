@@ -32,10 +32,12 @@ class AuthenticationView extends StatefulWidget {
 
 class _AuthenticationViewState extends State<AuthenticationView> {
   final submitFocusNode = new FocusNode();
+  late double unitHeightValue;
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -86,7 +88,7 @@ class _AuthenticationViewState extends State<AuthenticationView> {
       widget.title,
       textAlign: TextAlign.center,
       style: TextStyle(
-        fontSize: 30.0,
+        fontSize: 30.0 * unitHeightValue,
         color: Colors.white,
         fontFamily: 'OpenSans',
         fontWeight: FontWeight.bold,
@@ -117,7 +119,7 @@ class _AuthenticationViewState extends State<AuthenticationView> {
               letterSpacing: 1.5,
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.bold,
-              fontSize: 18.0),
+              fontSize: 18.0 * unitHeightValue),
         ),
       ),
     );

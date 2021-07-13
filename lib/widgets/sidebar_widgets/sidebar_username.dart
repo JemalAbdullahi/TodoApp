@@ -17,25 +17,28 @@ class SideBarUsername extends StatefulWidget {
 class _SideBarUsernameState extends State<SideBarUsername> {
   User _user = userBloc.getUserObject();
   late double height, radius;
+  late double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
     height = widget.height * 0.6;
-    radius = height * 0.4;
+    radius = height * 0.3;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return Container(
-            height: height,
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  _user.cAvatar(radius: radius),
-                  SizedBox(height: 8.0),
-                  Text(
-                    "${_user.firstname} ${_user.lastname}",
-                    style: TextStyle(color: Colors.black45),
-                  )
-                ],
-              ),
-            ),
-          );
+      height: height,
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            _user.cAvatar(radius: radius, unitHeightValue: unitHeightValue),
+            SizedBox(height: 8.0),
+            Text(
+              "${_user.firstname} ${_user.lastname}",
+              style: TextStyle(
+                  color: Colors.black45, fontSize: 18 * unitHeightValue),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
