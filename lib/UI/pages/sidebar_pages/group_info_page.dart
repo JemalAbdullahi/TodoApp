@@ -19,12 +19,13 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
   late Group group;
   late List<GroupMember> initialMembers;
   late int membersLength;
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
   bool groupUpdated = false;
 
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     final args =
         ModalRoute.of(context)!.settings.arguments as GroupInfoPageArguments;
     group = args.group;
@@ -92,9 +93,9 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildAvatar(),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         _buildGroupNameContainer(),
-        SizedBox(height: 20),
+        SizedBox(height: 20 * unitHeightValue),
         _buildExpandedCard(),
       ],
     );
@@ -160,9 +161,9 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           fontSize: 22 * unitHeightValue,
         ),
       ),
-      SizedBox(width: 15),
+      SizedBox(width: 15 * unitWidthValue),
       CircleAvatar(
-        radius: 16,
+        radius: 16 * unitHeightValue,
         backgroundColor: darkBlue,
         child: Text(
           "${group.members.length}",
@@ -216,16 +217,17 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       setState(() {});
     });
     return Padding(
-      padding: EdgeInsets.only(top: 44.0, right: 24.0),
+      padding: EdgeInsets.only(top: 75.0*unitHeightValue, right: 24.0*unitWidthValue),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 110,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10.0),
+            maxCrossAxisExtent: 200 * unitWidthValue,
+          childAspectRatio: 0.75,
+          crossAxisSpacing: 10 * unitWidthValue,
+          mainAxisSpacing: 10 * unitHeightValue,),
         itemBuilder: (context, index) => Column(
           children: [
-            group.members[index].cAvatar(radius: 34, unitHeightValue: unitHeightValue),
+            group.members[index]
+                .cAvatar(radius: 34, unitHeightValue: unitHeightValue),
             Text(
               group.members[index].firstname,
               overflow: TextOverflow.ellipsis,

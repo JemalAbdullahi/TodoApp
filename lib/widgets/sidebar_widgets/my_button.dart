@@ -17,6 +17,7 @@ class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    double unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     return MaterialButton(
       height: height,
       child: Row(
@@ -24,7 +25,7 @@ class MyButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Icon(iconData, color: Colors.black45, size: 32 * unitHeightValue),
-          SizedBox(width: 10),
+          SizedBox(width: 10 * unitWidthValue),
           Text(
             text,
             style: TextStyle(

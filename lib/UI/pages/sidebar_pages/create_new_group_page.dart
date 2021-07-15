@@ -79,16 +79,25 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   void saveGroup() async {
-    String groupKey = await groupBloc.addGroup(groupName.text, !isPrivate);
-    for (GroupMember member in newGroup.members) {
-      try {
-        await repository.addGroupMember(groupKey, member.username);
-      } catch (e) {
-        print(e);
+    if (groupName.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Enter a Group Name"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      String groupKey = await groupBloc.addGroup(groupName.text, !isPrivate);
+      for (GroupMember member in newGroup.members) {
+        try {
+          await repository.addGroupMember(groupKey, member.username);
+        } catch (e) {
+          print(e);
+        }
       }
+      await groupBloc.updateGroups();
+      Navigator.pop(context);
     }
-    await groupBloc.updateGroups();
-    Navigator.pop(context);
   }
 
   Stack _buildStack() {
@@ -106,9 +115,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildAvatar(),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         _buildGroupNameContainer(),
-        SizedBox(height: 20),
+        SizedBox(height: 20 * unitHeightValue),
         _buildExpandedCard(),
       ],
     );
@@ -241,23 +250,25 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     });
     return Padding(
       padding: EdgeInsets.only(
-          top: 44.0 * unitHeightValue, right: 24.0 * unitWidthValue),
+          top: 75.0 * unitHeightValue, right: 24.0 * unitWidthValue),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 110 * unitWidthValue,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10.0 * unitHeightValue),
+          maxCrossAxisExtent: 200 * unitWidthValue,
+          childAspectRatio: 0.75,
+          crossAxisSpacing: 10 * unitWidthValue,
+          mainAxisSpacing: 10 * unitHeightValue,
+        ),
         itemBuilder: (context, index) => Column(
           children: [
             newGroup.members[index]
-                .cAvatar(radius: 20, unitHeightValue: unitHeightValue),
+                .cAvatar(radius: 34, unitHeightValue: unitHeightValue),
             Text(
               newGroup.members[index].firstname,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: 'Segoe UI',
                 fontWeight: FontWeight.bold,
+                fontSize: 16 * unitHeightValue,
               ),
             ),
           ],

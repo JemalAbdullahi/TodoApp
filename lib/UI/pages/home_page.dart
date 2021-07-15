@@ -13,11 +13,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isMenuOpen = false;
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
+
 
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -52,7 +54,7 @@ class _HomePageState extends State<HomePage> {
               }, //will go to Create a group Page
             ),
             SizedBox(
-              width: 10,
+              width: 10 * unitWidthValue,
             )
           ],
         ),

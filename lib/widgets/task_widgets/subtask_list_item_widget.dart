@@ -4,7 +4,6 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
-import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/models/subtasks.dart';
 
 class SubtaskListItemWidget extends StatefulWidget {
@@ -22,11 +21,12 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
   late double listItemWidth;
   late Size mediaQuery;
   late double listItemHeight;
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
 
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     mediaQuery = MediaQuery.of(context).size;
     listItemWidth = mediaQuery.width * 0.85;
     listItemHeight = mediaQuery.height * 0.13;
@@ -208,11 +208,13 @@ class _SubtaskListItemWidgetState extends State<SubtaskListItemWidget> {
 
   Row _buildAssignedMemberAvatars() {
     return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      for (GroupMember member in widget.subtask.assignedTo)
+      for (int i = 0; i < 7 && i < widget.subtask.assignedTo.length; i++)
         Padding(
-          padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: member.cAvatar(unitHeightValue: unitHeightValue),
-        ),
+          padding: EdgeInsets.only(
+              top: 8.0 * unitHeightValue, right: 5.0 * unitWidthValue),
+          child: widget.subtask.assignedTo[i]
+              .cAvatar(radius: 18, unitHeightValue: unitHeightValue),
+        )
     ]);
   }
 }

@@ -103,23 +103,23 @@ class _ProfilePageState extends State<ProfilePage> {
           Center(
               child: _user.cAvatar(
                   radius: 56.0, unitHeightValue: unitHeightValue)),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _firstnameField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _lastnameField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _phonenumberField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _usernameField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _emailAddressField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _newPasswordField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _confirmPasswordField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _currentPasswordField(),
-          SizedBox(height: 20),
+          SizedBox(height: 20 * unitHeightValue),
           _buildSaveButton(context)
         ],
       ),
@@ -131,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Current Password", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
@@ -169,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Username", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
@@ -198,7 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("First Name", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
@@ -227,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Last Name", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
@@ -256,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Phone Number", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
@@ -285,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Email Address", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
@@ -314,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("New Password", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,
@@ -344,7 +344,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Confirm Password", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: profileBoxDecorationStyle,

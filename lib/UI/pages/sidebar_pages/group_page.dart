@@ -14,10 +14,11 @@ class GroupPage extends StatefulWidget {
 }
 
 class _GroupPageState extends State<GroupPage> {
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -30,7 +31,7 @@ class _GroupPageState extends State<GroupPage> {
                 onPressed: () {
                   Navigator.pushNamed(context, CreateGroupPage.routeName);
                 }),
-            SizedBox(width: 10),
+            SizedBox(width: 10 * unitWidthValue),
           ]),
           backgroundColor: Colors.transparent,
           body: GroupList(tileNavigatesTo: GroupInfoPage.routeName),

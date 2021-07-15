@@ -55,15 +55,15 @@ class ForgotPasswordDialogBox extends StatelessWidget {
       children: <Widget>[
         _resetPasswordTitle(),
         SizedBox(
-          height: 10,
+          height: 10 * unitHeightValue,
         ),
         _resetPasswordDescription(),
         SizedBox(
-          height: 15,
+          height: 15 * unitHeightValue,
         ),
         _resetPasswordTextFieldColumn(),
         SizedBox(
-          height: 10.0,
+          height: 10.0 * unitHeightValue,
         ),
         _resetPasswordBtn(context),
       ],
@@ -105,7 +105,7 @@ class ForgotPasswordDialogBox extends StatelessWidget {
                 fontSize: 16 * unitHeightValue,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Segoe UI')),
-        SizedBox(height: 10),
+        SizedBox(height: 10 * unitHeightValue),
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(

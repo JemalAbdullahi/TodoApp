@@ -47,11 +47,12 @@ class _GroupListState extends State<GroupList> {
   late double groupListItemWidth;
 
   late double groupListItemHeight;
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
 
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     mediaQuery = MediaQuery.of(context).size;
     groupListItemWidth = mediaQuery.width * 0.85;
     groupListItemHeight = mediaQuery.height * 0.17;
@@ -238,11 +239,13 @@ class _GroupListState extends State<GroupList> {
   ///Build Member Avatar
   Row _buildMemberAvatars(List<GroupMember> members) {
     return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      for (GroupMember member in members)
+      for (int i = 0; i <= 7 && i < members.length; i++)
         Padding(
-          padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: member.cAvatar(unitHeightValue: unitHeightValue),
-        ),
+          padding: EdgeInsets.only(
+              top: 8.0 * unitHeightValue, right: 5.0 * unitWidthValue),
+          child:
+              members[i].cAvatar(radius: 18, unitHeightValue: unitHeightValue),
+        )
     ]);
   }
 }

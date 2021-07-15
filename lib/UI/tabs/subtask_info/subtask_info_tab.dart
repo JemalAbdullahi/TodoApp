@@ -27,7 +27,7 @@ class SubtaskInfo extends StatefulWidget {
 
 class _SubtaskInfoState extends State<SubtaskInfo> {
   late final SubtaskViewModel viewmodel;
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
   TextEditingController notesController = new TextEditingController();
   bool buffering = true;
   bool updating = false;
@@ -44,6 +44,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     return SafeArea(
       child: GestureDetector(
         onTap: () {
@@ -61,8 +62,10 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
               widget.subtask.title,
               actions: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(
-                      top: 26.0, bottom: 20.0, right: 8.0),
+                  padding: EdgeInsets.only(
+                      top: 40.0 * unitHeightValue,
+                      bottom: 40.0 * unitHeightValue,
+                      right: 8.0 * unitWidthValue),
                   child: TextButton(
                     style: TextButton.styleFrom(
                       primary: Colors.white,
@@ -87,7 +90,7 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
                             style: TextStyle(
                                 color: lightGreenBlue,
                                 fontFamily: "Segoe UI",
-                                fontSize: 18 * unitHeightValue,
+                                fontSize: 24 * unitHeightValue,
                                 fontWeight: FontWeight.bold),
                           ),
                   ),
@@ -135,11 +138,11 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("Notes/Description", style: labelStyle(unitHeightValue)),
-        SizedBox(height: 10.0),
+        SizedBox(height: 10.0 * unitHeightValue),
         _notesContainer(),
-        SizedBox(height: 20),
+        SizedBox(height: 20 * unitHeightValue),
         DueDateRow(viewmodel),
-        SizedBox(height: 15),
+        SizedBox(height: 15 * unitHeightValue),
       ],
     );
   }
@@ -206,9 +209,9 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
             color: darkerGreenBlue,
             fontSize: 22 * unitHeightValue),
       ),
-      SizedBox(width: 15),
+      SizedBox(width: 15 * unitWidthValue),
       CircleAvatar(
-        radius: 16,
+        radius: 20 * unitHeightValue,
         backgroundColor: darkerGreenBlue,
         child: Text(
           "${viewmodel.subtask.assignedTo.length}",
@@ -224,13 +227,14 @@ class _SubtaskInfoState extends State<SubtaskInfo> {
 
   Padding _buildMembersList() {
     return Padding(
-      padding: EdgeInsets.only(top: 44.0, right: 24.0),
+      padding: EdgeInsets.only(
+          top: 75.0 * unitHeightValue, right: 24.0 * unitWidthValue),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 110,
+          maxCrossAxisExtent: 200 * unitWidthValue,
           childAspectRatio: 0.75,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10 * unitWidthValue,
+          mainAxisSpacing: 10 * unitHeightValue,
         ),
         itemBuilder: (context, index) {
           return GestureDetector(

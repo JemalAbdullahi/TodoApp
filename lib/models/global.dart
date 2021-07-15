@@ -16,7 +16,7 @@ TextStyle appTitleStyle(double unitHeightValue) => TextStyle(
       color: darkBlueGradient,
       fontWeight: FontWeight.bold,
       fontFamily: "Segoe UI",
-      fontSize: 28.0 * unitHeightValue,
+      fontSize: 36.0 * unitHeightValue,
     );
 
 TextStyle hintTextStyle(double unitHeightValue) => TextStyle(

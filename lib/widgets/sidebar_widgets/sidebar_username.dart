@@ -30,7 +30,7 @@ class _SideBarUsernameState extends State<SideBarUsername> {
         child: Column(
           children: <Widget>[
             _user.cAvatar(radius: radius, unitHeightValue: unitHeightValue),
-            SizedBox(height: 8.0),
+            SizedBox(height: 10.0 * unitHeightValue),
             Text(
               "${_user.firstname} ${_user.lastname}",
               style: TextStyle(

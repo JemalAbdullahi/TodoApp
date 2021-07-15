@@ -52,7 +52,7 @@ class GroupMember extends Equatable {
 
   /// Create CircleAvatar
   CircleAvatar cAvatar({
-    double radius = 12,
+    double radius = 16,
     Color color = darkBlue,
     required double unitHeightValue,
   }) {
@@ -60,13 +60,14 @@ class GroupMember extends Equatable {
       //backgroundImage: member.avatar,
       backgroundColor: color,
       child: selectedForAssignment
-          ? Icon(Icons.check, size: radius * unitHeightValue + 8, color: Colors.white)
+          ? Icon(Icons.check,
+              size: radius * unitHeightValue + 8, color: Colors.white)
           : Text(
               this.initials(),
               style: TextStyle(
                 fontFamily: "Segoe UI",
                 fontWeight: FontWeight.bold,
-                fontSize: radius * unitHeightValue + 2,
+                fontSize: radius * unitHeightValue,
                 color: Colors.white,
               ),
             ),

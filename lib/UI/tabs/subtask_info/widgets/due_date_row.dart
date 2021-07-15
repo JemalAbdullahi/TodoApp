@@ -12,18 +12,19 @@ class DueDateRow extends StatefulWidget {
 }
 
 class _DueDateRowState extends State<DueDateRow> {
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
 
   @override
   Widget build(BuildContext context) {
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     return Row(
       children: [
         Text(
           "Due Date: ${widget.viewmodel.deadline.month}/${widget.viewmodel.deadline.day}/${widget.viewmodel.deadline.year}",
           style: labelStyle(unitHeightValue),
         ),
-        SizedBox(width: 5),
+        SizedBox(width: 5 * unitWidthValue),
         IconButton(
             onPressed: () => _showDatePicker(context),
             icon: Icon(Icons.calendar_today,

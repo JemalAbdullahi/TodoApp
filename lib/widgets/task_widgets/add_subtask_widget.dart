@@ -21,8 +21,8 @@ class AddSubtask extends StatefulWidget {
 class _AddSubtaskState extends State<AddSubtask> {
   TextEditingController controller = new TextEditingController();
   FocusNode textfieldFocus = new FocusNode();
-  late double unitValueHeight,
-      unitValueWidth,
+  late double unitHeightValue,
+      unitWidthValue,
       height,
       defaultWidth,
       focusWidth,
@@ -32,18 +32,19 @@ class _AddSubtaskState extends State<AddSubtask> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    unitValueHeight = size.height * 0.001;
-    unitValueWidth = size.width * 0.001;
-    focusWidth = unitValueWidth * 900;
-    defaultWidth = unitValueWidth * 250;
-    height = unitValueHeight * 60;
+    unitHeightValue = size.height * 0.001;
+    unitWidthValue = size.width * 0.001;
+    focusWidth = unitWidthValue * 900;
+    defaultWidth = unitWidthValue * 500;
+    height = unitHeightValue * 60;
     double width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : defaultWidth;
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
       return Positioned(
         bottom: 0,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: marginH, vertical: 25),
+          margin: EdgeInsets.symmetric(
+              horizontal: marginH, vertical: 25 * unitHeightValue),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25.0),
@@ -57,7 +58,9 @@ class _AddSubtaskState extends State<AddSubtask> {
           ),
           height: height,
           width: width,
-          padding: EdgeInsets.all(12.0),
+          padding: EdgeInsets.symmetric(
+              vertical: 12.0 * unitHeightValue,
+              horizontal: 20.0 * unitWidthValue),
           child: Row(
             children: [
               Flexible(
@@ -68,7 +71,7 @@ class _AddSubtaskState extends State<AddSubtask> {
                   textAlignVertical: TextAlignVertical.center,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.go,
-                  style: TextStyle(fontSize: 16 * unitValueHeight),
+                  style: TextStyle(fontSize: 16 * unitHeightValue),
                   onTap: () {
                     setState(() {});
                   },
@@ -80,6 +83,8 @@ class _AddSubtaskState extends State<AddSubtask> {
                   decoration: InputDecoration(
                     suffixIcon: textfieldFocus.hasPrimaryFocus
                         ? IconButton(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.0 * unitWidthValue),
                             icon: Icon(Icons.add),
                             onPressed: () {
                               setState(() {
@@ -90,7 +95,7 @@ class _AddSubtaskState extends State<AddSubtask> {
                     border: InputBorder.none,
                     hintText: "Write a Subtask",
                     hintStyle: TextStyle(
-                        color: Colors.black54, fontSize: 16 * unitValueHeight),
+                        color: Colors.black54, fontSize: 16 * unitHeightValue),
                   ),
                 ),
               ),

@@ -92,7 +92,7 @@ class _TaskListItemWidgetState extends State<TaskListItemWidget> {
                         style: toDoListSubtitleStyle(unitHeightValue),
                         textAlign: TextAlign.right,
                       ),
-                SizedBox(height: 20),
+                SizedBox(height: 20 * unitHeightValue),
               ],
             ),
           ],

@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               hintText: 'Enter Username',
               unitHeightValue: unitHeightValue,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30 * unitHeightValue),
             TextFormFieldColumn(
               label: 'Password',
               controller: controllers["password"]!,

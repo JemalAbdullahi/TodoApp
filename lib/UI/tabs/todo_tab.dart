@@ -25,7 +25,7 @@ class _ToDoTabState extends State<ToDoTab> {
   late TaskBloc taskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   late Group group;
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue;
   late String orderBy;
   bool reorder;
   double height = 175;
@@ -42,6 +42,7 @@ class _ToDoTabState extends State<ToDoTab> {
     Size mediaQuery = MediaQuery.of(context).size;
     height = mediaQuery.height * 0.13;
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
     return KeyboardSizeProvider(
       child: SafeArea(
         child: GestureDetector(
@@ -72,7 +73,6 @@ class _ToDoTabState extends State<ToDoTab> {
               ),
               actions: [
                 _popupMenuButton(),
-                SizedBox(width: 10),
               ],
             ),
             body: Stack(
@@ -198,10 +198,12 @@ class _ToDoTabState extends State<ToDoTab> {
 
   PopupMenuButton _popupMenuButton() {
     return PopupMenuButton<String>(
+      padding: EdgeInsets.symmetric(
+          vertical: 8 * unitHeightValue, horizontal: 8 * unitWidthValue),
       icon: Icon(Icons.sort,
           size: 32.0 * unitHeightValue, color: darkBlueGradient),
       color: darkGreenBlue,
-      offset: Offset(0, 50),
+      offset: Offset(0, 70 * unitHeightValue),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(15.0),
@@ -218,11 +220,11 @@ class _ToDoTabState extends State<ToDoTab> {
           value: "Alphabetical",
           child: Row(children: [
             Icon(Icons.sort_by_alpha, size: 24 * unitHeightValue),
-            SizedBox(width: 6.0),
+            SizedBox(width: 30.0 * unitWidthValue),
             Text(
               "Alphabetical",
               style: TextStyle(
-                  color: Colors.white, fontSize: 18 * unitHeightValue),
+                  color: Colors.white, fontSize: 24 * unitHeightValue),
             )
           ]),
         ),
@@ -230,11 +232,11 @@ class _ToDoTabState extends State<ToDoTab> {
           value: "Recent-Oldest",
           child: Row(children: [
             Icon(Icons.date_range, size: 24 * unitHeightValue),
-            SizedBox(width: 6.0),
+            SizedBox(width: 30.0 * unitWidthValue),
             Text(
               "Recent-Oldest",
               style: TextStyle(
-                  color: Colors.white, fontSize: 18 * unitHeightValue),
+                  color: Colors.white, fontSize: 24 * unitHeightValue),
             )
           ]),
         ),
@@ -242,11 +244,11 @@ class _ToDoTabState extends State<ToDoTab> {
           value: "Oldest-Recent",
           child: Row(children: [
             Icon(Icons.date_range, size: 24 * unitHeightValue),
-            SizedBox(width: 6.0),
+            SizedBox(width: 30.0 * unitWidthValue),
             Text(
               "Oldest-Recent",
               style: TextStyle(
-                  color: Colors.white, fontSize: 18 * unitHeightValue),
+                  color: Colors.white, fontSize: 24 * unitHeightValue),
             )
           ]),
         ),

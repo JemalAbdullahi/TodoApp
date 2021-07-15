@@ -41,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
               keyboardType: TextInputType.name,
               unitHeightValue: unitHeightValue,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30 * unitHeightValue),
             TextFormFieldColumn(
               label: 'Lastname',
               controller: controllers["lastname"]!,
@@ -50,7 +50,7 @@ class _SignupPageState extends State<SignupPage> {
               keyboardType: TextInputType.name,
               unitHeightValue: unitHeightValue,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30 * unitHeightValue),
             TextFormFieldColumn(
               label: 'Username',
               controller: controllers["username"]!,
@@ -58,7 +58,7 @@ class _SignupPageState extends State<SignupPage> {
               hintText: 'Enter Username',
               unitHeightValue: unitHeightValue,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30 * unitHeightValue),
             TextFormFieldColumn(
               label: 'Phone Number',
               controller: controllers["phone"]!,
@@ -67,7 +67,7 @@ class _SignupPageState extends State<SignupPage> {
               keyboardType: TextInputType.phone,
               unitHeightValue: unitHeightValue,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30 * unitHeightValue),
             TextFormFieldColumn(
               label: 'Email Address',
               controller: controllers["email"]!,
@@ -76,7 +76,7 @@ class _SignupPageState extends State<SignupPage> {
               keyboardType: TextInputType.emailAddress,
               unitHeightValue: unitHeightValue,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30 * unitHeightValue),
             TextFormFieldColumn(
               label: 'Password',
               controller: controllers["password"]!,

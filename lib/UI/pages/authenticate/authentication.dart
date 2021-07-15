@@ -71,7 +71,7 @@ class _AuthenticationViewState extends State<AuthenticationView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _signText(),
-                    SizedBox(height: 30),
+                    SizedBox(height: 30 * unitHeightValue),
                     widget.form,
                     _buildMainBtn(),
                     widget.bottomBtn!,

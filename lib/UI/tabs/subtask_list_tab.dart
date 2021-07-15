@@ -23,7 +23,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
   late SubtaskBloc subtaskBloc;
   late Group group;
   late Task task;
-  late double unitHeightValue;
+  late double unitHeightValue, unitWidthValue, height;
   late String orderBy;
   bool reorder;
 
@@ -38,6 +38,9 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
     task = args.task;
     group = args.group;
     unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    unitWidthValue = MediaQuery.of(context).size.width * 0.001;
+    Size mediaQuery = MediaQuery.of(context).size;
+    height = mediaQuery.height * 0.13;
     subtaskBloc = SubtaskBloc(task);
     return KeyboardSizeProvider(
       child: SafeArea(
@@ -66,7 +69,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
                 },
                 color: Colors.blueGrey,
               ),
-              actions: [_popupMenuButton(), SizedBox(width: 10)],
+              actions: [_popupMenuButton()],
             ),
             body: Stack(
               children: <Widget>[
@@ -128,7 +131,7 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
       key: UniqueKey(),
       child: ListView(
         key: UniqueKey(),
-        padding: EdgeInsets.only(top: 175, bottom: 90),
+        padding: EdgeInsets.only(top: height + 40, bottom: 90),
         children: task.subtasks.map<Dismissible>((Subtask item) {
           return _buildListTile(item);
         }).toList(),
@@ -192,10 +195,12 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
 
   PopupMenuButton _popupMenuButton() {
     return PopupMenuButton<String>(
+      padding: EdgeInsets.symmetric(
+          vertical: 8 * unitHeightValue, horizontal: 8 * unitWidthValue),
       icon: Icon(Icons.sort,
           size: 32.0 * unitHeightValue, color: darkBlueGradient),
       color: darkGreenBlue,
-      offset: Offset(0, 50),
+      offset: Offset(0, 70 * unitHeightValue),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(15.0),
@@ -212,11 +217,11 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
           value: "Alphabetical",
           child: Row(children: [
             Icon(Icons.sort_by_alpha, size: 24 * unitHeightValue),
-            SizedBox(width: 6.0),
+            SizedBox(width: 30.0 * unitWidthValue),
             Text(
               "Alphabetical",
               style: TextStyle(
-                  color: Colors.white, fontSize: 18 * unitHeightValue),
+                  color: Colors.white, fontSize: 24 * unitHeightValue),
             )
           ]),
         ),
@@ -224,11 +229,11 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
           value: "Recent-Oldest",
           child: Row(children: [
             Icon(Icons.date_range, size: 24 * unitHeightValue),
-            SizedBox(width: 6.0),
+            SizedBox(width: 30.0 * unitWidthValue),
             Text(
               "Recent-Oldest",
               style: TextStyle(
-                  color: Colors.white, fontSize: 18 * unitHeightValue),
+                  color: Colors.white, fontSize: 24 * unitHeightValue),
             )
           ]),
         ),
@@ -236,11 +241,11 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
           value: "Oldest-Recent",
           child: Row(children: [
             Icon(Icons.date_range, size: 24 * unitHeightValue),
-            SizedBox(width: 6.0),
+            SizedBox(width: 30.0 * unitWidthValue),
             Text(
               "Oldest-Recent",
               style: TextStyle(
-                  color: Colors.white, fontSize: 18 * unitHeightValue),
+                  color: Colors.white, fontSize: 24 * unitHeightValue),
             )
           ]),
         ),
@@ -248,11 +253,11 @@ class _SubtaskListTabState extends State<SubtaskListTab> {
           value: "Due Date",
           child: Row(children: [
             Icon(Icons.date_range, size: 24 * unitHeightValue),
-            SizedBox(width: 6.0),
+            SizedBox(width: 30.0 * unitWidthValue),
             Text(
               "Due Date",
               style: TextStyle(
-                  color: Colors.white, fontSize: 18 * unitHeightValue),
+                  color: Colors.white, fontSize: 24 * unitHeightValue),
             )
           ]),
         ),
