@@ -127,7 +127,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   Container _buildGroupNameContainer() {
     return Container(
       //margin: const EdgeInsets.only(left: 100.0, right: 45.0, bottom: 20.0),
-      width: 250 * unitWidthValue,
+      width: 480 * unitWidthValue,
       padding: EdgeInsets.only(left: 20),
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -148,7 +148,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
           fontFamily: 'Segoe UI',
           fontWeight: FontWeight.bold,
           color: lightBlue,
-          fontSize: 30 * unitHeightValue,
+          fontSize: 24 * unitHeightValue,
         ),
         suffixIcon: Icon(
           Icons.edit,
@@ -246,12 +246,12 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 110 * unitWidthValue,
             childAspectRatio: 0.75,
-            crossAxisSpacing: 10 * unitWidthValue,
+            crossAxisSpacing: 10,
             mainAxisSpacing: 10.0 * unitHeightValue),
         itemBuilder: (context, index) => Column(
           children: [
             newGroup.members[index]
-                .cAvatar(radius: 34, unitHeightValue: unitHeightValue),
+                .cAvatar(radius: 20, unitHeightValue: unitHeightValue),
             Text(
               newGroup.members[index].firstname,
               overflow: TextOverflow.ellipsis,
