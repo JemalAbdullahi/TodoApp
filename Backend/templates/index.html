@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDoList-Groups</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link
+      href="//db.onlinewebfonts.com/c/ace51fb0e489a977bed8a67511865c11?family=Averta+CY+W01"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo">ToDoList-Groups</div>
+      <ul id="navigation">
+        <li><a href="#" class="btn active">Home</a></li>
+        <li><a href="#group" class="btn">Groups</a></li>
+        <li><a href="#project" class="btn">Projects</a></li>
+        <li><a href="#task" class="btn">Tasks</a></li>
+        <li><a href="#task-info" class="btn">Task Info</a></li>
+      </ul>
+    </header>
+    <section class="welcome" id="welcome">
+      <img src="../static/assets/stars.png" alt="stars" id="stars" />
+      <h2 id="text">ToDoList-Groups</h2>
+      <a href="#app-features" id="btn">Explore</a>
+    </section>
+    <div class="app-features" id="app-features">
+      <section class="feature group" id="group">
+        <div class="featured-item">
+          <div class="featured-item-grid">
+            <div class="col-6">
+              <div class="featured-item-img">
+                <img src="../static/assets/Group Page.png" alt="Groups" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="featured-item-text">
+                <div class="featured-item-header">
+                  <h3 id="featured-title">Group Page</h3>
+                </div>
+                <div class="featured-item-desc">
+                  <p id="feature-description">View a list of your Groups!</p>
+                  <p id="feature-description">Both personal and public</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="feature project" id="project">
+        <div class="featured-item">
+          <div class="featured-item-grid">
+            <div class="col-6">
+              <div class="featured-item-img">
+                <img src="../static/assets/To Do Page.png" alt="Groups" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="featured-item-text">
+                <div class="featured-item-header">
+                  <h3 id="featured-title">Project Page</h3>
+                </div>
+                <div class="featured-item-desc">
+                  <p id="feature-description">Create and Manage Projects</p>
+                  <p id="feature-description">for your many Groups</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="feature task" id="task">
+        <div class="featured-item">
+          <div class="featured-item-grid">
+            <div class="col-6">
+              <div class="featured-item-img">
+                <img src="../static/assets/Subtask Page.png" alt="Groups" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="featured-item-text">
+                <div class="featured-item-header">
+                  <h3 id="featured-title">To Do Page</h3>
+                </div>
+                <div class="featured-item-desc">
+                  <p id="feature-description">View a list of your ToDos!</p>
+                  <p id="feature-description">
+                    with Notes and Assigned Members!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="feature task-info" id="task-info">
+        <div class="featured-item">
+          <div class="featured-item-grid">
+            <div class="col-6">
+              <div class="featured-item-img">
+                <img src="../static/assets/Subtask Info Page.png" alt="Groups" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="featured-item-text">
+                <div class="featured-item-header">
+                  <h3 id="featured-title">Task Info Page</h3>
+                </div>
+                <div class="featured-item-desc">
+                  <p id="feature-description">Save Notes</p>
+                  <p id="feature-description">Assign Deadlines</p>
+                  <p id="feature-description">Assign GroupMembers</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      let stars = document.getElementById("stars");
+      let text = document.getElementById("text");
+      let btn = document.getElementById("btn");
+      //let header = document.querySelector("header");
+      window.addEventListener("scroll", function () {
+        let value = window.scrollY;
+        stars.style.left = value * 0.25 + "px";
+        text.style.marginRight = value * 4 + "px";
+        text.style.marginTop = value * 1.5 + "px";
+        btn.style.marginTop = value * 1.5 + "px";
+        //header.style.top = value * 0.5 + "px";
+      });
+      // Get the ul element with id navigation
+      let navigation = document.getElementById("navigation");
+      // Get all buttons with class btn in navigation
+      let btns = navigation.getElementsByClassName("btn");
+      for(var i = 0; i < btns.length; i++){
+        btns[i].addEventListener("click", function () {
+          let current = document.getElementsByClassName("active");
+          current[0].className = current[0].className.replace(" active", "");
+          this.className += " active";
+        });
+      }
+    </script>
+  </body>
+</html>

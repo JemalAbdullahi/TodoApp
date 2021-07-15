@@ -1,7 +1,7 @@
 from Models import db
 from api.api import api_bp
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import sys
 import logging
@@ -21,12 +21,12 @@ db.init_app(app)
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return render_template("index.html")
 
-@app.route('/privacy%20policy')
-def index():
-    return """
-        <h1>Privacy Policy</h1>
+
+@app.route('/privacypolicy')
+def privacy():
+    return """<h1>Privacy Policy</h1>
         <p>Last updated: July 10, 2021</p>
         <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
         <p>We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the <a href="https://www.termsfeed.com/privacy-policy-generator/" target="_blank">Privacy Policy Generator</a>.</p>
@@ -167,8 +167,7 @@ def index():
         <p>If you have any questions about this Privacy Policy, You can contact us:</p>
         <ul>
         <li>By email: jemal.a.abdullahi@gmail.com</li>
-        </ul>
-    """
+        </ul>"""
 
 
 if __name__ == "__main__":
