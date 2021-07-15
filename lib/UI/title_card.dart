@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-
 import 'package:todolist/models/global.dart';
-//import 'package:todolist/widgets/create_task_overlay.dart';
 
+// ignore: must_be_immutable
 class TitleCard extends StatelessWidget {
   final String title;
   final Widget child;
-  //final VoidCallback addTask;
+  late double unitHeightValue;
+  late double height;
 
-  TitleCard({this.title, this.child});
+  TitleCard({required this.title, required this.child});
   @override
   Widget build(BuildContext context) {
+    Size mediaQuery = MediaQuery.of(context).size;
+    unitHeightValue = mediaQuery.height * 0.001;
+    height = mediaQuery.height * 0.13;
     return Stack(
       children: <Widget>[
         child,
@@ -21,7 +24,7 @@ class TitleCard extends StatelessWidget {
 
   Container _titleCardBackground() {
     return Container(
-      height: 120,
+      height: height,
       width: double.infinity,
       decoration: new BoxDecoration(
         color: Colors.white,
@@ -46,7 +49,7 @@ class TitleCard extends StatelessWidget {
       alignment: Alignment.bottomLeft,
       child: Text(
         title,
-        style: cardTitleStyle,
+        style: cardTitleStyle(unitHeightValue),
       ),
     );
   }

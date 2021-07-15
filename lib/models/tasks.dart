@@ -1,20 +1,19 @@
+import 'package:equatable/equatable.dart';
 import 'package:todolist/models/subtasks.dart';
 
-class Task {
+// ignore: must_be_immutable
+class Task extends Equatable {
   /// Task Name/Title
   String title;
 
   /// Task ID
   int id;
 
-  /// Task Index in the list
-  int index;
-
   /// Task Key
   String taskKey;
 
   /// List of Subtasks associated with the Task
-  List<Subtask> subtasks;
+  List<Subtask> subtasks = [];
 
   /// GroupKey from the Group that added the task
   String groupKey;
@@ -32,32 +31,24 @@ class Task {
   DateTime timeUpdated;
 
   /// Not Implemented
-  String repeats;
-
-  /// Not Implemented
   String note;
 
-  /// Not Implemented
-  List<DateTime> reminders;
-  //DateTime deadline;
 
   Task(
-      {this.title,
-      this.groupKey,
-      this.groupName,
-      this.completed,
-      this.id,
-      this.note,
-      this.taskKey,
-      this.index,
-      this.timeCreated,
-      this.timeUpdated});
+      {required this.title,
+      required this.groupKey,
+      required this.groupName,
+      required this.completed,
+      required this.id,
+      required this.note,
+      required this.taskKey,
+      required this.timeCreated,
+      required this.timeUpdated});
 
   factory Task.fromJson(Map<String, dynamic> parsedJson) {
     return Task(
         id: parsedJson['id'],
         title: parsedJson['title'],
-        index: parsedJson['index'],
         taskKey: parsedJson['task_key'],
         completed: parsedJson['completed'],
         note: parsedJson['note'],
@@ -66,6 +57,9 @@ class Task {
         timeCreated: DateTime.parse(parsedJson['time_created']),
         timeUpdated: DateTime.parse(parsedJson['time_updated']));
   }
+
+  @override
+  List<Object> get props => [taskKey];
 
   @override
   String toString() {

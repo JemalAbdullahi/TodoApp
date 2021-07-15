@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/UI/pages/authenticate/login_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/group_page.dart';
 import 'package:todolist/UI/pages/sidebar_pages/profile_page.dart';
 import 'package:todolist/bloc/resources/repository.dart';
@@ -6,9 +7,9 @@ import 'package:todolist/widgets/sidebar_widgets/my_button.dart';
 
 class SideBarButtonList extends StatefulWidget {
   const SideBarButtonList({
-    Key key,
-    @required this.offset,
-    @required this.menuContainerHeight,
+    Key? key,
+    required this.offset,
+    required this.menuContainerHeight,
   }) : super(key: key);
 
   final Offset offset;
@@ -25,12 +26,13 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
   @override
   void initState() {
     limits = [0, 0, 0, 0, 0];
-    WidgetsBinding.instance.addPostFrameCallback(getPosition);
+    WidgetsBinding.instance!.addPostFrameCallback(getPosition);
     super.initState();
   }
 
   getPosition(duration) {
-    RenderBox renderBox = globalKey.currentContext.findRenderObject();
+    RenderBox renderBox =
+        globalKey.currentContext!.findRenderObject() as RenderBox;
     final position = renderBox.localToGlobal(Offset.zero);
     double start = position.dy - 60;
     double contLimit = position.dy + renderBox.size.height - 60;
@@ -67,41 +69,19 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
             textSize: getSize(0),
             height: (widget.menuContainerHeight) / 4,
             buttonFunction: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              ).then((value) => setState(() {}));
+              Navigator.pushNamed(context, ProfilePage.routeName)
+                  .then((value) => setState(() {}));
             },
           ),
-          /* MyButton(
-            text: "Friends",
-            iconData: Icons.person,
-            textSize: getSize(1),
-            height: (widget.menuContainerHeight) / 5,
-            buttonFunction: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HowToPage()),
-              );
-            },
-          ), */
           MyButton(
             text: "Groups",
             iconData: Icons.group,
             textSize: getSize(1),
             height: (widget.menuContainerHeight) / 4,
             buttonFunction: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GroupPage()),
-              );
+              Navigator.pushNamed(context, GroupPage.routeName);
             },
           ),
-          /* MyButton(
-              text: "Settings",
-              iconData: Icons.settings,
-              textSize: getSize(3),
-              height: (widget.menuContainerHeight) / 5), */
           MyButton(
             text: "Logout",
             iconData: Icons.exit_to_app,
@@ -109,7 +89,7 @@ class _SideBarButtonListState extends State<SideBarButtonList> {
             height: (widget.menuContainerHeight) / 4,
             buttonFunction: () {
               repository.saveApiKey("");
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushNamed(context, LoginPage.routeName);
             },
           ),
         ],

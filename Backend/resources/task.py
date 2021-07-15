@@ -12,9 +12,9 @@ class Tasks(Resource):
         json_data = request.get_json(force=True)
 
         if not json_data:
-            return {'Message': 'No input data provided'}, 400
+            return {'status': 'No input data provided'}, 400
         if not header:
-            return {"Messege": "No api key!"}, 401
+            return {"status": "No api key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -32,8 +32,6 @@ class Tasks(Resource):
                         user_id=user.id,
                         group_id=group.id,
                         task_key=task_key,
-                        completed=json_data['completed'],
-                        index=json_data['index'],
                     )
                     db.session.add(task)
                     db.session.commit()
@@ -42,10 +40,10 @@ class Tasks(Resource):
                     return {"status": 'success', 'data': result}, 201
                 else:
                     return {
-                        "Messege": "No Group found with that group key"
+                        "status": "No Group found with that group key"
                     }, 404
             else:
-                return {"Messege": "No user with that api key"}, 404
+                return {"status": "No user with that api key"}, 404
 
     # List Task //Change to List GROUP TASK, NO NESTED FOR LOOP
     def get(self):
@@ -53,7 +51,7 @@ class Tasks(Resource):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No group key!"}, 401
+            return {"status": "No group key!"}, 401
         else:
             group = Group.query.filter_by(group_key=header).first()
             if group:
@@ -62,7 +60,7 @@ class Tasks(Resource):
                     result.append(Task.serialize(task))
                 return {"status": 'success', 'data': result}, 200
             else:
-                return {"Message": "Group Not Found"}, 404
+                return {"status": "Group Not Found"}, 404
 
     # Update Task
     def put(self):
@@ -70,49 +68,35 @@ class Tasks(Resource):
         json_data = request.get_json(force=True)
 
         if not header:
-            return {"Messege": "No task key!"}, 401
+            return {"status": "No task key!"}, 401
         else:
             task = Task.query.filter_by(task_key=header).first()
             if task:
-                if (task.title != json_data['title']):
-                    task.title = json_data['title']
-                if (task.note != json_data['note']):
-                    task.note = json_data['note']
                 if (task.completed != json_data['completed']):
                     task.completed = json_data['completed']
-                if (task.repeats != json_data['repeats']):
-                    task.repeats = json_data['repeats']
-                if (task.reminders != json_data['reminders']):
-                    task.reminders = json_data['reminders']
-                if (task.index != json_data['index']):
-                    task.index = json_data['index']
 
                 db.session.commit()
 
                 result = Task.serialize(task)
                 return {"status": 'success', 'data': result}, 200
             else:
-                return {"Messege": "No Task with that task key"}, 404
+                return {"status": "No Task with that task key"}, 404
 
     # Delete Task
     def delete(self):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No task key!"}, 401
+            return {"status": "No task key!"}, 401
         else:
             task = Task.query.filter_by(task_key=header).first()
             if task:
                 result = Task.serialize(task)
-                subtasks = SubTask.query.filter_by(task_id=task.id).all()
-                for subtask in subtasks:
-                    db.session.delete(subtask)
-                db.session.commit()
                 db.session.delete(task)
                 db.session.commit()
                 return {"status": 'success', 'data': result}, 200
             else:
-                return {"Message": 'No Task found with that task key'}, 404
+                return {"status": 'No Task found with that task key'}, 404
 
     def generate_key(self):
         return ''.join(

@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/UI/title_card.dart';
 import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 import 'package:todolist/models/global.dart';
@@ -12,66 +13,84 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 import 'package:todolist/widgets/task_widgets/add_task_widget.dart';
 import 'package:todolist/widgets/task_widgets/task_list_item_widget.dart';
 
+/// Argument that can be passed when navigating to ToDoTab
+/// * group
 class ToDoTab extends StatefulWidget {
-  final Group group;
-
-  ToDoTab({@required this.group});
+  static const routeName = '/list_tasks';
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
 
 class _ToDoTabState extends State<ToDoTab> {
-  TaskBloc taskBloc;
+  late TaskBloc taskBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  int orderBy;
+  late Group group;
+  late double unitHeightValue;
+  late String orderBy;
+  bool reorder;
+  double height = 175;
 
-  @override
-  void initState() {
-    taskBloc = TaskBloc(widget.group.groupKey);
-    orderBy = 1;
-    super.initState();
+  _ToDoTabState() : reorder = false {
+    getOrderBy();
   }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as ToDoTabArguments;
+    group = args.group;
+    taskBloc = TaskBloc(group.groupKey);
+    Size mediaQuery = MediaQuery.of(context).size;
+    height = mediaQuery.height * 0.13;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return KeyboardSizeProvider(
       child: SafeArea(
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(
-              widget.group.name,
-              style: appTitleStyle,
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              title: Text(
+                group.name,
+                style: appTitleStyle(unitHeightValue),
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back,
+                    size: 32.0 * unitHeightValue, color: darkBlueGradient),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Colors.blueGrey,
+              ),
+              actions: [
+                _popupMenuButton(),
+                SizedBox(width: 10),
+              ],
             ),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, size: 32.0, color: darkBlueGradient),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              color: Colors.blueGrey,
-            ),
-            actions: [
-              _popupMenuButton(),
-            ],
-          ),
-          body: Stack(
-            children: <Widget>[
-              BackgroundColorContainer(
-                startColor: lightBlue,
-                endColor: lightBlueGradient,
-                widget: TitleCard(
-                  title: 'Projects/Tasks',
-                  child: _buildStreamBuilder(),
+            body: Stack(
+              children: <Widget>[
+                BackgroundColorContainer(
+                  startColor: lightBlue,
+                  endColor: lightBlueGradient,
+                  widget: TitleCard(
+                    title: 'Projects/Tasks',
+                    child: _buildStreamBuilder(),
+                  ),
                 ),
-              ),
-              AddTask(
-                length: widget.group.tasks.length,
-                taskbloc: taskBloc,
-              ),
-            ],
+                AddTask(
+                  length: group.tasks.length,
+                  taskbloc: taskBloc,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -83,41 +102,30 @@ class _ToDoTabState extends State<ToDoTab> {
       key: UniqueKey(),
       // Wrap our widget with a StreamBuilder
       stream: taskBloc.getTasks, // pass our Stream getter here
-      initialData: widget.group.tasks, // provide an initial data
+      initialData: group.tasks, // provide an initial data
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             print("None Data");
-            return Container(
-              child: Center(
-                child: Text("No Connection Message"),
-              ),
-            );
+            break;
           case ConnectionState.active:
             print("Active Data: " +
                 snapshot.data.toString() +
                 " @" +
                 DateTime.now().toString());
-            if (snapshot.data.isNotEmpty) {
-              widget.group.tasks = snapshot.data;
-              return _buildList();
+            if (snapshot.hasData && !listEquals(group.tasks, snapshot.data)) {
+              group.tasks = snapshot.data!;
             }
-            return SizedBox.shrink();
-            break;
+            if (reorder) {
+              reorder = false;
+            }
+            return _buildList();
           case ConnectionState.waiting:
-            print("Waiting Data" +
-                snapshot.data.toString() +
-                " @" +
-                DateTime.now().toString());
-            return Center(child: CircularProgressIndicator());
-            break;
+            return Center(
+                child: CircularProgressIndicator(color: Colors.black54));
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
-            if (snapshot.data.isNotEmpty) {
-              widget.group.tasks = snapshot.data;
-              return _buildList();
-            }
-            return SizedBox.shrink();
+            break;
         }
         return CircularProgressIndicator();
       },
@@ -125,26 +133,27 @@ class _ToDoTabState extends State<ToDoTab> {
   }
 
   Widget _buildList() {
-    _orderBy(orderBy);
+    _orderBy();
     return Theme(
       data: ThemeData(canvasColor: Colors.transparent),
       key: UniqueKey(),
       child: ListView(
         key: UniqueKey(),
-        padding: EdgeInsets.only(top: 175, bottom: 90),
-        children: widget.group.tasks.map<Dismissible>((Task item) {
+        padding: EdgeInsets.only(top: height + 40, bottom: 90),
+        children: group.tasks.map<Dismissible>((Task item) {
           return _buildListTile(item);
         }).toList(),
       ),
     );
   }
 
-  Widget _buildListTile(Task item) {
+  Dismissible _buildListTile(Task item) {
     return Dismissible(
       key: Key(item.taskKey),
       child: ListTile(
         key: Key(item.title),
         title: TaskListItemWidget(
+          group: group,
           task: item,
         ),
       ),
@@ -154,10 +163,11 @@ class _ToDoTabState extends State<ToDoTab> {
         child: Icon(
           Icons.delete,
           color: lightBlueGradient,
+          size: 28 * unitHeightValue,
         ),
       ),
-      onDismissed: (direction) {
-        deleteTask(item);
+      onDismissed: (direction) async {
+        await deleteTask(item);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Task " + item.title + " dismissed"),
@@ -174,28 +184,22 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  void removeTask(Task task) {
-    if (widget.group.tasks.contains(task)) {
-      setState(() {
-        widget.group.tasks.remove(task);
-      });
-    }
-  }
-
   void reAddTask(Task task) async {
-    await taskBloc.addTask(task.title, task.index, task.completed);
-    setState(() {});
+    await taskBloc.addTask(task.title).then((value) {
+      setState(() {});
+    });
   }
 
   Future<Null> deleteTask(Task task) async {
-    await taskBloc.deleteTask(task.taskKey);
-    setState(() {});
+    await taskBloc.deleteTask(task.taskKey).then((value) {
+      setState(() {});
+    });
   }
 
   PopupMenuButton _popupMenuButton() {
-    return PopupMenuButton<int>(
-      icon: Icon(Icons.sort, size: 32.0, color: darkBlueGradient),
-      iconSize: 24.0,
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.sort,
+          size: 32.0 * unitHeightValue, color: darkBlueGradient),
       color: darkGreenBlue,
       offset: Offset(0, 50),
       shape: RoundedRectangleBorder(
@@ -204,41 +208,45 @@ class _ToDoTabState extends State<ToDoTab> {
         ),
       ),
       onSelected: (value) {
+        saveOrderBy(value);
         setState(() {
-          orderBy = value;
+          reorder = true;
         });
       },
       itemBuilder: (context) => [
-        PopupMenuItem<int>(
-          value: 0,
+        PopupMenuItem<String>(
+          value: "Alphabetical",
           child: Row(children: [
-            Icon(Icons.sort_by_alpha),
+            Icon(Icons.sort_by_alpha, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Alphabetical",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
-        PopupMenuItem<int>(
-          value: 1,
+        PopupMenuItem<String>(
+          value: "Recent-Oldest",
           child: Row(children: [
-            Icon(Icons.date_range),
+            Icon(Icons.date_range, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Recent-Oldest",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
-        PopupMenuItem<int>(
-          value: 2,
+        PopupMenuItem<String>(
+          value: "Oldest-Recent",
           child: Row(children: [
-            Icon(Icons.date_range),
+            Icon(Icons.date_range, size: 24 * unitHeightValue),
             SizedBox(width: 6.0),
             Text(
               "Oldest-Recent",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18 * unitHeightValue),
             )
           ]),
         ),
@@ -246,24 +254,38 @@ class _ToDoTabState extends State<ToDoTab> {
     );
   }
 
-  _orderBy(int value) {
-    orderBy = value;
-    switch (value) {
-      case 0:
-        widget.group.tasks.sort(
+  _orderBy() {
+    switch (orderBy) {
+      case "Alphabetical":
+        group.tasks.sort(
             (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
         break;
-      case 1:
-        widget.group.tasks
-            .sort((a, b) => b.timeUpdated.compareTo(a.timeUpdated));
-        print(widget.group.tasks.toString());
+      case "Recent-Oldest":
+        group.tasks.sort((a, b) => b.timeCreated.compareTo(a.timeCreated));
         break;
-      case 2:
-        widget.group.tasks
-            .sort((a, b) => a.timeUpdated.compareTo(b.timeUpdated));
-        print(widget.group.tasks.toString());
+      case "Oldest-Recent":
+        group.tasks.sort((a, b) => a.timeCreated.compareTo(b.timeCreated));
         break;
       default:
     }
   }
+
+  /// Get order list from persistant storage.
+  void getOrderBy() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    this.orderBy = prefs.getString('TASK_ORDER_LIST') ?? "Recent-Oldest";
+  }
+
+  /// Save orderlist to Device's persistant storage
+  Future<void> saveOrderBy(String orderBy) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('TASK_ORDER_LIST', orderBy);
+    this.orderBy = orderBy;
+  }
+}
+
+class ToDoTabArguments {
+  final Group group;
+
+  ToDoTabArguments(this.group);
 }

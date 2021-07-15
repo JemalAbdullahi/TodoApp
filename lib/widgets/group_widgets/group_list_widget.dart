@@ -29,7 +29,7 @@ class GroupList extends StatefulWidget {
 
   /// Creates a visual Group List.
   GroupList(
-      {@required this.tileNavigatesTo,
+      {required this.tileNavigatesTo,
       this.top = 50,
       this.left = 30,
       this.right = 30,
@@ -42,17 +42,19 @@ class GroupList extends StatefulWidget {
 class _GroupListState extends State<GroupList> {
   List<Group> groups = groupBloc.getGroupList();
 
-  Size mediaQuery;
+  late Size mediaQuery;
 
-  double groupListItemWidth;
+  late double groupListItemWidth;
 
-  double groupListItemHeight;
+  late double groupListItemHeight;
+  late double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     mediaQuery = MediaQuery.of(context).size;
     groupListItemWidth = mediaQuery.width * 0.85;
-    groupListItemHeight = mediaQuery.height * 0.2;
+    groupListItemHeight = mediaQuery.height * 0.17;
     return _buildStreamBuilder();
   }
 
@@ -65,29 +67,30 @@ class _GroupListState extends State<GroupList> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            print("No Connection");
-            return buildGroupListView();
-            break;
+            return Container(
+              child: Center(
+                child: Text("No Connection"),
+              ),
+            );
           case ConnectionState.waiting:
-            if (!snapshot.hasData || snapshot.data.isEmpty) {
-              print("Waiting Data");
+            if (!snapshot.hasData) {
+              //print("Waiting Data");
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasData) {
-              groups = snapshot.data;
+              groups = snapshot.data!;
               return buildGroupListView();
             }
             break;
           case ConnectionState.active:
-            print("Active Data: " + snapshot.data.toString());
+            //print("Active Data: " + snapshot.data.toString());
             if (snapshot.hasData) {
-              groups = snapshot.data;
+              groups = snapshot.data!;
             }
             return buildGroupListView();
-            break;
           case ConnectionState.done:
             print("Done Data: " + snapshot.toString());
             if (snapshot.hasData) {
-              groups = snapshot.data;
+              groups = snapshot.data!;
             }
             return buildGroupListView();
         }
@@ -115,6 +118,7 @@ class _GroupListState extends State<GroupList> {
   }
 
   Dismissible buildGroupListTile(Group group) {
+    dynamic arguments;
     group.addListener(() {
       setState(() {});
     });
@@ -123,7 +127,8 @@ class _GroupListState extends State<GroupList> {
       background: Container(
         alignment: AlignmentDirectional.centerEnd,
         color: darkRed,
-        child: Icon(Icons.delete, color: lightBlueGradient),
+        child: Icon(Icons.delete,
+            color: lightBlueGradient, size: 28 * unitHeightValue),
       ),
       onDismissed: (direction) async {
         if (group.members.length == 1) {
@@ -133,30 +138,27 @@ class _GroupListState extends State<GroupList> {
             await repository.deleteGroupMember(
                 group.groupKey, userBloc.getUserObject().username);
           } catch (e) {
-            print(e.message);
+            print(e);
           }
         }
       },
       direction: DismissDirection.endToStart,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) {
-              switch (widget.tileNavigatesTo) {
-                case "ToDoTab":
-                  return ToDoTab(group: group);
-                case "GroupInfoPage":
-                  return GroupInfoPage(group: group);
-                default:
-                  return null;
-              }
-            }),
-          );
+          switch (widget.tileNavigatesTo) {
+            case ToDoTab.routeName:
+              arguments = ToDoTabArguments(group);
+              break;
+            case GroupInfoPage.routeName:
+              arguments = GroupInfoPageArguments(group);
+              break;
+          }
+          Navigator.pushNamed(context, widget.tileNavigatesTo,
+              arguments: arguments);
         },
         child: Container(
           height: groupListItemHeight,
-          width: groupListItemWidth,
+          //width: groupListItemWidth,
           decoration: _tileDecoration(),
           child: _buildTilePadding(group),
         ),
@@ -193,13 +195,14 @@ class _GroupListState extends State<GroupList> {
       Icon(
         Icons.arrow_forward_ios,
         color: Colors.grey,
+        size: 24 * unitHeightValue,
       )
     ]);
   }
 
   ///Group Info
   Column _groupInfoColumn(Group group) {
-    int groupSize = group.members != null ? group.members.length : 0;
+    int groupSize = group.members.length;
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -217,7 +220,7 @@ class _GroupListState extends State<GroupList> {
   Text _buildGroupSize(int groupSize) {
     return Text(
       groupSize == 1 ? "Personal" : "$groupSize People",
-      style: TextStyle(fontSize: 20.0, color: Colors.blueGrey),
+      style: TextStyle(fontSize: 20 * unitHeightValue, color: Colors.blueGrey),
     );
   }
 
@@ -226,17 +229,19 @@ class _GroupListState extends State<GroupList> {
     return Text(
       group.name,
       style: TextStyle(
-          fontSize: 25.0, fontWeight: FontWeight.bold, color: darkBlueGradient),
+          fontSize: 25 * unitHeightValue,
+          fontWeight: FontWeight.bold,
+          color: darkBlueGradient),
     );
   }
 
   ///Build Member Avatar
   Row _buildMemberAvatars(List<GroupMember> members) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
       for (GroupMember member in members)
         Padding(
           padding: EdgeInsets.only(top: 8.0, right: 2.0),
-          child: member.cAvatar(),
+          child: member.cAvatar(unitHeightValue: unitHeightValue),
         ),
     ]);
   }

@@ -8,25 +8,27 @@ class MyButton extends StatelessWidget {
   final VoidCallback buttonFunction;
 
   MyButton(
-      {this.text,
-      this.iconData,
-      this.textSize,
-      this.height,
-      this.buttonFunction});
+      {required this.text,
+      required this.iconData,
+      required this.textSize,
+      required this.height,
+      required this.buttonFunction});
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return MaterialButton(
       height: height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Icon(iconData, color: Colors.black45),
+          Icon(iconData, color: Colors.black45, size: 32 * unitHeightValue),
           SizedBox(width: 10),
           Text(
             text,
-            style: TextStyle(color: Colors.black45, fontSize: textSize),
+            style: TextStyle(
+                color: Colors.black45, fontSize: textSize * unitHeightValue),
           )
         ],
       ),

@@ -1,23 +1,18 @@
 import 'package:todolist/models/groupmember.dart';
 //import 'package:todolist/models/group.dart';
 
+// ignore: must_be_immutable
 class User extends GroupMember {
-  final int id;
-  final String password;
-  final String apiKey;
-  
+  late int id;
+  late String password;
+  late String apiKey;
+
   //List<Group> groups;
 
-  User(
-      {this.id,
-      this.password,
-      this.apiKey,
-      username,
-      firstname,
-      lastname,
-      emailaddress,
-      phonenumber,
-      avatar})
+  User.blank(): super.blank();
+
+  User(this.id, this.password, this.apiKey,
+      {username, firstname, lastname, emailaddress, phonenumber, avatar})
       : super(
             firstname: firstname,
             lastname: lastname,
@@ -28,10 +23,10 @@ class User extends GroupMember {
 
   factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
-      apiKey: parsedJson['api_key'],
-      id: parsedJson['id'],
+      parsedJson['id'],
+      parsedJson['password'],
+      parsedJson['api_key'],
       username: parsedJson['username'],
-      password: parsedJson['password'],
       emailaddress: parsedJson['emailaddress'],
       firstname: parsedJson['firstname'],
       lastname: parsedJson['lastname'],

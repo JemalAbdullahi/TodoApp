@@ -10,6 +10,7 @@ import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 //import 'package:todolist/models/global.dart';
 
 class ProfilePage extends StatefulWidget {
+  static const routeName = '/profile';
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -17,9 +18,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  User _user = userBloc.getUserObject();
+  late double unitHeightValue;
+  final User _user = userBloc.getUserObject();
 
-  String _currentPassword,
+  late String _currentPassword,
       _newPassword,
       _confirmPassword,
       _emailAddress,
@@ -64,18 +66,28 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
         endColor: lightBlueGradient,
-        widget: Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: Colors.transparent,
-          appBar: CustomAppBar('Edit Profile'),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 40),
-            physics: AlwaysScrollableScrollPhysics(),
-            child: _buildForm(context),
+        widget: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: Colors.transparent,
+            appBar: CustomAppBar('Edit Profile'),
+            body: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              physics: AlwaysScrollableScrollPhysics(),
+              child: _buildForm(context),
+            ),
           ),
         ),
       ),
@@ -87,7 +99,9 @@ class _ProfilePageState extends State<ProfilePage> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          Center(child: _user.cAvatar(radius: 56.0)),
+          Center(
+              child: _user.cAvatar(
+                  radius: 56.0, unitHeightValue: unitHeightValue)),
           SizedBox(height: 20),
           _firstnameField(),
           SizedBox(height: 20),
@@ -115,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Current Password", style: labelStyle),
+        Text("Current Password", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -130,20 +144,18 @@ class _ProfilePageState extends State<ProfilePage> {
               contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
               prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
               hintText: 'Current Password',
-              hintStyle: hintTextStyle,
+              hintStyle: hintTextStyle(unitHeightValue),
               errorMaxLines: 2,
-              errorStyle: TextStyle(fontSize: 16, color: Colors.red),
+              errorStyle:
+                  TextStyle(fontSize: 16 * unitHeightValue, color: Colors.red),
             ),
-            validator: (String value) {
-              if (value.isEmpty) {
+            validator: (String? value) {
+              if (value!.isEmpty) {
                 return 'Current Password is Required';
-              }
-              if (value != _user.password) {
-                return 'Incorrect Password';
               }
               return null;
             },
-            onSaved: (newValue) => _currentPassword = newValue.trim(),
+            onSaved: (newValue) => _currentPassword = newValue!.trim(),
           ),
         )
       ],
@@ -155,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Username", style: labelStyle),
+        Text("Username", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -169,10 +181,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.person, color: Colors.white),
                 hintText: 'Username',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _username = newValue.trim(),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
+            onSaved: (newValue) => _username = newValue!.trim(),
           ),
         ),
       ],
@@ -184,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("First Name", style: labelStyle),
+        Text("First Name", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -198,10 +210,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.person_outline, color: Colors.white),
                 hintText: 'Firstname',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _firstname = newValue.trim(),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
+            onSaved: (newValue) => _firstname = newValue!.trim(),
           ),
         ),
       ],
@@ -213,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Last Name", style: labelStyle),
+        Text("Last Name", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -227,10 +239,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.person_outline, color: Colors.white),
                 hintText: 'Lastname',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _lastname = newValue.trim(),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
+            onSaved: (newValue) => _lastname = newValue!.trim(),
           ),
         ),
       ],
@@ -242,7 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Phone Number", style: labelStyle),
+        Text("Phone Number", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -256,10 +268,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.phone, color: Colors.white),
                 hintText: 'Phone Number',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
-            onSaved: (newValue) => _phonenumber = newValue.trim(),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
+            onSaved: (newValue) => _phonenumber = newValue!.trim(),
           ),
         ),
       ],
@@ -271,7 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Email Address", style: labelStyle),
+        Text("Email Address", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -285,11 +297,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.email, color: Colors.white),
                 hintText: 'Email Address',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             validator: EmailValidator(errorText: 'Enter a Valid Email'),
-            onSaved: (newValue) => _emailAddress = newValue.trim(),
+            onSaved: (newValue) => _emailAddress = newValue!.trim(),
           ),
         ),
       ],
@@ -297,12 +309,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _newPasswordField() {
-    _newPasswordController.text = _user.password;
-    _newPassword = _user.password;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("New Password", style: labelStyle),
+        Text("New Password", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -317,11 +327,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.lock, color: Colors.white),
                 hintText: 'New Password',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             validator: passwordValidator,
-            onSaved: (newValue) => _newPassword = newValue.trim(),
+            onSaved: (newValue) => _newPassword = newValue!.trim(),
           ),
         ),
       ],
@@ -329,11 +339,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _confirmPasswordField() {
-    _confirmPasswordController.text = _user.password;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Confirm Password", style: labelStyle),
+        Text("Confirm Password", style: labelStyle(unitHeightValue)),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
@@ -348,13 +357,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 contentPadding: EdgeInsets.only(top: 14.0, left: 14.0),
                 prefixIcon: Icon(Icons.lock, color: Colors.white),
                 hintText: 'Re-Enter New Password',
-                hintStyle: hintTextStyle,
+                hintStyle: hintTextStyle(unitHeightValue),
                 errorMaxLines: 2,
-                errorStyle: TextStyle(fontSize: 16)),
+                errorStyle: TextStyle(fontSize: 16 * unitHeightValue)),
             validator: (val) =>
                 MatchValidator(errorText: 'Passwords Do Not Match')
-                    .validateMatch(val, _newPassword),
-            onSaved: (newValue) => _confirmPassword = newValue.trim(),
+                    .validateMatch(val!, _newPassword),
+            onSaved: (newValue) => _confirmPassword = newValue!.trim(),
           ),
         ),
       ],
@@ -375,9 +384,9 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         autofocus: false,
         onPressed: () async {
-          if (_formKey.currentState.validate()) {
+          if (_formKey.currentState!.validate()) {
             try {
-              _formKey.currentState.save();
+              _formKey.currentState!.save();
               await userBloc.updateUserProfile(
                   _currentPassword,
                   _confirmPassword,
@@ -396,7 +405,7 @@ class _ProfilePageState extends State<ProfilePage> {
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(e.message),
+                  content: Text("$e"),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -418,7 +427,7 @@ class _ProfilePageState extends State<ProfilePage> {
               letterSpacing: 1.5,
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.bold,
-              fontSize: 18.0),
+              fontSize: 18 * unitHeightValue),
         ),
       ),
     );

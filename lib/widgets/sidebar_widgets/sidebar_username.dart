@@ -4,8 +4,8 @@ import 'package:todolist/models/user.dart';
 
 class SideBarUsername extends StatefulWidget {
   SideBarUsername({
-    Key key,
-    @required this.height,
+    Key? key,
+    required this.height,
   }) : super(key: key);
 
   final double height;
@@ -15,30 +15,30 @@ class SideBarUsername extends StatefulWidget {
 }
 
 class _SideBarUsernameState extends State<SideBarUsername> {
-  User _user;
-  double height, radius;
+  User _user = userBloc.getUserObject();
+  late double height, radius;
+  late double unitHeightValue;
 
   @override
   Widget build(BuildContext context) {
-    _user = userBloc.getUserObject();
     height = widget.height * 0.6;
-    radius = height * 0.4;
-    return _user != null
-        ? Container(
-            height: height,
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  _user.cAvatar(radius: radius),
-                  SizedBox(height: 8.0),
-                  Text(
-                    "${_user.firstname} ${_user.lastname}",
-                    style: TextStyle(color: Colors.black45),
-                  )
-                ],
-              ),
-            ),
-          )
-        : SizedBox.shrink();
+    radius = height * 0.3;
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    return Container(
+      height: height,
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            _user.cAvatar(radius: radius, unitHeightValue: unitHeightValue),
+            SizedBox(height: 8.0),
+            Text(
+              "${_user.firstname} ${_user.lastname}",
+              style: TextStyle(
+                  color: Colors.black45, fontSize: 18 * unitHeightValue),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

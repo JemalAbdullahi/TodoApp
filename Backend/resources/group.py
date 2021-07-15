@@ -12,9 +12,9 @@ class Groups(Resource):
         json_data = request.get_json(force=True)
 
         if not json_data:
-            return {'Message': 'No input data provided'}, 400
+            return {'status': 'No input data provided'}, 400
         if not header:
-            return {"Messege": "No api key!"}, 401
+            return {"status": "No api key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -36,7 +36,7 @@ class Groups(Resource):
                 result = Group.serialize(group)
                 return {"status": 'success', 'data': result}, 201
             else:
-                return {"Messege": "No user with that api key"}, 404
+                return {"status": "No user with that api key"}, 404
 
     # List User's Groups
     def get(self):
@@ -44,7 +44,7 @@ class Groups(Resource):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No api key!"}, 401
+            return {"status": "No api key!"}, 401
         else:
             user = User.query.filter_by(api_key=header).first()
             if user:
@@ -58,7 +58,7 @@ class Groups(Resource):
         json_data = request.get_json(force=True)
 
         if not header:
-            return {"Messege": "No group key!"}, 401
+            return {"status": "No group key!"}, 401
         else:
             group = Group.query.filter_by(group_key=header).first()
             if group:
@@ -73,13 +73,13 @@ class Groups(Resource):
                 result = Group.serialize(group)
                 return {"status": 'success', 'data': result}, 200
             else:
-                return {"Messege": "No Group with that group key"}, 404
+                return {"status": "No Group with that group key"}, 404
 
     def delete(self):
         header = request.headers["Authorization"]
 
         if not header:
-            return {"Messege": "No group key!"}, 401
+            return {"status": "No group key!"}, 401
         else:
             group = Group.query.filter_by(group_key=header).first()
             if group:

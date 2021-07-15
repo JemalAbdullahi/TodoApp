@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/UI/pages/sidebar_pages/add_members.dart';
-//import 'package:todolist/bloc/resources/repository.dart';
+import 'package:todolist/bloc/resources/repository.dart';
 import 'package:todolist/models/global.dart';
 import 'package:todolist/models/group.dart';
 import 'package:todolist/models/groupmember.dart';
@@ -8,9 +8,7 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 import 'package:todolist/widgets/global_widgets/custom_appbar.dart';
 
 class GroupInfoPage extends StatefulWidget {
-  final Group group;
-
-  const GroupInfoPage({Key key, @required this.group}) : super(key: key);
+  static const routeName = '/GroupInfoPage';
 
   @override
   _GroupInfoPageState createState() => _GroupInfoPageState();
@@ -18,17 +16,20 @@ class GroupInfoPage extends StatefulWidget {
 
 class _GroupInfoPageState extends State<GroupInfoPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  int membersLength = 0;
-  List<GroupMember> initialMembers;
-
-  @override
-  void initState() {
-    initialMembers = widget.group.members;
-    super.initState();
-  }
+  late Group group;
+  late List<GroupMember> initialMembers;
+  late int membersLength;
+  late double unitHeightValue;
+  bool groupUpdated = false;
 
   @override
   Widget build(BuildContext context) {
+    unitHeightValue = MediaQuery.of(context).size.height * 0.001;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as GroupInfoPageArguments;
+    group = args.group;
+    initialMembers = group.members;
+    membersLength = initialMembers.length;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
@@ -36,21 +37,8 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         widget: Scaffold(
           key: _scaffoldKey,
           appBar: CustomAppBar(
-            widget.group.name,
-            /* actions: <Widget>[
-              TextButton(
-                onPressed: updateGroup,
-                child: Text(
-                  "Update",
-                  style: TextStyle(
-                      color: Colors.lightBlue,
-                      fontFamily: "Segoe UI",
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ], */
-            fontSize: 24,
+            group.name,
+            fontSize: 24 * unitHeightValue,
           ),
           backgroundColor: Colors.transparent,
           body: Padding(
@@ -63,10 +51,10 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
   }
 
   /* void updateGroup() async {
-    String groupKey = widget.group.groupKey;
+    String groupKey = group.groupKey;
     //delete from members
     for (GroupMember member in initialMembers) {
-      if (!widget.group.members.contains(member)) {
+      if (!group.members.contains(member)) {
         //delete memeber from group dbtable
         try {
           await repository.deleteGroupMember(groupKey, member.username);
@@ -77,7 +65,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       }
     }
     //add to members
-    for (GroupMember member in widget.group.members) {
+    for (GroupMember member in group.members) {
       if (!initialMembers.contains(member)) {
         try {
           await repository.addGroupMember(groupKey, member.username);
@@ -127,42 +115,17 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       width: double.infinity,
       alignment: Alignment.topCenter,
       child: Text(
-        widget.group.name,
+        group.name,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: 'Segoe UI',
           fontWeight: FontWeight.bold,
           color: darkBlue,
-          fontSize: 30,
+          fontSize: 30 * unitHeightValue,
         ),
       ),
     );
   }
-
-  /* TextField _buildGroupNameTF() {
-    return TextField(
-      textAlign: TextAlign.center,
-      keyboardType: TextInputType.name,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: "Group Name",
-        hintStyle: TextStyle(
-          fontFamily: 'Segoe UI',
-          fontWeight: FontWeight.bold,
-          color: darkBlue,
-          fontSize: 30,
-        ),
-        suffixIcon: Icon(Icons.edit),
-      ),
-      style: TextStyle(
-        fontFamily: 'Segoe UI',
-        fontWeight: FontWeight.bold,
-        color: darkBlue,
-        fontSize: 30,
-      ),
-      onSubmitted: (groupName) => newGroup.name = groupName,
-    );
-  } */
 
   Expanded _buildExpandedCard() {
     return Expanded(
@@ -191,42 +154,53 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
       Text(
         "MEMBERS",
         style: TextStyle(
-            fontFamily: 'Segoe UI',
-            fontWeight: FontWeight.bold,
-            color: darkBlue,
-            fontSize: 22),
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: darkBlue,
+          fontSize: 22 * unitHeightValue,
+        ),
       ),
       SizedBox(width: 15),
       CircleAvatar(
         radius: 16,
         backgroundColor: darkBlue,
         child: Text(
-          "${widget.group.members.length}",
+          "${group.members.length}",
           style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Segoe UI',
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
+            color: Colors.white,
+            fontFamily: 'Segoe UI',
+            fontWeight: FontWeight.bold,
+            fontSize: 16 * unitHeightValue,
+          ),
         ),
       ),
       Spacer(),
       Text(
         "Personal",
         style: TextStyle(
-            fontFamily: 'Segoe UI',
-            fontWeight: FontWeight.bold,
-            color: Colors.black54,
-            fontSize: 20),
+          fontFamily: 'Segoe UI',
+          fontWeight: FontWeight.bold,
+          color: Colors.black54,
+          fontSize: 20 * unitHeightValue,
+        ),
       ),
       Switch(
-          value: !widget.group.isPublic,
+          value: !group.isPublic,
           onChanged: (newValue) {
-            if (!widget.group.isPublic || widget.group.members.length == 1) {
-              setState(() {
-                widget.group.isPublic = !newValue;
-              });
+            if (!group.isPublic || group.members.length == 1) {
+              setState(
+                () {
+                  group.isPublic = !newValue;
+                  repository.updateGroup(group).catchError(
+                    (e) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("$e")));
+                    },
+                  );
+                },
+              );
             }
-            if (widget.group.members.length > 1) {
+            if (group.members.length > 1) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Personal Groups are Limited to 1 Member Only"),
@@ -238,7 +212,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
   }
 
   Padding _buildMembersList() {
-    widget.group.addListener(() {
+    group.addListener(() {
       setState(() {});
     });
     return Padding(
@@ -251,9 +225,9 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             mainAxisSpacing: 10.0),
         itemBuilder: (context, index) => Column(
           children: [
-            widget.group.members[index].cAvatar(radius: 34),
+            group.members[index].cAvatar(radius: 34, unitHeightValue: unitHeightValue),
             Text(
-              widget.group.members[index].firstname,
+              group.members[index].firstname,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: 'Segoe UI',
@@ -262,13 +236,13 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             ),
           ],
         ),
-        itemCount: widget.group.members.length,
+        itemCount: group.members.length,
       ),
     );
   }
 
   Widget _addMembers() {
-    return this.widget.group.isPublic
+    return this.group.isPublic
         ? Align(
             alignment: Alignment(0.9, 0.9),
             child: FloatingActionButton(
@@ -278,7 +252,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AddMembersPage(
-                      group: widget.group,
+                      group: group,
                     ),
                   ),
                 );
@@ -288,4 +262,10 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           )
         : SizedBox.shrink();
   }
+}
+
+class GroupInfoPageArguments {
+  final Group group;
+
+  GroupInfoPageArguments(this.group);
 }

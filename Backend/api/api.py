@@ -7,6 +7,7 @@ from resources.Signin import Signin
 from resources.task import Tasks
 from resources.subtask import SubTasks
 from resources.search import Search
+from resources.assigned_to_user import AssignedToUser
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -25,3 +26,5 @@ api.add_resource(Tasks, '/tasks')
 api.add_resource(SubTasks, '/subtasks')
 
 api.add_resource(Search, '/search')
+
+api.add_resource(AssignedToUser, '/assignedtouser')

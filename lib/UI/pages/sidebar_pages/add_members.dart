@@ -9,14 +9,15 @@ import 'package:todolist/widgets/global_widgets/background_color_container.dart'
 class AddMembersPage extends StatefulWidget {
   final Group group;
 
-  const AddMembersPage({Key key, this.group}) : super(key: key);
+  const AddMembersPage({Key? key, required this.group}) : super(key: key);
 
   @override
   _AddMembersPageState createState() => _AddMembersPageState();
 }
 
 class _AddMembersPageState extends State<AddMembersPage> {
-  Size size;
+  late Size size;
+  late double unitHeightValue;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
   String searchQuery = "Search query";
@@ -28,32 +29,45 @@ class _AddMembersPageState extends State<AddMembersPage> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
+    unitHeightValue = size.height * 0.001;
     return SafeArea(
       child: BackgroundColorContainer(
         startColor: lightBlue,
         endColor: lightBlueGradient,
-        widget: Scaffold(
-          appBar: AppBar(
-            title: _isSearching ? _buildSearchField() : _buildTitle(),
+        widget: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: _isSearching ? _buildSearchField() : _buildTitle(),
+              backgroundColor: Colors.transparent,
+              centerTitle: true,
+              elevation: 0.0,
+              toolbarHeight: 100.0,
+              actions: _buildActions(),
+              iconTheme: IconThemeData(
+                  color: Colors.black,
+                  size: 32.0 * unitHeightValue,
+                  opacity: 1.0),
+              leading: _isSearching
+                  ? IconButton(
+                      icon: Icon(Icons.keyboard_arrow_down,
+                          size: 30 * unitHeightValue),
+                      onPressed: () => FocusScope.of(context).unfocus(),
+                    )
+                  : BackButton(),
+              automaticallyImplyLeading: true,
+            ),
             backgroundColor: Colors.transparent,
-            centerTitle: true,
-            elevation: 0.0,
-            toolbarHeight: 100.0,
-            actions: _buildActions(),
-            iconTheme:
-                IconThemeData(color: Colors.black, size: 32.0, opacity: 1.0),
-            leading: _isSearching
-                ? IconButton(
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    onPressed: () => FocusScope.of(context).unfocus(),
-                  )
-                : BackButton(),
-            automaticallyImplyLeading: true,
-          ),
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            alignment: Alignment.center,
-            children: [_buildColumnCard()],
+            body: Stack(
+              alignment: Alignment.center,
+              children: [_buildColumnCard()],
+            ),
           ),
         ),
       ),
@@ -67,7 +81,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
         color: Colors.white,
         fontWeight: FontWeight.bold,
         fontFamily: "Segoe UI",
-        fontSize: 32.0,
+        fontSize: 32.0 * unitHeightValue,
       ),
     );
   }
@@ -80,13 +94,15 @@ class _AddMembersPageState extends State<AddMembersPage> {
         hintText: "Search Users...",
         border: InputBorder.none,
         hintStyle: TextStyle(
-          color: Colors.white,
-          fontFamily: "Segoe UI",
-          fontSize: 24.0,
-        ),
+            color: Colors.white,
+            fontFamily: "Segoe UI",
+            fontSize: 24.0 * unitHeightValue),
       ),
       style: TextStyle(
-          color: Colors.white, fontSize: 24.0, fontFamily: "Segoe UI"),
+        color: Colors.white,
+        fontSize: 24.0 * unitHeightValue,
+        fontFamily: "Segoe UI",
+      ),
       onChanged: (query) {
         if (query.length >= 2) {
           updateSearchQuery(query);
@@ -99,7 +115,8 @@ class _AddMembersPageState extends State<AddMembersPage> {
     if (_isSearching) {
       return <Widget>[
         IconButton(
-          icon: const Icon(Icons.clear, color: Colors.red),
+          icon:
+              Icon(Icons.clear, color: Colors.red, size: 30 * unitHeightValue),
           onPressed: () {
             /* if (_searchQueryController == null ||
                 _searchQueryController.text.isEmpty) {
@@ -113,14 +130,14 @@ class _AddMembersPageState extends State<AddMembersPage> {
     }
     return <Widget>[
       IconButton(
-        icon: const Icon(Icons.search),
+        icon: Icon(Icons.search, size: 30 * unitHeightValue),
         onPressed: _startSearch,
       ),
     ];
   }
 
   void _startSearch() {
-    ModalRoute.of(context)
+    ModalRoute.of(context)!
         .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
 
     setState(() {
@@ -189,7 +206,8 @@ class _AddMembersPageState extends State<AddMembersPage> {
             },
             child: Column(
               children: [
-                widget.group.members[index].cAvatar(radius: 25),
+                widget.group.members[index]
+                    .cAvatar(radius: 25, unitHeightValue: unitHeightValue),
                 Text(
                   widget.group.members[index].firstname,
                   overflow: TextOverflow.ellipsis,
@@ -227,7 +245,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
               fontFamily: 'Segoe UI',
               fontWeight: FontWeight.bold,
               color: darkBlue,
-              fontSize: 30,
+              fontSize: 30 * unitHeightValue,
             ),
           ),
           paddingList()
@@ -246,46 +264,33 @@ class _AddMembersPageState extends State<AddMembersPage> {
   ListView searchResultListView() {
     return ListView.separated(
       itemBuilder: (context, index) => ListTile(
-        leading: CircleAvatar(
-          backgroundImage: searchResults[index].avatar,
-        ),
+        leading: searchResults[index]
+            .cAvatar(unitHeightValue: unitHeightValue, radius: 16),
         title: Text(
-            "${searchResults[index].firstname} ${searchResults[index].lastname}"),
-        subtitle: Text(searchResults[index].username),
+          "${searchResults[index].firstname} ${searchResults[index].lastname}",
+          style: TextStyle(fontSize: 20 * unitHeightValue),
+        ),
+        subtitle: Text(
+          searchResults[index].username,
+          style: TextStyle(fontSize: 16 * unitHeightValue),
+        ),
         trailing: Checkbox(
             value: widget.group.members.contains(searchResults[index]),
             checkColor: Colors.white,
             activeColor: Colors.blue,
             onChanged: (val) {
               if (widget.group.members.contains(searchResults[index])) {
-                if (widget.group.groupKey != null) {
-                  _deleteGroupMember(searchResults[index].username);
-                }
+                _deleteGroupMember(searchResults[index].username);
                 this.setState(() {
                   widget.group.removeGroupMember(searchResults[index]);
                 });
               } else if (!widget.group.members.contains(searchResults[index])) {
-                if (widget.group.groupKey != null) {
-                  _addGroupMember(searchResults[index].username);
-                }
+                _addGroupMember(searchResults[index].username);
                 this.setState(() {
                   widget.group.addGroupMember(searchResults[index]);
                 });
               }
             }),
-        /*CircularCheckBox(
-          value: widget.group.members.contains(searchResults[index]),
-          checkColor: Colors.white,
-          activeColor: Colors.blue,
-          inactiveColor: Colors.redAccent,
-          disabledColor: Colors.grey,
-          onChanged: (val) => this.setState(() {
-            if (widget.group.members.contains(searchResults[index])) {
-              widget.group.removeGroupMember(searchResults[index]);
-            } else
-              widget.group.addGroupMember(searchResults[index]);
-          }),
-        ),*/
       ),
       separatorBuilder: (context, index) => Divider(),
       itemCount: searchResults.length,
@@ -297,7 +302,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
     try {
       await repository.deleteGroupMember(widget.group.groupKey, username);
     } catch (e) {
-      print(e.message);
+      print(e);
     }
   }
 

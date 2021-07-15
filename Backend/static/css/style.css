@@ -1,0 +1,268 @@
+@import url(//db.onlinewebfonts.com/c/ace51fb0e489a977bed8a67511865c11?family=Averta+CY+W01);
+@font-face {
+  font-family: "Averta CY";
+  src: url("//db.onlinewebfonts.com/t/ace51fb0e489a977bed8a67511865c11.eot");
+  src: url("//db.onlinewebfonts.com/t/ace51fb0e489a977bed8a67511865c11.eot?#iefix")
+      format("embedded-opentype"),
+    url("//db.onlinewebfonts.com/t/ace51fb0e489a977bed8a67511865c11.woff2")
+      format("woff2"),
+    url("//db.onlinewebfonts.com/t/ace51fb0e489a977bed8a67511865c11.woff")
+      format("woff"),
+    url("//db.onlinewebfonts.com/t/ace51fb0e489a977bed8a67511865c11.ttf")
+      format("truetype"),
+    url("//db.onlinewebfonts.com/t/ace51fb0e489a977bed8a67511865c11.svg#Averta CY W01")
+      format("svg");
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Averta CY", sans-serif;
+  scroll-behavior: smooth;
+}
+::after,
+::before {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  overflow-x: hidden;
+  background: linear-gradient(#2f80ed, #57cbf2, #4eb6d9, #5cd6ff);
+  font-size: 14px;
+  height: 100%;
+  width: 100%;
+  letter-spacing: normal;
+}
+[class*="col-"] {
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .col-1 {
+    width: 8.33%;
+  }
+  .col-2 {
+    width: 16.66%;
+  }
+  .col-3 {
+    width: 25%;
+  }
+  .col-4 {
+    width: 33.33%;
+  }
+  .col-5 {
+    width: 41.66%;
+  }
+  .col-6 {
+    width: 50%;
+  }
+  .col-7 {
+    width: 58.33%;
+  }
+  .col-8 {
+    width: 66.66%;
+  }
+  .col-9 {
+    width: 75%;
+  }
+  .col-10 {
+    width: 83.33%;
+  }
+  .col-11 {
+    width: 91.66%;
+  }
+  .col-12 {
+    width: 100%;
+  }
+  header {
+    position: fixed;
+    justify-content: space-between;
+  }
+  .app-features {
+    padding-bottom: 0;
+  }
+  .feature {
+    padding: 0 5% 0 10%;
+  }
+  .featured-item-grid {
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .featured-item-header {
+    font-size: 2vw;
+  }
+  .featured-item-desc {
+    font-size: 3.5vw;
+  }
+}
+@media screen and (max-width: 767px) {
+  header {
+    position: absolute;
+    justify-content: center;
+  }
+  header ul li {
+    display: none;
+  }
+  .app-features {
+    padding-bottom: 100px;
+  }
+  .featured-item-grid {
+    justify-content: center;
+    display: block;
+  }
+
+  .featured-item-header {
+    font-size: 3vw;
+  }
+  .featured-item-desc {
+    font-size: 5vw;
+  }
+}
+header {
+  top: 0;
+  left: 0;
+  padding: 30px 100px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  z-index: 999;
+  background-color: transparent;
+}
+header .logo {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 2en;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+header ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+header ul li {
+  list-style: none;
+  margin-left: 20px;
+}
+header ul li a {
+  text-decoration: none;
+  padding: 6px 15px;
+  color: #fff;
+  border-radius: 20px;
+}
+header ul li a:hover,
+header ul li a.active {
+  background: #fff;
+  color: #2f80ed;
+}
+section {
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+}
+section.welcome {
+  height: 100vh;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+section::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 100px;
+  background: linear-gradient(to top, #5cd6ff, transparent);
+}
+section.welcome img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+#text {
+  position: absolute;
+  color: #fff;
+  white-space: nowrap;
+  font-size: 7.5vw;
+}
+#btn {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 30px;
+  border-radius: 40px;
+  background: #fff;
+  color: #2f80ed;
+  font-size: 1.5em;
+  transform: translateY(100px);
+}
+.app-features {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(transparent, #4ad2ee, #2f80ed);
+}
+
+.feature {
+  display: block;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+.featured-item {
+  padding: 0;
+  margin: 0;
+}
+.featured-item-grid {
+  align-items: center;
+  min-height: 100vh;
+  -webkit-box-align: center;
+  -webkit-box-pack: justify;
+}
+
+.featured-item-img {
+  max-width: 500pt;
+  max-height: 897pt;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featured-item-img img {
+  width: 72%;
+  height: 72%;
+}
+/* .img img {
+  max-width: 100%;
+  max-height: 100%;
+} */
+.featured-item-text {
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 100%;
+}
+.featured-item-header {
+  font-weight: 700;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+}
+.featured-item-desc {
+  font-weight: 300;
+  line-height: 133%;
+  letter-spacing: -0.03em;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+}

@@ -26,14 +26,14 @@ class Signin(Resource):
 
     def username_and_password_signin(self, json_data):
         if not json_data:
-            return {'Message': 'No input data provided'}, 400
+            return {'status': 'No input data provided'}, 400
 
         user = User.query.filter_by(username=json_data['username']).first()
         if not user:
-            return {'Message': 'Username does not exist'}, 404
+            return {'status': 'Username does not exist'}, 404
 
-        if user.password != json_data['password']:
-            return {'Message': 'Password incorrect'}, 401
+        if not user.verify_password(json_data["password"]):
+            return {'status': 'Password incorrect'}, 401
 
         result = User.serialize(user)
         return {"status": 'success', 'data': result}, 200

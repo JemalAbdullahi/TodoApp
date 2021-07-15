@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
-  Avatar({Key key, this.imageProvider, this.radius = 16.0}) : super(key: key);
+  Avatar({Key? key, this.radius = 16.0}) : super(key: key);
 
-  final ImageProvider imageProvider;
   final double radius;
 
   @override
@@ -11,7 +10,6 @@ class Avatar extends StatelessWidget {
     return CircleAvatar(
       backgroundColor: Colors.blue,
       radius: radius,
-      backgroundImage: imageProvider,
     );
   }
 }

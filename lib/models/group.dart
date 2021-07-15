@@ -3,18 +3,18 @@ import 'package:todolist/models/groupmember.dart';
 import 'package:todolist/models/tasks.dart';
 
 class Group extends ChangeNotifier {
-  int id;
-  String _name;
-  String groupKey;
-  bool isPublic;
-  List<GroupMember> members = [];
-  List<Task> tasks;
+  late int id;
+  late String _name;
+  late String groupKey;
+  late bool isPublic;
+  late List<GroupMember> members = [];
+  List<Task> tasks = [];
 
   /// Time Created
-  DateTime timeCreated;
+  late DateTime timeCreated;
 
   /// Time Updated
-  DateTime timeUpdated;
+  late DateTime timeUpdated;
 
   Group.blank();
 

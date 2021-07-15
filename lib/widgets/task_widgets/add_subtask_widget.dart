@@ -6,9 +6,9 @@ import 'package:todolist/bloc/blocs/user_bloc_provider.dart';
 
 class AddSubtask extends StatefulWidget {
   const AddSubtask({
-    Key key,
-    @required this.length,
-    @required this.subtaskBloc,
+    Key? key,
+    required this.length,
+    required this.subtaskBloc,
   }) : super(key: key);
 
   final int length;
@@ -20,26 +20,28 @@ class AddSubtask extends StatefulWidget {
 
 class _AddSubtaskState extends State<AddSubtask> {
   TextEditingController controller = new TextEditingController();
-
-  double height = 60.0;
-  double width = 250.0;
-  double bottom = 0;
-  double focusWidth, marginH;
-  Size size;
-
   FocusNode textfieldFocus = new FocusNode();
+  late double unitValueHeight,
+      unitValueWidth,
+      height,
+      defaultWidth,
+      focusWidth,
+      marginH;
+  late Size size;
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    focusWidth = size.width * 0.9;
-    width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : 250;
-    //bottom = (isFocused) ? 0 : 230;
+    unitValueHeight = size.height * 0.001;
+    unitValueWidth = size.width * 0.001;
+    focusWidth = unitValueWidth * 900;
+    defaultWidth = unitValueWidth * 250;
+    height = unitValueHeight * 60;
+    double width = (textfieldFocus.hasPrimaryFocus) ? focusWidth : defaultWidth;
     marginH = (size.width - width) / 2;
     return Consumer<ScreenHeight>(builder: (context, _res, child) {
-      //bottom = (isFocused && !_res.isOpen) ? 100 : 0;
-      return Align(
-        alignment: Alignment.bottomCenter,
+      return Positioned(
+        bottom: 0,
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: marginH, vertical: 25),
           decoration: BoxDecoration(
@@ -66,12 +68,9 @@ class _AddSubtaskState extends State<AddSubtask> {
                   textAlignVertical: TextAlignVertical.center,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.go,
+                  style: TextStyle(fontSize: 16 * unitValueHeight),
                   onTap: () {
-                    if (width != focusWidth) {
-                      setState(() {
-                        width = focusWidth;
-                      });
-                    }
+                    setState(() {});
                   },
                   onSubmitted: (_) {
                     setState(() {
@@ -85,13 +84,13 @@ class _AddSubtaskState extends State<AddSubtask> {
                             onPressed: () {
                               setState(() {
                                 addSubtask();
-                                textfieldFocus.unfocus();
                               });
                             })
                         : SizedBox.shrink(),
                     border: InputBorder.none,
                     hintText: "Write a Subtask",
-                    hintStyle: TextStyle(color: Colors.black54),
+                    hintStyle: TextStyle(
+                        color: Colors.black54, fontSize: 16 * unitValueHeight),
                   ),
                 ),
               ),
@@ -102,12 +101,12 @@ class _AddSubtaskState extends State<AddSubtask> {
     });
   }
 
-  void addSubtask() async {
+  Future<void> addSubtask() async {
     if (controller.text.isNotEmpty) {
-      await widget.subtaskBloc
-          .addSubtask(controller.text, widget.length, false);
+      String title = controller.text;
       controller.clear();
       textfieldFocus.unfocus();
+      await widget.subtaskBloc.addSubtask(title);
     }
   }
 }
