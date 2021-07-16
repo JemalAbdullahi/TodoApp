@@ -22,6 +22,7 @@ TextStyle appTitleStyle(double unitHeightValue) => TextStyle(
 TextStyle hintTextStyle(double unitHeightValue) => TextStyle(
       color: Colors.white70,
       fontFamily: 'Segoe UI',
+      fontSize: 18 * unitHeightValue,
     );
 
 TextStyle labelStyle(double unitHeightValue) => TextStyle(
@@ -93,12 +94,12 @@ TextStyle loginButtonStyle(double unitHeightValue) => new TextStyle(
       fontFamily: 'Segoe UI',
       fontWeight: FontWeight.w700,
       color: lightBlue,
-      fontSize: 24 * unitHeightValue,
+      fontSize: 26 * unitHeightValue,
     );
 
 TextStyle registerButtonStyle(double unitHeightValue) => new TextStyle(
       fontFamily: 'Segoe UI',
       fontWeight: FontWeight.bold,
       color: red,
-      fontSize: 24 * unitHeightValue,
+      fontSize: 26 * unitHeightValue,
     );
