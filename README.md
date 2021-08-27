@@ -2,19 +2,10 @@
 
 A Flutter project to create a To Do List App utilizing flutter for the front end User Interface and flask RESTful API for the Backend (python).
 
-## Personal note 
-### How to run DB locally:
-- cd Backend/env/Scripts
-- activate.bat
-- cd ../../project
-- python run.py
-### How to update remote DB/Backend:
-- first change directory into Backend directory (cd todolist/Backend)
-- Then push to the master branch to the relevant branch production, stage, or heroku (main) branch
-  - git push (heroku/pro/stage) master
+- Create public or personal groups for specific tasks.
+- Share the group with family members, classmates, co-workers, and many more.
 
-
-## To Do
+## To Do List: Functionality
 
 - [x] Connect completed checkbox to sql server
 - [x] Create deleted action
@@ -32,15 +23,15 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
     - [x] Password (change)
     - [x] Email Address (change)
   - [x] Groups
-  - [ ] Friends
-  - [ ] Settings
+  - [x] Friends
+  - [x] Settings
   - [x] Log out
   - [x] Animated
 
 ### Goal
 
-- [ ] Publish to App store
-- [ ] Gain a better understanding of flutter
+- [x] Publish to App store
+- [x] Build a native mobile app for iOS and ANdroid
 
 ### Future Functionality
 - [x] Add groups
@@ -49,4 +40,4 @@ A Flutter project to create a To Do List App utilizing flutter for the front end
   - [ ] Provide various permissions to different users in groups (Read only, Read+Write, Delete)
   - [x] Each user can have numerous groups
 - [ ] Implement all attributes of tasks/subtasks (Reminders, Notes, Repeat, Deadline, etc.)
-- [ ] Create a Detailed Page for SubTask
+- [x] Create a Detailed Page for SubTask
